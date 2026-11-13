@@ -3,12 +3,14 @@
 // - BLOQUEA si el mensaje no cita su issue (#12, GH-12 o la URL del issue). Exentos: merges, reverts,
 //   fixup!/squash!/amend!. En ramas tipo/N-descripcion, prepare-commit-msg ya agregó "Refs #N".
 // - AVISA si no cita un identificador del documento maestro (§1, §28) o si trae Co-Authored-By de IA.
+// - AVISA si cita requisitos del módulo de otra persona según §19 (apoyo a su rol), con la identidad del clon.
 // - Commits grandes (varios temas mezclados): muestra la división propuesta y termina con código 3 para que el
 //   wrapper .githooks/commit-msg PREGUNTE en la terminal. Sin terminal (agentes, IDE) bloquea y pide preguntar.
 //   Se acepta un solo commit con URAQI_UN_COMMIT=1 o con la línea "Commit-grande: aprobado" en el mensaje.
 import fs from 'node:fs';
 import { ISSUE_REF, EXEMPT_MESSAGE, git } from './lib/git.mjs';
 import { agrupar, esGrande, describirPlan, parseNameStatus } from './lib/commit-groups.mjs';
+import { avisoDeApoyo } from './lib/equipo.mjs';
 
 const file = process.argv[2];
 const msg = file ? fs.readFileSync(file, 'utf8').replace(/^# .*$|^#$/gm, '').trim() : '';
@@ -58,4 +60,7 @@ if (!ID.test(msg)) {
 if (AI_COAUTHOR.test(msg)) {
   process.stderr.write('[uraqi] Aviso: el mensaje incluye un Co-Authored-By de un asistente de IA; la convención del equipo es no incluirlo.\n');
 }
+// §19: si el commit cita requisitos del módulo de otra persona, avisa que es apoyo a su rol (no bloquea).
+const apoyo = avisoDeApoyo({ texto: msg, cwd: process.cwd() });
+if (apoyo) process.stderr.write(`[uraqi] ${apoyo}\n`);
 process.exit(0);
