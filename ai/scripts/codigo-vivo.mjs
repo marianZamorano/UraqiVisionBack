@@ -14,6 +14,7 @@ import { execFileSync, spawn, spawnSync } from 'node:child_process';
 import { analizar, informe } from '../hooks/lib/codigo-vivo.mjs';
 import { revisarCicd, textoCicd, aplicaciones } from '../hooks/lib/cicd.mjs';
 import { api, repoSlug } from '../hooks/lib/github.mjs';
+import { cargarCatalogo, validarCatalogo, leerDocumento, revisarImplementacion, textoRevision } from '../hooks/lib/referencias.mjs';
 
 const args = process.argv.slice(2);
 const comando = args[0] ?? 'revisar';
@@ -42,11 +43,15 @@ async function cmdRevisar() {
   const archivos = archivosDelRepo();
   const r = analizar({ archivos, leer });
   const cicd = revisarCicd({ archivos, leer });
+  // Referencias de §31: avisos (no bloquean) si se implementan requisitos sin citar su referencia o hay DOI fuera de §31.
+  const catalogo = cargarCatalogo(root);
+  const refs = revisarImplementacion({ archivos, leer, catalogo });
+  const erroresRefs = validarCatalogo(catalogo, leerDocumento(root));
   const errores = r.hallazgos.filter((h) => h.nivel === 'error').length + cicd.hallazgos.filter((h) => h.nivel === 'error').length;
   if (args.includes('--json')) {
-    console.log(JSON.stringify({ ...r, cicd }, null, 2));
+    console.log(JSON.stringify({ ...r, cicd, referencias: { errores: erroresRefs, ...refs } }, null, 2));
   } else {
-    const cuerpo = [MARCA, informe(r, { titulo: 'Revisor de código vivo' }), '', textoCicd(cicd)].join('\n');
+    const cuerpo = [MARCA, informe(r, { titulo: 'Revisor de código vivo' }), '', textoCicd(cicd), '', textoRevision(refs, erroresRefs)].join('\n');
     console.log(cuerpo);
     resumenPaso(cuerpo);
     await comentar(valor('--pr'), cuerpo);
