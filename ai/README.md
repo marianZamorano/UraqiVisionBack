@@ -1,7 +1,8 @@
 # Herramientas de IA de UraqiVision
 
 Skills, subagentes, hooks y servidores MCP para **Claude Code, Gemini CLI, Codex CLI y opencode**, definidos
-una sola vez y generados para cada plataforma. Las reglas del proyecto están en [`AGENTS.md`](../AGENTS.md);
+una sola vez y generados para cada plataforma. Este repositorio es el **backend** (pipeline e Insight): las
+skills y subagentes de la web están en [`UraqiVision`](https://github.com/marianZamorano/UraqiVision). Las reglas del proyecto están en [`AGENTS.md`](../AGENTS.md);
 la fuente de verdad es [`docs/UraqiVisionDocumentoMaestrov1.0.pdf`](../docs/UraqiVisionDocumentoMaestrov1.0.pdf).
 
 ## Qué se edita y qué se genera
