@@ -4,11 +4,14 @@
 //    (o solo enlaza el upstream si la rama ya existe en origin). No actúa en dev, qa, main ni con HEAD desacoplado.
 // 2) Variables de entorno: si .env.example cambió entre los dos commits, agrega al .env local las claves nuevas
 //    vacías y avisa qué valores pedir al equipo (ver ai/scripts/entorno.mjs).
+// 3) Herramientas de IA: si al cambiar de rama cambian skills, subagentes, MCP, hooks, workflows, scripts o la
+//    ayuda, avisa qué cambió, regenera la ayuda si hace falta y verifica que todo siga funcionando y activo.
 // Nunca bloquea: si no hay red, avisa para subir la rama después. URAQI_SIN_PUSH=1 desactiva el push.
 import { execFileSync } from 'node:child_process';
 import { currentBranch } from './lib/git.mjs';
 import { PROTECTED_BRANCHES } from './lib/guard.mjs';
 import { avisarCambiosDeEntorno } from './lib/entorno-git.mjs';
+import { avisarCambiosDeHerramientas } from './lib/herramientas-git.mjs';
 
 const [anterior, nuevo, esCambioDeRama] = process.argv.slice(2);
 const git = (...a) => execFileSync('git', a, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
@@ -17,6 +20,14 @@ try {
   avisarCambiosDeEntorno(anterior, nuevo);
 } catch {
   // el aviso de entorno nunca impide cambiar de rama
+}
+if (esCambioDeRama === '1') {
+  try {
+    const aviso = await avisarCambiosDeHerramientas(anterior, nuevo);
+    if (aviso) process.stderr.write(`${aviso}\n`);
+  } catch {
+    // el aviso de herramientas nunca impide cambiar de rama
+  }
 }
 
 if (esCambioDeRama === '1' && process.env.URAQI_SIN_PUSH !== '1') {
