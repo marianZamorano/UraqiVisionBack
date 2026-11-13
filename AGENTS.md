@@ -1,7 +1,14 @@
-# UraqiVision — instrucciones para asistentes de IA
+# UraqiVision (backend) — instrucciones para asistentes de IA
 
 Lo leen Claude Code (vía `CLAUDE.md`), Gemini CLI (vía `.gemini/settings.json`), Codex CLI y opencode.
 Lanza siempre el agente **desde la raíz del repositorio**.
+
+**Este repositorio es solo el backend**: el pipeline en Python (ingesta, ciencia, validación y publicación de
+estaciones) y la función Insight. El **frontend** —globo, mapa de análisis, atlas, interfaz, descargas, idiomas y
+accesibilidad— vive en [`UraqiVision`](https://github.com/marianZamorano/UraqiVision). La web consume lo que este
+repositorio produce: los archivos publicados de cada estación (§17.3) y el contrato `POST /api/insight` (§21.1).
+Si una tarea es del frontend, dilo y no la implementes aquí. Este repositorio se creó con el historial completo de
+`UraqiVision`: los `#N` de los commits anteriores a su issue #1 apuntan a issues de ese repositorio.
 
 ## 1. Fuente de verdad
 
@@ -30,7 +37,7 @@ protegidas y territorios indígenas. Reto: NASA Space Apps 2026, *Dancing with t
 4. Distingue siempre **hecho verificado** (con fuente y fecha), **propuesta de diseño**, **hipótesis** y
    **pendiente**. Los pendientes (DP-01 a DP-08, §29) no se implementan hasta resolverse.
 5. Referencia los identificadores (RF, RNF, MC, RN, CQ, VC, PS) en el código, los commits y las tareas.
-6. Todo texto de interfaz va en **español e inglés** (RNF-03).
+6. Todo texto que se publique para la web (p. ej. en `station.json`) va en **español e inglés** (RNF-03).
 7. **Nunca** incluyas claves, tokens ni credenciales en código, commits, prompts o argumentos de
    herramientas (RNF-06). La clave del proveedor de IA vive solo en el servidor.
 8. Declara en la entrega dónde y cómo se usó IA.
@@ -51,9 +58,8 @@ protegidas y territorios indígenas. Reto: NASA Space Apps 2026, *Dancing with t
 
 - Pipeline: Python (asf_search, earthaccess, openSEPPO/GDAL ≥ 3.13, h5py, NumPy, xarray, rioxarray, SciPy,
   GeoPandas, rasterio, pandas, Matplotlib), pruebas con pytest.
-- Web: React + TypeScript + Vite, CesiumJS (sin token de Cesium ion), MapLibre GL JS, Recharts,
-  react-i18next (`es.json` y `en.json`), pruebas con Vitest y Playwright.
 - Insight: función serverless con adaptador de proveedor (Claude, configurable por variables de entorno).
+- Web (en `UraqiVision`): React + TypeScript + Vite, CesiumJS y MapLibre; solo consume los contratos.
 - Hospedaje: GitHub Pages o Vercel (**pendiente, DP-06**: no lo decidas tú).
 - **Entornos por rama** (decisión del equipo, 12 nov 2026):
 
@@ -64,8 +70,9 @@ protegidas y territorios indígenas. Reto: NASA Space Apps 2026, *Dancing with t
   | `dev` | Integración | Sin despliegue obligatorio |
 
   No existe una rama `master`. Cómo se configuran los dos despliegues depende de DP-06.
-- Módulos y responsables: M-INGESTA (Alex), M-CIENCIA (Tabata), M-VALIDACIÓN (Tabata), M-PUBLICACIÓN (Mimi),
-  M-INSIGHT (Mimi), M-GLOBO (Joaco), M-MAPA (Joaco), M-ATLAS (Angie y Marian), M-INTERFAZ (Angie y Marian).
+- Módulos de este repositorio: M-INGESTA (Alex), M-CIENCIA (Tabata), M-VALIDACIÓN (Tabata), M-PUBLICACIÓN
+  (Mimi) y M-INSIGHT (Mimi). En `UraqiVision`: M-GLOBO (Joaco), M-MAPA (Joaco), M-ATLAS y M-INTERFAZ (Angie y
+  Marian).
 
 ## 6. Forma de trabajar
 
@@ -138,18 +145,16 @@ Todo se define una sola vez y se genera para cada plataforma con `node ai/sync.m
 **Coordinador**: la skill `vibecodear` actúa como Engineering Manager: diagnostica, elige roles y reparte el
 trabajo entre las skills y subagentes de cada rol (tabla en `.agents/skills/vibecodear/references/roles.md`).
 
-Skills por rol (44; detalle en `ai/README.md`):
+Skills por rol (31; detalle en `ai/README.md`). Las de la web (globo, mapa, interfaz, accesibilidad, atlas y
+descargas) están en `UraqiVision`.
 
 | Rol | Skills |
 |---|---|
 | Proyecto y SDD | `documento-maestro`, `sdd-uraqivision`, `flujo-issues-y-pr`, `entrega-hackathon`, `rigor-y-fuentes`, `vibecodear` |
 | Ingesta | `ingesta-nisar-asf`, `python-geoespacial` |
 | Ciencia y validación | `ciencia-radar-nisar`, `python-geoespacial`, `validacion-optica-firms`, `notebook-reproducible` |
-| Publicación | `publicacion-estacion`, `descargas-y-exportacion` |
-| Contenidos | `fichas-atlas`, `metodo-y-creditos`, `rigor-y-fuentes` |
-| Frontend | `globo-y-mapa`, `react-component-architecture`, `react-components-and-state`, `frontend-data-fetching`, `typed-api-integration`, `vite-bundle-optimization`, `frontend-testing` |
+| Publicación | `publicacion-estacion` |
 | Insight | `insight-lector-radar` |
-| UX | `interfaz-bilingue-accesible`, `design-system-tokens`, `responsive-visual-testing` |
 | QA | `qa-project-discovery`, `qa-test-strategy`, `qa-test-design`, `qa-automation`, `qa-regression-analysis`, `qa-quality-gates`, `qa-test-reporting`, `qa-defect-analysis`, `qa-security-testing`, `test-driven-development`, `systematic-debugging`, `verification-before-completion` |
 | DevSecOps | `devops-secrets-management`, `devops-dependency-security`, `devops-git-workflow`, `devops-release-readiness`, `devops-free-tier-audit`, `devops-supervised-execution` |
 
