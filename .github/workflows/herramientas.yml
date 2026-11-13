@@ -1,0 +1,56 @@
+# Herramientas de IA (skills, subagentes, servidores MCP, hooks, guardas, workflows, scripts y ayuda):
+# - En cada PR hacia dev, qa o main que cambie alguna: verifica que sigan funcionando y activas (ayuda y
+#   configuración generadas al día, scripts sin errores, guardas que responden, MCP propios que arrancan y pruebas) y
+#   que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones
+#   pendientes señaladas, frontmatter y MCP válidos). Resume el resultado en la PR y falla si algo no cumple.
+# - Al fusionarse en dev: avisa a los demás colaboradores con un comentario nuevo que los menciona (GitHub les
+#   notifica) y les dice qué cambió y qué hacer. Lógica en ai/scripts/herramientas.mjs.
+name: Herramientas de IA
+
+on:
+  pull_request:
+    branches: [dev, qa, main]
+    types: [opened, synchronize, reopened, ready_for_review, closed]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  verificar:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verificar y revisar la coherencia
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: node ai/scripts/herramientas.mjs revisar-pr --pr "$PR_NUMBER" --base "origin/$BASE_REF"
+
+  avisar:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Avisar a los colaboradores
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node ai/scripts/herramientas.mjs notificar --pr "$PR_NUMBER"
