@@ -3,7 +3,6 @@ name: auditor-publicacion
 description: Auditor de la carpeta publicada de una estación de UraqiVision (M-PUBLICACIÓN). Verifica que estén todos los archivos de §17.3, que manifest.json y quality.json sean coherentes, que los COG sean sin pérdida, que las vistas pesen menos de 40 MB, que los textos estén en español e inglés y que ninguna métrica ausente aparezca como cero. No modifica archivos. Usar antes de publicar o desplegar una estación.
 skills:
   - publicacion-estacion
-  - descargas-y-exportacion
   - verification-before-completion
 color: blue
 ---

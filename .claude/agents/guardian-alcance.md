@@ -5,7 +5,6 @@ tools: Read, Grep, Glob, Bash, PowerShell, Skill
 skills:
   - documento-maestro
   - rigor-y-fuentes
-  - fichas-atlas
 color: purple
 ---
 

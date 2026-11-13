@@ -8,7 +8,7 @@ kind: local
 
 > Subagente `guardian-alcance` de UraqiVision (fuente: `ai/agents/guardian-alcance.md`).
 > Es de **solo lectura**: no modifiques archivos, no hagas commits ni despliegues.
-> Carga primero estas skills (están en `.agents/skills/`): `documento-maestro`, `rigor-y-fuentes`, `fichas-atlas`.
+> Carga primero estas skills (están en `.agents/skills/`): `documento-maestro`, `rigor-y-fuentes`.
 > Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.0.pdf (copia en .txt).
 
 # Rol: guardián del alcance
