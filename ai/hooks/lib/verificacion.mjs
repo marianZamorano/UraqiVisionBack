@@ -5,6 +5,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn, spawnSync, execFileSync } from 'node:child_process';
 import { cargarDocumento, coherencia, revisable } from './herramientas.mjs';
+import { cargarCatalogo, validarCatalogo, leerDocumento, CATALOGO } from './referencias.mjs';
+import { cargarEquipo } from './equipo.mjs';
 
 const node = (root, args, opts = {}) => spawnSync(process.execPath, args, { cwd: root, encoding: 'utf8', timeout: 60000, ...opts });
 const listar = (root, rel, re) => (fs.existsSync(path.join(root, rel)) ? fs.readdirSync(path.join(root, rel)).filter((f) => re.test(f)).map((f) => `${rel}/${f}`) : []);
@@ -198,6 +200,14 @@ export function mcpAprobadosClaude(root) {
   return resultado('mcp-claude', !faltan.length, faltan.length ? `servidores sin aprobar o desactivados en Claude Code: ${faltan.join(', ')}` : 'servidores MCP del proyecto aprobados en Claude Code', 'aviso');
 }
 
+/** El catálogo de referencias coincide con §31 del documento maestro. */
+export function referenciasCoherentes(root) {
+  const catalogo = cargarCatalogo(root);
+  if (!catalogo.length) return resultado('referencias', false, `no hay catálogo de referencias (${CATALOGO})`);
+  const errores = validarCatalogo(catalogo, leerDocumento(root), { modulos: cargarEquipo(root).modulos.map((m) => m.id) });
+  return resultado('referencias', !errores.length, errores.length ? errores.slice(0, 4).join(' | ') : `${catalogo.length} referencias de §31 en el catálogo, con sus enlaces`);
+}
+
 /** Node 20 o superior (hooks, sync y servidores MCP propios). */
 export function nodeVersion() {
   const mayor = Number(process.versions.node.split('.')[0]);
@@ -226,7 +236,7 @@ export async function verificar(root, { rapido = false, ci = false, conPruebas =
   r.push(...hooksDeGitCompletos(root).filter((x) => !(ci && x.id === 'commitlint')));
   r.push(hooksDeAsistentes(root), skillsActivas(root), specKitActivo(root), subagentesActivos(root));
   if (!ci) r.push(mcpAprobadosClaude(root));
-  r.push(configuracionAlDia(root), guardasResponden(root), coherenciaTotal(root));
+  r.push(configuracionAlDia(root), guardasResponden(root), coherenciaTotal(root), referenciasCoherentes(root));
   if (!rapido) r.push(sintaxis(root), await servidoresMcp(root));
   if (!rapido && !ci) r.push(pythonDisponible(root), sesionGh(root));
   if (conPruebas) r.push(pruebas(root));

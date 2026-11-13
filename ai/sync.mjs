@@ -8,6 +8,7 @@
 //   ai/mcp/servers.json       servidores MCP
 //   ai/docs/README.plantilla.md  texto del ai/README.md (el resto del README se genera de las fuentes)
 //   sdd/*.md                  SDD por área (la tabla de orden de sdd/README.md se genera desde ellos)
+//   ai/referencias/catalogo.json  referencias de §31: genera su sección en cada skill y SDD que las usa
 //
 // Uso:
 //   node ai/sync.mjs           genera o actualiza los archivos de cada plataforma
@@ -20,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { parseFrontmatter } from './hooks/lib/frontmatter.mjs';
 import { generarReadme } from './docs/readme.mjs';
 import { cargarSdds, readmeConOrden } from './hooks/lib/sdd.mjs';
+import { cargarCatalogo, referenciasPara, bloqueReferencias, inyectarBloque } from './hooks/lib/referencias.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
@@ -71,9 +73,20 @@ function walk(dir, base = dir, out = []) {
   return out;
 }
 
+// Referencias de §31: cada skill recibe la sección generada con los enlaces que le aplican (la skill
+// referencias-documento, el catálogo completo). Se escribe en la fuente y en su copia para Claude Code.
+const catalogo = cargarCatalogo(ROOT);
+const conReferencias = (s, texto) => inyectarBloque(texto, bloqueReferencias(s === 'referencias-documento' ? catalogo : referenciasPara({ skills: [s] }, catalogo)));
+
 for (const s of skills) {
   for (const f of walk(path.join(skillsDir, s))) {
-    outputs.set(rel('.claude', 'skills', s, f), fs.readFileSync(path.join(skillsDir, s, f), 'utf8'));
+    let contenido = fs.readFileSync(path.join(skillsDir, s, f), 'utf8');
+    if (f === 'SKILL.md') {
+      const nuevo = conReferencias(s, contenido);
+      if (nuevo.replace(/\r\n/g, '\n') !== contenido.replace(/\r\n/g, '\n')) emit(path.join('.agents', 'skills', s, f), nuevo);
+      contenido = nuevo;
+    }
+    outputs.set(rel('.claude', 'skills', s, f), contenido);
   }
   emit(path.join('.claude', 'skills', s, MARKER), `${GEN}\nFuente: .agents/skills/${s}/`);
 }
@@ -324,6 +337,19 @@ export const UraqiGuardas = async ({ directory }) => ({
 // ------------------------------------------------------------------ sdd/README.md (orden de los prompts)
 
 // La tabla del orden global de prompts se genera desde los SDD de sdd/*.md; el resto del README se escribe a mano.
+// Cada SDD recibe, dentro de «6. Herramientas del repositorio», las referencias de §31 de su área.
+for (const s of cargarSdds(ROOT)) {
+  if (!s.meta) continue;
+  const abs = rel(s.archivo);
+  const texto = fs.readFileSync(abs, 'utf8');
+  const refs = s.meta.tipo === 'modulo'
+    ? referenciasPara({ modulos: [s.meta.id] }, catalogo)
+    // Identificadores del SDD sin contar la sección generada (si no, sus propios «Aplica a» arrastrarían más).
+    : referenciasPara({ ids: [...new Set(inyectarBloque(texto, '').match(/\b(?:RF|RNF|MC|RN|CQ|VC|PS)-\d{2,3}\b/g) ?? [])] }, catalogo);
+  const nuevo = inyectarBloque(texto, bloqueReferencias(refs, { encabezado: '**Referencias del documento maestro (§31)**' }), { antesDe: '## 7. Riesgos y pendientes' });
+  if (nuevo.replace(/\r\n/g, '\n') !== texto.replace(/\r\n/g, '\n')) emit(s.archivo, nuevo);
+}
+
 if (fs.existsSync(rel('sdd', 'README.md'))) {
   const readme = fs.readFileSync(rel('sdd', 'README.md'), 'utf8').replace(/\r\n/g, '\n');
   const nuevo = readmeConOrden(readme, cargarSdds(ROOT));

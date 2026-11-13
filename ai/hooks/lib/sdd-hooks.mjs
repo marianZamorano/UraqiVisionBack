@@ -9,6 +9,7 @@ import {
   cargarSdds, todosLosPrompts, leerHistorial, estados, siguiente, leerEnCurso, guardarEnCurso, idEnMensaje, difiere,
 } from './sdd.mjs';
 import { cargarEquipo, leerIdentidad, identidadVigente, textoPedirIdentidad } from './equipo.mjs';
+import { cargarCatalogo, referenciasPara, listaReferencias } from './referencias.mjs';
 
 const raizDe = (cwd) => execFileSync('git', ['rev-parse', '--show-toplevel'], { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
 
@@ -35,6 +36,9 @@ export function contextoDePromptSdd({ prompt, cwd, sesion }) {
     if (faltan.length) lineas.push(`⚠ Dependencias sin terminar: ${faltan.join(', ')}. Avísalo: ejecutarlo antes puede generar conflictos.`);
     if (s?.estado === 'hecho') lineas.push(`⚠ Ya se ejecutó (${s.hecho.fecha.slice(0, 16)}, ${s.hecho.colaborador}). Volver a ejecutarlo puede generar conflictos: confírmalo y registra el motivo.`);
     for (const c of s?.conflictos ?? []) lineas.push(`⚠ Conflicto: ${c}.`);
+    // Referencias de §31 del área y de los requisitos del prompt: para tenerlas en cuenta en la spec, el plan y el código.
+    const refs = referenciasPara({ ids: [...new Set(p.texto.match(/\b(?:RF|RNF|MC|RN|CQ|VC|PS)-\d{2,3}\b/g) ?? [])], modulos: [p.sdd] }, cargarCatalogo(root));
+    if (refs.length) lineas.push(`Referencias de §31 que aplican a este paso (tenlas en cuenta y cítalas en lo que produzca; skill referencias-documento):\n${listaReferencias(refs)}`);
     if (difiere(prompt, p.texto)) lineas.push('⚠ El texto pegado difiere del prompt registrado en el SDD: es una MODIFICACIÓN. Pregunta si se actualiza el SDD con la versión nueva (edita el bloque del prompt en su archivo) y registra la decisión «modificar» con el motivo.');
     lineas.push(
       'ANTES de ejecutarlo, confirma con la persona con una pregunta de OPCIÓN MÚLTIPLE (AskUserQuestion en Claude Code; lista numerada en otros asistentes): «Ejecutar tal cual (Recomendado)» · «Modificarlo antes de ejecutar» · «Posponer u omitir». Registra la respuesta:',

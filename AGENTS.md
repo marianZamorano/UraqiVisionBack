@@ -33,7 +33,9 @@ protegidas y territorios indígenas. Reto: NASA Space Apps 2026, *Dancing with t
 2. **Consulta al equipo** antes de cambiar arquitectura, tecnologías, formatos de archivo o el contrato de
    Insight. No reabras decisiones tomadas (p. ej. el globo con CesiumJS) salvo que el equipo lo pida.
 3. **No inventes** datos, cifras, fechas, fuentes, autores, DOI, endpoints ni resultados. Si falta
-   información, dilo. No asumas capacidades de NISAR u otros satélites sin documentación oficial.
+   información, dilo. No asumas capacidades de NISAR u otros satélites sin documentación oficial. Las referencias
+   del proyecto son las de §31: cada skill y SDD tiene su sección con los enlaces que le aplican (skill
+   `referencias-documento`, `npm run referencias:para -- <IDs>`); cítalas donde implementes lo que respaldan.
 4. Distingue siempre **hecho verificado** (con fuente y fecha), **propuesta de diseño**, **hipótesis** y
    **pendiente**. Los pendientes (DP-01 a DP-08, §29) no se implementan hasta resolverse.
 5. Referencia los identificadores (RF, RNF, MC, RN, CQ, VC, PS) en el código, los commits y las tareas.
@@ -176,7 +178,7 @@ descargas) están en `UraqiVision`.
 
 | Rol | Skills |
 |---|---|
-| Proyecto y SDD | `documento-maestro`, `sdd-uraqivision`, `sdd-prompts`, `flujo-issues-y-pr`, `entrega-hackathon`, `rigor-y-fuentes`, `vibecodear`, `microauditoria`, `ayuda` |
+| Proyecto y SDD | `documento-maestro`, `sdd-uraqivision`, `sdd-prompts`, `flujo-issues-y-pr`, `entrega-hackathon`, `rigor-y-fuentes`, `referencias-documento`, `vibecodear`, `microauditoria`, `ayuda` |
 | Ingesta | `ingesta-nisar-asf`, `python-geoespacial` |
 | Ciencia y validación | `ciencia-radar-nisar`, `python-geoespacial`, `validacion-optica-firms`, `notebook-reproducible` |
 | Publicación | `publicacion-estacion` |
