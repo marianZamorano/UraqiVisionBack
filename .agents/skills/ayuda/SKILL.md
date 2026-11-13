@@ -41,6 +41,7 @@ script. Por eso esta skill **no repite su contenido**: lo consulta. Lo que dice 
 | ¿Qué comandos npm hay? | Scripts npm |
 | ¿Cómo agrego una skill, un subagente, un MCP o un script? | Añadir algo |
 | ¿Qué módulos me tocan? ¿Por qué vibecodear pregunta quién soy? ¿Esto es de otra persona? | Equipo: quién eres y qué te corresponde (`npm run equipo:quien`, `npm run equipo:alcance -- <IDs>`) |
+| ¿Por qué no funciona una skill, un MCP, un hook o un subagente? ¿Cómo lo activo? | Cuando cambian las herramientas → Vigilancia en segundo plano y guía para activar (`npm run ai:activar`) |
 | ¿Funcionan y están activas las herramientas? ¿Qué cambió? ¿A quién se avisa? | Cuando cambian las herramientas: aviso, coherencia y verificación (`npm run ai:verificar`, `npm run ai:cambios`) |
 
 ## Reglas
