@@ -27,10 +27,10 @@ consume lo que este repositorio publica: los archivos de cada estación (§17.3)
 | Subagentes | 12 | `ai/agents/` |
 | Servidores MCP | 3 | `ai/mcp/servers.json` |
 | Hooks de los asistentes | 4 | `ai/hooks/*.mjs` |
-| Reglas de las guardas | 30 | `ai/hooks/lib/` |
+| Reglas de las guardas | 31 | `ai/hooks/lib/` |
 | Hooks de git | 6 | `.githooks/` |
-| Workflows de GitHub | 7 | `.github/workflows/` |
-| Scripts npm | 16 | `package.json` |
+| Workflows de GitHub | 8 | `.github/workflows/` |
+| Scripts npm | 18 | `package.json` |
 
 ## Instalación (primera vez)
 
@@ -122,6 +122,8 @@ node ai/scripts/issues-de-promocion.mjs dev qa   # lista "Refs #N" de una promoc
 # Herramientas de IA
 npm run ai:sync                     # regenera configuraciones y esta ayuda tras editar una fuente
 npm run ai:check                    # falla si algo quedó desactualizado
+npm run ai:verificar                # ¿funcionan y están activas todas las herramientas?
+npm run ai:cambios                  # qué herramientas cambian frente a origin/dev y si son coherentes
 npm run test:guardas                # pruebas de guardas, flujo y README
 node .agents/skills/microauditoria/scripts/evidencia.mjs --dias 7   # evidencia de los últimos cambios
 
@@ -264,10 +266,10 @@ Se ejecutan en cada sesión, mensaje o herramienta del asistente. Una sola lógi
 
 | Script | Qué hace | Claude Code | Codex CLI | Gemini CLI | opencode |
 |---|---|---|---|---|---|
-| `ai/hooks/post-edit.mjs` | Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a mano ai/README.md, que es generado. | PostToolUse (Write\|Edit\|MultiEdit) | PostToolUse (^apply_patch$) | AfterTool (write_file\|replace) | — |
+| `ai/hooks/post-edit.mjs` | Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow, script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes). | PostToolUse (Write\|Edit\|MultiEdit) | PostToolUse (^apply_patch$) | AfterTool (write_file\|replace) | — |
 | `ai/hooks/pre-tool.mjs` | Hook previo a cada herramienta (PreToolUse en Claude y Codex, BeforeTool en Gemini). Bloquea secretos, rutas protegidas, comandos destructivos y push o merge directo a main. | PreToolUse (Bash\|PowerShell\|Write\|Edit\|MultiEdit\|NotebookEdit\|Read) | PreToolUse (^(Bash\|apply_patch)$) | BeforeTool (run_shell_command\|write_file\|replace\|read_file) | plugin: tool.execute.before |
 | `ai/hooks/prompt-guard.mjs` | Hook del mensaje del usuario (UserPromptSubmit en Claude y Codex, BeforeAgent en Gemini). 1) Si el mensaje contiene un secreto, no se envía al modelo. 2) Cada 10 minutos como máximo, revisa en GitHub si hay PR nuevas que esperan la aprobación de la persona y, si hay novedades, se las indica al asistente para que avise (sin red o sin gh, no hace nada). | UserPromptSubmit | UserPromptSubmit | BeforeAgent | plugin: chat.message |
-| `ai/hooks/session-context.mjs` | Hook de inicio de sesión: recuerda al agente la fuente de verdad y las reglas clave, y avisa de las PR que esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). Nunca bloquea. | SessionStart | SessionStart | SessionStart | — |
+| `ai/hooks/session-context.mjs` | Hook de inicio de sesión: recuerda al agente la fuente de verdad y las reglas clave, y avisa de las PR que esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). También avisa de las herramientas de IA que cambiaron desde la última sesión (con la ayuda regenerada si hacía falta y la coherencia con el documento maestro) y de cualquier herramienta que haya dejado de funcionar o de estar activa. Nunca bloquea. | SessionStart | SessionStart | SessionStart | — |
 
 ### Guardas
 
@@ -276,7 +278,7 @@ Reglas que bloquean (o avisan) antes de que el asistente actúe. Los mensajes ll
 
 | Regla | Qué bloquea o avisa | Dónde |
 |---|---|---|
-| `ayuda-desactualizada` | Commit bloqueado: ai/README.md (la ayuda) o la configuración generada no están al día con las fuentes. | `ai/hooks/git-pre-commit.mjs` |
+| `ayuda-desactualizada` | Commit bloqueado: no se pudo regenerar ai/README.md (la ayuda) ni la configuración generada. | `ai/hooks/git-pre-commit.mjs` |
 | `borrar-rama` | Borrar ramas está prohibido: son parte de la trazabilidad entre issues, commits y PR. Solo una persona puede decidirlo, si la rama crea confusión o su código ya no sirve | `ai/hooks/lib/guard.mjs` |
 | `commit-en-main` | No se commitea directamente en … | `ai/hooks/git-pre-commit.mjs` |
 | `commit-grande` | Este commit mezcla varios temas. | `ai/hooks/git-commit-msg.mjs` |
@@ -288,6 +290,7 @@ Reglas que bloquean (o avisan) antes de que el asistente actúe. Los mensajes ll
 | `git-destructive` | Descarta trabajo sin confirmar o reescribe el historial | `ai/hooks/lib/guard.mjs` |
 | `git-force-push` | Push forzado: reescribe el historial compartido | `ai/hooks/lib/guard.mjs` |
 | `git-no-verify` | Salta los hooks de git (escaneo de secretos) | `ai/hooks/lib/guard.mjs` |
+| `incoherente-con-documento` | Commit bloqueado: las herramientas de IA del commit no son coherentes con el documento maestro. | `ai/hooks/git-pre-commit.mjs` |
 | `merge-into-protected` | Merge local en …: los merges a dev, qa y main se hacen en GitHub al aprobar la PR (skill flujo-issues-y-pr). | `ai/hooks/lib/guard.mjs` |
 | `post-edit` | Revisa antes de seguir: | `ai/hooks/post-edit.mjs` |
 | `pr-aprobar-directo` | Aprobar una PR solo con `npm run pr:aprobar -- <N>`, que muestra el resumen y pide confirmación | `ai/hooks/lib/guard.mjs` |
@@ -316,9 +319,9 @@ Se activan con `npm run hooks:activar` y corren en tu máquina en cada commit, p
 | Hook | Qué hace | Script |
 |---|---|---|
 | `commit-msg` | trazabilidad commit → issue. - BLOQUEA si el mensaje no cita su issue (#12, GH-12 o la URL del issue). Exentos: merges, reverts, fixup!/squash!/amend!. En ramas tipo/N-descripcion, prepare-commit-msg ya agregó "Refs #N". - AVISA si no cita un identificador del documento maestro (§1, §28) o si trae Co-Authored-By de IA. - Commits grandes (varios temas mezclados): muestra la división propuesta y termina con código 3 para que el wrapper .githooks/commit-msg PREGUNTE en la terminal. Sin terminal (agentes, IDE) bloquea y pide preguntar. Se acepta un solo commit con URAQI_UN_COMMIT=1 o con la línea "Commit-grande: aprobado" en el mensaje. | `ai/hooks/git-commit-msg.mjs` |
-| `post-checkout` | 1) Toda rama nueva se sube: si la rama actual no tiene upstream, hace `git push -u origin <rama>` (o solo enlaza el upstream si la rama ya existe en origin). No actúa en dev, qa, main ni con HEAD desacoplado. 2) Variables de entorno: si .env.example cambió entre los dos commits, agrega al .env local las claves nuevas vacías y avisa qué valores pedir al equipo (ver ai/scripts/entorno.mjs). Nunca bloquea: si no hay red, avisa para subir la rama después. URAQI_SIN_PUSH=1 desactiva el push. | `ai/hooks/git-post-checkout.mjs` |
-| `post-merge` | si cambió .env.example, agrega al .env local las claves nuevas vacías y avisa qué valores pedir al equipo. Nunca bloquea ni muestra valores. | `ai/hooks/git-post-merge.mjs` |
-| `pre-commit` | impide versionar archivos con secretos o líneas con claves. También impide commitear directamente en dev, qa o main: el trabajo va en una rama tipo/N-descripcion y llega a esas ramas por PR. Variables de entorno: solo se versionan las plantillas permitidas (.env.example y las declaradas), sin valores sensibles; no puede haber archivos .env* no permitidos; .env y .env.example deben tener la misma estructura; y si el commit cambia la estructura de una plantilla, hay una PAUSA obligatoria para comunicarlo al equipo (el .env se copia a Descargas). Tras comunicarlo: URAQI_ENV_COMUNICADO=1 git commit … Ayuda al día: si el commit toca una fuente de las herramientas, ai/README.md y la configuración generada deben estar regenerados (npm run ai:sync) y agregados al commit. | `ai/hooks/git-pre-commit.mjs` |
+| `post-checkout` | 1) Toda rama nueva se sube: si la rama actual no tiene upstream, hace `git push -u origin <rama>` (o solo enlaza el upstream si la rama ya existe en origin). No actúa en dev, qa, main ni con HEAD desacoplado. 2) Variables de entorno: si .env.example cambió entre los dos commits, agrega al .env local las claves nuevas vacías y avisa qué valores pedir al equipo (ver ai/scripts/entorno.mjs). 3) Herramientas de IA: si al cambiar de rama cambian skills, subagentes, MCP, hooks, workflows, scripts o la ayuda, avisa qué cambió, regenera la ayuda si hace falta y verifica que todo siga funcionando y activo. Nunca bloquea: si no hay red, avisa para subir la rama después. URAQI_SIN_PUSH=1 desactiva el push. | `ai/hooks/git-post-checkout.mjs` |
+| `post-merge` | Nunca bloquea ni muestra valores. 1) Si cambió .env.example, agrega al .env local las claves nuevas vacías y avisa qué valores pedir al equipo. 2) Si cambiaron herramientas de IA (skills, subagentes, MCP, hooks, workflows, scripts o la ayuda), avisa qué cambió, regenera la ayuda y la configuración si hace falta, revisa la coherencia con el documento maestro y verifica que todo siga funcionando y activo. | `ai/hooks/git-post-merge.mjs` |
+| `pre-commit` | impide versionar archivos con secretos o líneas con claves. También impide commitear directamente en dev, qa o main: el trabajo va en una rama tipo/N-descripcion y llega a esas ramas por PR. Variables de entorno: solo se versionan las plantillas permitidas (.env.example y las declaradas), sin valores sensibles; no puede haber archivos .env* no permitidos; .env y .env.example deben tener la misma estructura; y si el commit cambia la estructura de una plantilla, hay una PAUSA obligatoria para comunicarlo al equipo (el .env se copia a Descargas). Tras comunicarlo: URAQI_ENV_COMUNICADO=1 git commit … Ayuda al día: si el commit toca una fuente de las herramientas, ai/README.md y la configuración generada se regeneran solas; y las herramientas del commit deben ser coherentes con el documento maestro. | `ai/hooks/git-pre-commit.mjs` |
 | `pre-push` | nada llega a dev, qa ni main sin PR, todo commit que se sube cita su issue y no quedan archivos generados por ai/sync.mjs (incluida la ayuda ai/README.md) sin commitear. | `ai/hooks/git-pre-push.mjs` |
 | `prepare-commit-msg` | en ramas tipo/N-descripcion (feat/12-deslizador), agrega "Refs #N" al mensaje si todavía no cita ningún issue. Así cada commit queda enlazado a su issue sin escribirlo a mano. | `ai/hooks/git-prepare-commit-msg.mjs` |
 
@@ -333,6 +336,7 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | Buenas prácticas de PR | pull_request | Buenas prácticas de PR hacia dev, qa y main (reglas en ai/hooks/lib/buenas-practicas-pr.mjs): título (Conventional Commits o "Promoción dev → qa"), rama tipo/N que cierra su issue, descripción completa (salvo borrador), issues válidos, sin conflictos ni secretos, archivos generados al día y pruebas en verde. Pone etiquetas de tipo y tamaño, asigna al autor y comenta un resumen. Las ramas NUNCA se borran al fusionar: son parte de la trazabilidad. | `.github/workflows/buenas-practicas-pr.yml` |
 | Entorno | pull_request | Variables de entorno (ai/scripts/aviso-entorno.mjs): cuando una PR cambia la estructura de .env.example (o de un .env.<x>.example permitido), comenta mencionando a todos los colaboradores excepto el autor con las claves nuevas y eliminadas, sin valores. Falla si una plantilla trae valores en claves sensibles. | `.github/workflows/entorno.yml` |
 | Estado de issues | pull_request, workflow_dispatch | Estado de los issues según sus PR (reglas en ai/hooks/lib/estado-issues.mjs): PR hacia dev: borrador → "en progreso"; lista → "en revisión"; fusionada (aceptada) → "en dev" y se cierra; cerrada sin fusionar → se quitan "en progreso"/"en revisión". PR hacia qa o main: al abrirla se crea su issue de promoción; al fusionarla, SOLO con la aprobación completa (todos los colaboradores excepto el autor, sobre el último commit), los issues pasan a "en preproducción" o "en producción" y se cierra el issue de promoción. Sin aprobación completa no cambia ningún estado. Para aplicar a mano una PR ya fusionada: gh workflow run estado-issues.yml --ref dev -f pr=<N> | `.github/workflows/estado-issues.yml` |
+| Herramientas de IA | pull_request | Herramientas de IA (skills, subagentes, servidores MCP, hooks, guardas, workflows, scripts y ayuda): - En cada PR hacia dev, qa o main que cambie alguna: verifica que sigan funcionando y activas (ayuda y configuración generadas al día, scripts sin errores, guardas que responden, MCP propios que arrancan y pruebas) y que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes señaladas, frontmatter y MCP válidos). Resume el resultado en la PR y falla si algo no cumple. - Al fusionarse en dev: avisa a los demás colaboradores con un comentario nuevo que los menciona (GitHub les notifica) y les dice qué cambió y qué hacer. Lógica en ai/scripts/herramientas.mjs. | `.github/workflows/herramientas.yml` |
 | Issue a PR | issues | Al crear un issue de trabajo: rama tipo/N-titulo desde dev, PR en borrador hacia dev con "Closes #N", etiqueta "estado: en progreso" y comentario con los pasos (ai/scripts/issue-a-pr.mjs). Los eventos de issues corren con el workflow de la rama por defecto (main). Requiere en Settings → Actions → General: "Allow GitHub Actions to create and approve pull requests". | `.github/workflows/issue-a-pr.yml` |
 | Protección de issues | issues | Protección del estado de los issues (ai/scripts/proteger-issues.mjs). Revierte cambios manuales: - etiquetas "estado: …" puestas o quitadas a mano; - cerrar un issue de promoción sin que su PR se haya fusionado con la aprobación completa; - cerrar un issue con PR en curso (se cierra solo al aceptarla); - reabrir un issue cuya PR ya fue aceptada. Los eventos de issues corren con el workflow de la rama por defecto (main). Los cambios hechos por la automatización con GITHUB_TOKEN no disparan este workflow. | `.github/workflows/proteger-issues.yml` |
 | Trazabilidad | pull_request | Trazabilidad commit ↔ issue ↔ PR en TODA PR hacia dev, qa o main (sin excepciones). Falla si: 1. algún commit de la PR no cita su issue (#N, GH-N o la URL del issue); 2. algún issue citado por los commits no aparece en el título o la descripción de la PR (así cada issue enlaza todas las PR por las que pasó: → dev, dev → qa, qa → main); 3. una PR de trabajo hacia dev no cierra al menos un issue (Closes/Fixes/Resolves #N); las PR de promoción dev → qa y qa → main listan sus issues con "Refs #N"; 4. algún commit no cumple Conventional Commits (commitlint.config.mjs). Es el control que no depende de que cada persona tenga activados los hooks locales (.githooks). Lee el título y la descripción ACTUALES de la PR (no los del evento), así que tras corregir la descripción basta con volver a ejecutar la corrida. | `.github/workflows/trazabilidad.yml` |
@@ -351,7 +355,9 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | `npm run commits:dividir` | Muestra la división propuesta, pregunta y crea un commit por tema. | `node ai/scripts/dividir-commits.mjs --aplicar` |
 | `npm run ai:sync` | Genera la configuración de los cuatro asistentes y ai/README.md desde las fuentes. | `node ai/sync.mjs` |
 | `npm run ai:check` | Falla si la configuración generada o ai/README.md están desactualizados (no escribe nada). | `node ai/sync.mjs --check` |
-| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs` |
+| `npm run ai:verificar` | Verifica que las herramientas de IA funcionan y están activas: hooks, guardas, MCP, ayuda al día, coherencia con el documento maestro y pruebas. | `node ai/scripts/herramientas.mjs verificar --pruebas` |
+| `npm run ai:cambios` | Resume qué herramientas de IA cambian frente a origin/dev y si son coherentes con el documento maestro (-- --desde <ref> --hasta <ref>). | `node ai/scripts/herramientas.mjs cambios` |
+| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs` |
 | `npm run env:check` | Revisa los archivos .env y que .env y .env.example tengan la misma estructura (sin mostrar valores). | `node ai/scripts/entorno.mjs check` |
 | `npm run env:sync` | Crea o alinea tu .env con .env.example sin leer ni mostrar valores. | `node ai/scripts/entorno.mjs sync` |
 | `npm run env:compartir` | Copia tu .env a Descargas para compartirlo con el equipo por un canal seguro. | `node ai/scripts/entorno.mjs compartir` |
@@ -364,14 +370,44 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
   fuentes. Una skill, un subagente, un servidor MCP, un hook, un workflow o un script nuevos aparecen solos.
 - **Validada**: el sync falla si la plantilla cita un `npm run`, un `node ai/…` o una ruta que no existen, o si
   un script de `package.json` no tiene su descripción en `uraqi.scripts`.
-- **Hook pre-commit**: si el commit toca una fuente y la ayuda o los generados quedaron viejos, lo bloquea
-  (`[uraqi-guard:ayuda-desactualizada]`) y pide `npm run ai:sync`. Si ya están regenerados pero sin agregar,
-  avisa (así se pueden dividir los commits por tema).
+- **Regeneración automática**: al editar una fuente con un asistente (`ai/hooks/post-edit.mjs`), al commitear
+  (hook pre-commit) y tras un `git pull` o un cambio de rama (hooks post-merge y post-checkout), la ayuda y la
+  configuración se regeneran solas. El pre-commit solo bloquea (`[uraqi-guard:ayuda-desactualizada]`) si el
+  sync falla porque una fuente es inválida. Si lo regenerado queda sin agregar, avisa (así se pueden dividir los
+  commits por tema).
 - **Hook pre-push**: bloquea el push mientras queden archivos generados sin commitear.
-- **Hook de los asistentes tras editar** (`ai/hooks/post-edit.mjs`): avisa al asistente si edita este README a
-  mano, porque el siguiente sync lo pisa.
+- **Hook de los asistentes tras editar**: además avisa al asistente si edita este README a mano, porque el
+  siguiente sync lo pisa.
 - **CI**: el workflow Buenas prácticas de PR ejecuta `node ai/sync.mjs --check` en cada PR; las pruebas de
   `npm run test:guardas` comprueban el generador.
+
+## Cuando cambian las herramientas: aviso, coherencia y verificación
+
+Una herramienta de IA es cualquier skill, subagente, servidor MCP, hook, guarda, workflow, script, la plantilla
+de esta ayuda o `AGENTS.md`. Cuando una cambia:
+
+| Momento | Qué pasa |
+|---|---|
+| El asistente edita una herramienta | `ai/hooks/post-edit.mjs` regenera la ayuda y revisa la coherencia con el documento maestro en el momento. |
+| `git commit` | El pre-commit regenera la ayuda y **bloquea** (`[uraqi-guard:incoherente-con-documento]`) si una herramienta cita un identificador (RF, RNF, MC, RN, CQ, VC, PS, DP, CU, HU) o una sección (§N) que no existe en el documento, si el `name` de una skill o un subagente no coincide con su archivo o si un servidor MCP no declara `description` y `effects`. Avisa si se mencionan decisiones pendientes (§29). |
+| PR hacia `dev`, `qa` o `main` | El workflow Herramientas de IA verifica que todo funcione y la coherencia, lo resume en la PR y falla si algo no cumple. |
+| PR fusionada en `dev` | El mismo workflow comenta en la PR **mencionando a los demás colaboradores** (GitHub les notifica): qué cambió, si es coherente y qué hacer. |
+| `git pull` o cambio de rama | Los hooks post-merge y post-checkout avisan qué cambió, regeneran la ayuda si hace falta y verifican que todo siga activo. |
+| Inicio de sesión de un asistente | Avisa qué herramientas cambiaron desde la última sesión y cualquier cosa que haya dejado de funcionar. |
+
+`npm run ai:verificar` comprueba, en cualquier momento, que todo funciona y está activo:
+
+- hooks de git activos (`core.hooksPath`) y sus scripts presentes, con commitlint instalado;
+- hooks de Claude, Codex y Gemini apuntando a scripts que existen, y el plugin de opencode;
+- ayuda y configuración generadas al día;
+- guardas que responden: una prueba de humo bloquea un push forzado y deja pasar `git status`;
+- coherencia de todas las herramientas con el documento maestro;
+- scripts sin errores de sintaxis, servidores MCP propios que arrancan (handshake `initialize`) y servidores de npm
+  con versión fijada;
+- pruebas de `npm run test:guardas`.
+
+`npm run ai:cambios` muestra qué herramientas cambian en tu rama frente a `origin/dev` y si son coherentes, antes de
+abrir la PR.
 
 ## Añadir algo
 

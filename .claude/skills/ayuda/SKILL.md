@@ -13,6 +13,8 @@ script. Por eso esta skill **no repite su contenido**: lo consulta. Lo que dice 
 
 1. **Comprueba que la ayuda está al día**: `node ai/sync.mjs --check`. Si falla, dilo («la ayuda está
    desactualizada») y ofrece ejecutar `npm run ai:sync`. Hasta entonces, las fuentes mandan sobre el README.
+   Normalmente se regenera sola (al editar una herramienta, al commitear y tras un pull). Si preguntan si algo
+   funciona o está activo, ejecuta `npm run ai:verificar` y responde con su resultado, sin suponerlo.
 2. **Busca la sección**: `npm run ayuda` da el índice y `npm run ayuda -- <tema>` muestra las secciones de un
    tema (sin acentos: `instalacion`, `funciona`, `ejemplos`, `skills`, `sdd`, `subagentes`, `mcp`, `hooks`,
    `guardas`, `git`, `github`, `scripts`, `anadir`). También puedes leer `ai/README.md` por sus títulos `##`.
@@ -38,6 +40,7 @@ script. Por eso esta skill **no repite su contenido**: lo consulta. Lo que dice 
 | ¿Qué hace un workflow o por qué falló un check? | Automatización en GitHub |
 | ¿Qué comandos npm hay? | Scripts npm |
 | ¿Cómo agrego una skill, un subagente, un MCP o un script? | Añadir algo |
+| ¿Funcionan y están activas las herramientas? ¿Qué cambió? ¿A quién se avisa? | Cuando cambian las herramientas: aviso, coherencia y verificación (`npm run ai:verificar`, `npm run ai:cambios`) |
 
 ## Reglas
 

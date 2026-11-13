@@ -110,6 +110,8 @@ node ai/scripts/issues-de-promocion.mjs dev qa   # lista "Refs #N" de una promoc
 # Herramientas de IA
 npm run ai:sync                     # regenera configuraciones y esta ayuda tras editar una fuente
 npm run ai:check                    # falla si algo quedó desactualizado
+npm run ai:verificar                # ¿funcionan y están activas todas las herramientas?
+npm run ai:cambios                  # qué herramientas cambian frente a origin/dev y si son coherentes
 npm run test:guardas                # pruebas de guardas, flujo y README
 node .agents/skills/microauditoria/scripts/evidencia.mjs --dias 7   # evidencia de los últimos cambios
 
@@ -218,14 +220,44 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
   fuentes. Una skill, un subagente, un servidor MCP, un hook, un workflow o un script nuevos aparecen solos.
 - **Validada**: el sync falla si la plantilla cita un `npm run`, un `node ai/…` o una ruta que no existen, o si
   un script de `package.json` no tiene su descripción en `uraqi.scripts`.
-- **Hook pre-commit**: si el commit toca una fuente y la ayuda o los generados quedaron viejos, lo bloquea
-  (`[uraqi-guard:ayuda-desactualizada]`) y pide `npm run ai:sync`. Si ya están regenerados pero sin agregar,
-  avisa (así se pueden dividir los commits por tema).
+- **Regeneración automática**: al editar una fuente con un asistente (`ai/hooks/post-edit.mjs`), al commitear
+  (hook pre-commit) y tras un `git pull` o un cambio de rama (hooks post-merge y post-checkout), la ayuda y la
+  configuración se regeneran solas. El pre-commit solo bloquea (`[uraqi-guard:ayuda-desactualizada]`) si el
+  sync falla porque una fuente es inválida. Si lo regenerado queda sin agregar, avisa (así se pueden dividir los
+  commits por tema).
 - **Hook pre-push**: bloquea el push mientras queden archivos generados sin commitear.
-- **Hook de los asistentes tras editar** (`ai/hooks/post-edit.mjs`): avisa al asistente si edita este README a
-  mano, porque el siguiente sync lo pisa.
+- **Hook de los asistentes tras editar**: además avisa al asistente si edita este README a mano, porque el
+  siguiente sync lo pisa.
 - **CI**: el workflow Buenas prácticas de PR ejecuta `node ai/sync.mjs --check` en cada PR; las pruebas de
   `npm run test:guardas` comprueban el generador.
+
+## Cuando cambian las herramientas: aviso, coherencia y verificación
+
+Una herramienta de IA es cualquier skill, subagente, servidor MCP, hook, guarda, workflow, script, la plantilla
+de esta ayuda o `AGENTS.md`. Cuando una cambia:
+
+| Momento | Qué pasa |
+|---|---|
+| El asistente edita una herramienta | `ai/hooks/post-edit.mjs` regenera la ayuda y revisa la coherencia con el documento maestro en el momento. |
+| `git commit` | El pre-commit regenera la ayuda y **bloquea** (`[uraqi-guard:incoherente-con-documento]`) si una herramienta cita un identificador (RF, RNF, MC, RN, CQ, VC, PS, DP, CU, HU) o una sección (§N) que no existe en el documento, si el `name` de una skill o un subagente no coincide con su archivo o si un servidor MCP no declara `description` y `effects`. Avisa si se mencionan decisiones pendientes (§29). |
+| PR hacia `dev`, `qa` o `main` | El workflow Herramientas de IA verifica que todo funcione y la coherencia, lo resume en la PR y falla si algo no cumple. |
+| PR fusionada en `dev` | El mismo workflow comenta en la PR **mencionando a los demás colaboradores** (GitHub les notifica): qué cambió, si es coherente y qué hacer. |
+| `git pull` o cambio de rama | Los hooks post-merge y post-checkout avisan qué cambió, regeneran la ayuda si hace falta y verifican que todo siga activo. |
+| Inicio de sesión de un asistente | Avisa qué herramientas cambiaron desde la última sesión y cualquier cosa que haya dejado de funcionar. |
+
+`npm run ai:verificar` comprueba, en cualquier momento, que todo funciona y está activo:
+
+- hooks de git activos (`core.hooksPath`) y sus scripts presentes, con commitlint instalado;
+- hooks de Claude, Codex y Gemini apuntando a scripts que existen, y el plugin de opencode;
+- ayuda y configuración generadas al día;
+- guardas que responden: una prueba de humo bloquea un push forzado y deja pasar `git status`;
+- coherencia de todas las herramientas con el documento maestro;
+- scripts sin errores de sintaxis, servidores MCP propios que arrancan (handshake `initialize`) y servidores de npm
+  con versión fijada;
+- pruebas de `npm run test:guardas`.
+
+`npm run ai:cambios` muestra qué herramientas cambian en tu rama frente a `origin/dev` y si son coherentes, antes de
+abrir la PR.
 
 ## Añadir algo
 
