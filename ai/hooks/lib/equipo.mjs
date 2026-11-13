@@ -292,7 +292,7 @@ export function lineaDeSesion(cwd) {
 export function textoPedirIdentidad({ modulos, repoModulos }) {
   const { opciones: ops, otros } = opciones(modulos, repoModulos);
   return [
-    'vibecodear necesita saber primero qué colaborador es la persona (§19), para no desarrollar algo que no le corresponde.',
+    'Hace falta saber primero qué colaborador es la persona (§19), para no desarrollar algo que no le corresponde.',
     'Pregúntaselo con una pregunta de OPCIÓN MÚLTIPLE (en Claude Code, la herramienta AskUserQuestion; en otros asistentes, una lista numerada) «¿Qué colaborador eres?» con estas opciones:',
     ...ops.map((o, i) => `  ${i + 1}. ${o.nombre} — ${o.descripcion}`),
     otros.length ? `  (otra persona del equipo, respuesta libre: ${otros.join(', ')})` : '',
