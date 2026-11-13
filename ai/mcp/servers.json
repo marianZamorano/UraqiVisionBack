@@ -1,13 +1,8 @@
 {
   "$comment": "Fuente única de los servidores MCP de UraqiVision. Tras editar, ejecuta `node ai/sync.mjs` para generar .mcp.json, .gemini/settings.json, .codex/config.toml y opencode.json. Las versiones se fijan en ai/mcp/launch.mjs.",
   "servers": {
-    "playwright": {
-      "description": "Navegador automatizado para PS-07, PS-08 y PS-09. Solo contra localhost salvo aprobación explícita.",
-      "launch": "playwright",
-      "effects": true
-    },
     "context7": {
-      "description": "Documentación vigente de librerías (CesiumJS, MapLibre GL JS, react-i18next, rasterio, xarray...) para no inventar APIs. Solo lectura. CONTEXT7_API_KEY es opcional (sube el límite de uso).",
+      "description": "Documentación vigente de librerías (rasterio, xarray, GDAL, asf_search, earthaccess, GeoPandas...) para no inventar APIs. Solo lectura. CONTEXT7_API_KEY es opcional (sube el límite de uso).",
       "launch": "context7",
       "effects": false,
       "optionalEnv": ["CONTEXT7_API_KEY"]

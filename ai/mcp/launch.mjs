@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 // Lanzador multiplataforma de los servidores MCP (Claude Code, Gemini CLI, Codex CLI y opencode).
-//   node ai/mcp/launch.mjs playwright
 //   node ai/mcp/launch.mjs context7
 // - Ejecuta npx con el Node actual y sin shell: en Windows evita npx.cmd y problemas de comillas.
 // - Versiones fijadas: actualizar aquí solo tras revisar el changelog del paquete.
@@ -11,7 +10,6 @@ import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 const SERVERS = {
-  playwright: { pkg: '@playwright/mcp@0.0.83', args: () => [] },
   context7: { pkg: '@upstash/context7-mcp@4.4.4', args: () => [] },
 };
 
