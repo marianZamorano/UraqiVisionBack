@@ -114,6 +114,11 @@ npm run ai:verificar                # ¿funcionan y están activas todas las her
 npm run ai:cambios                  # qué herramientas cambian frente a origin/dev y si son coherentes
 npm run codigo:revisar              # código roto, muerto o desconectado + CI/CD por rama, con plan
 npm run codigo:cicd                 # solo el estado del CI/CD de dev, qa y main
+
+# Equipo (§19): quién eres y qué te corresponde
+npm run equipo:modulos              # módulos, responsables, apoyo y revisores
+npm run equipo:soy -- Marian        # registra quién eres en este clon (vibecodear lo pregunta)
+npm run equipo:alcance -- RF-05     # ¿es tuyo o apoyas el rol de otra persona?
 uv run --with pypdf python ai/scripts/extraer_documento.py   # regenera la copia .txt del documento maestro
 npm run test:guardas                # pruebas de guardas, flujo y README
 node .agents/skills/microauditoria/scripts/evidencia.mjs --dias 7   # evidencia de los últimos cambios
@@ -261,6 +266,21 @@ de esta ayuda o `AGENTS.md`. Cuando una cambia:
 
 `npm run ai:cambios` muestra qué herramientas cambian en tu rama frente a `origin/dev` y si son coherentes, antes de
 abrir la PR.
+
+## Equipo: quién eres y qué te corresponde (§19)
+
+Cada módulo tiene un responsable, a veces apoyo, y un revisor (§19 del documento maestro; se lee de la copia
+en texto, no se escribe a mano). Los módulos de este repositorio están en `package.json` → `uraqi.modulos`.
+
+- **vibecodear empieza preguntando «¿Qué colaborador eres?»** con opción múltiple: las personas con rol en este
+  repositorio y la descripción de sus módulos (`node ai/scripts/equipo.mjs opciones --json`). La respuesta se
+  registra solo en el clon (`.git/uraqi-colaborador.json`, nunca se versiona) y vale para esa sesión.
+- **Guarda** `[uraqi-guard:colaborador-sin-identificar]`: no deja cargar vibecodear mientras nadie se haya
+  identificado en la sesión. El hook del mensaje lo recuerda si se pide vibecodear.
+- **Apoyo a otro rol**: si el objetivo, lo editado o un commit citan requisitos del módulo de otra persona,
+  vibecodear, el hook tras editar y el hook commit-msg **avisan** («vas a apoyar el rol de <responsable>»), para
+  que se le avise y se anote en el issue y la PR. Si el módulo vive en el otro repositorio, se deriva.
+- El inicio de sesión muestra quién se registró por última vez en el clon.
 
 ## Revisor de código vivo y CI/CD
 
