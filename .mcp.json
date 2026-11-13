@@ -1,12 +1,5 @@
 {
   "mcpServers": {
-    "playwright": {
-      "command": "node",
-      "args": [
-        "ai/mcp/launch.mjs",
-        "playwright"
-      ]
-    },
     "context7": {
       "command": "node",
       "args": [

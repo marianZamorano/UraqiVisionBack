@@ -4,7 +4,6 @@ description: Guardián del alcance y la trazabilidad de UraqiVision. Revisa un p
 skills:
   - documento-maestro
   - rigor-y-fuentes
-  - fichas-atlas
 color: purple
 ---
 

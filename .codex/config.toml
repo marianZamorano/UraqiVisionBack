@@ -2,14 +2,8 @@
 # Codex se lanza desde la raíz del repositorio. La capa .codex/ del proyecto (hooks incluidos) solo se carga
 # si confías en el proyecto; revisa y confía los hooks con /hooks.
 
-[mcp_servers.playwright]
-# Navegador automatizado para PS-07, PS-08 y PS-09. Solo contra localhost salvo aprobación explícita.
-command = "node"
-args = ["ai/mcp/launch.mjs","playwright"]
-default_tools_approval_mode = "prompt"
-
 [mcp_servers.context7]
-# Documentación vigente de librerías (CesiumJS, MapLibre GL JS, react-i18next, rasterio, xarray...) para no inventar APIs. Solo lectura. CONTEXT7_API_KEY es opcional (sube el límite de uso).
+# Documentación vigente de librerías (rasterio, xarray, GDAL, asf_search, earthaccess, GeoPandas...) para no inventar APIs. Solo lectura. CONTEXT7_API_KEY es opcional (sube el límite de uso).
 command = "node"
 args = ["ai/mcp/launch.mjs","context7"]
 env_vars = ["CONTEXT7_API_KEY"]

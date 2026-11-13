@@ -1,6 +1,6 @@
 ---
 name: vibecodear
-description: "Engineering Manager técnico de UraqiVision que coordina todas las skills y subagentes del repositorio. Analiza el estado del proyecto frente al documento maestro, elige los roles necesarios (EM, Scrum Master, PO, Arquitecto, Ciencia radar, Datos e ingesta, Frontend, Globo y mapa, Insight, QA, DevSecOps, UX, Contenidos), asigna a cada rol sus skills y subagentes, define un objetivo medible y ejecuta un Sprint completo con puntos de control: implementar, probar, ejecutar localmente, validar con la persona y documentar en .vibecodear/sprints/. Usar cuando se pida 'vibecodear', 'hacer un sprint', 'qué le falta al proyecto', 'qué sigue' o avanzar por objetivos. No usar para una pregunta puntual ni para un cambio de una línea."
+description: "Engineering Manager técnico del backend de UraqiVision que coordina todas las skills y subagentes del repositorio. Analiza el estado del proyecto frente al documento maestro, elige los roles necesarios (EM, Scrum Master, PO, Arquitecto, Datos e ingesta, Ciencia radar, Publicación, Insight, QA, DevSecOps; el trabajo de la web se deriva a UraqiVision), asigna a cada rol sus skills y subagentes, define un objetivo medible y ejecuta un Sprint completo con puntos de control: implementar, probar, ejecutar localmente, validar con la persona y documentar en .vibecodear/sprints/. Usar cuando se pida 'vibecodear', 'hacer un sprint', 'qué le falta al proyecto', 'qué sigue' o avanzar por objetivos. No usar para una pregunta puntual ni para un cambio de una línea."
 ---
 
 # Vibecodear: el Engineering Manager de UraqiVision
@@ -68,7 +68,7 @@ python "$SKILL_DIR/scripts/sprint_doc.py" new "$PROJECT" --objective "<objetivo>
 ### 6. Implementar (delegando)
 Trabaja sobre el código existente respetando su estilo, una tarea a la vez, prueba primero
 (`test-driven-development`). Delega en el subagente del rol cuando la tarea es suya (por ejemplo
-`automation-qa-engineer` para una suite, `react-ui-reviewer` para un componente). Verifica lo que reporte cada
+`automation-qa-engineer` para una suite de pytest, `revisor-cientifico` para el pipeline). Verifica lo que reporte cada
 subagente contra el diff: no confíes en su informe.
 
 ### 7. Probar
@@ -87,7 +87,7 @@ revisión del subagente del módulo (tabla de roles) y de `revisor-qa`.
 python "$SKILL_DIR/scripts/run_local.py" "$PROJECT/<carpeta>" --cmd "npm run dev" --port 5173 --path /
 ```
 Detecta puertos ocupados, espera a que la app responda, guarda el final del log y detiene solo lo que levantó
-(`--keep` para que la persona pruebe). Para revisar la interfaz usa el MCP `playwright` solo contra `localhost`.
+(`--keep` para que la persona pruebe).
 
 > ⛔ **Punto de control 2:** muestra cómo abrir la app y pide feedback. Espera la respuesta.
 

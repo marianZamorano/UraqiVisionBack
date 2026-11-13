@@ -4,7 +4,6 @@ description: "Auditor de la carpeta publicada de una estación de UraqiVision (M
 tools: Read, Grep, Glob, Bash, PowerShell, Skill
 skills:
   - publicacion-estacion
-  - descargas-y-exportacion
   - verification-before-completion
 color: blue
 ---
