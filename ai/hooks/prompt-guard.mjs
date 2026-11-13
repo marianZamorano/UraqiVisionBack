@@ -5,10 +5,13 @@
 //    y, si hay novedades, se las indica al asistente para que avise (sin red o sin gh, no hace nada).
 // 3) Si el mensaje pide vibecodear y nadie se identificó en esta sesión, recuerda preguntar con opción múltiple
 //    qué colaborador es (§19) antes de empezar.
+// 4) Si el mensaje trae un prompt del SDD («[SDD P-…]»), pide confirmarlo con la persona (opción múltiple), avisa de
+//    dependencias, cambios, re-ejecuciones y de quién lo ejecuta, y recuerda registrar el resultado al terminar.
 import { evaluatePrompt } from './lib/guard.mjs';
 import { readStdinJson, block, failOpen, platform } from './lib/io.mjs';
 import { avisoPRs } from './lib/prs-resumen.mjs';
 import { recordatorioVibecodear } from './lib/equipo.mjs';
+import { contextoDePromptSdd } from './lib/sdd-hooks.mjs';
 
 try {
   const event = await readStdinJson();
@@ -16,6 +19,7 @@ try {
   const result = evaluatePrompt(prompt);
   if (result.decision === 'deny') block(result.reason);
   const aviso = [
+    contextoDePromptSdd({ prompt, cwd: event.cwd || process.cwd(), sesion: event.session_id }),
     recordatorioVibecodear({ prompt, cwd: event.cwd || process.cwd(), sesion: event.session_id }),
     await avisoPRs({ modo: 'periodico', intervaloMin: 10 }),
   ].filter(Boolean).join('\n\n');
