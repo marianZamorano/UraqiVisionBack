@@ -19,7 +19,11 @@
     "codigo:revisar": "node ai/scripts/codigo-vivo.mjs revisar",
     "codigo:cicd": "node ai/scripts/codigo-vivo.mjs cicd",
     "codigo:levantar": "node ai/scripts/codigo-vivo.mjs levantar",
-    "test:guardas": "node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs",
+    "equipo:modulos": "node ai/scripts/equipo.mjs modulos",
+    "equipo:soy": "node ai/scripts/equipo.mjs soy",
+    "equipo:quien": "node ai/scripts/equipo.mjs quien",
+    "equipo:alcance": "node ai/scripts/equipo.mjs alcance",
+    "test:guardas": "node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs ai/hooks/test/equipo.test.mjs",
     "env:check": "node ai/scripts/entorno.mjs check",
     "env:sync": "node ai/scripts/entorno.mjs sync",
     "env:compartir": "node ai/scripts/entorno.mjs compartir",
@@ -27,8 +31,15 @@
     "ayuda": "node ai/docs/ayuda.mjs"
   },
   "uraqi": {
-    "$comentario": "envPermitidos: entornos extra (.env.<nombre>) solo si son imprescindibles para que algo funcione; cada uno necesita su .env.<nombre>.example. Por defecto solo existen .env y .env.example. scripts: descripción de cada script npm para ai/README.md (ai/sync.mjs falla si falta una).",
+    "$comentario": "envPermitidos: entornos extra (.env.<nombre>) solo si son imprescindibles para que algo funcione; cada uno necesita su .env.<nombre>.example. Por defecto solo existen .env y .env.example. scripts: descripción de cada script npm para ai/README.md (ai/sync.mjs falla si falta una). modulos: módulos de §19 que viven en este repositorio (decisión del equipo del 12 nov 2026, ver «Stack y módulos» en AGENTS.md); el resto de §19 se lee del documento maestro.",
     "envPermitidos": [],
+    "modulos": [
+      "M-INGESTA",
+      "M-CIENCIA",
+      "M-VALIDACIÓN",
+      "M-PUBLICACIÓN",
+      "M-INSIGHT"
+    ],
     "scripts": {
       "commitlint": "Valida un mensaje de commit con Conventional Commits (lo usa el hook commit-msg).",
       "pr:pendientes": "Lista las PR que esperan tu aprobación y las tuyas listas para fusionar.",
@@ -45,6 +56,10 @@
       "codigo:revisar": "Revisor de código vivo: código roto, muerto o desconectado, con plan de solución, y estado del CI/CD por rama (falla si hay errores).",
       "codigo:cicd": "Estado del CI/CD de dev, qa y main: conflictos, código vivo, pruebas, build y arranque.",
       "codigo:levantar": "Instala, construye y arranca cada aplicación del repositorio y comprueba que responde (instala dependencias: pide aprobación).",
+      "equipo:modulos": "Tabla de §19: módulos, responsables, apoyo, revisores y requisitos (marca los de este repositorio).",
+      "equipo:soy": "Registra qué colaborador eres en este clon (npm run equipo:soy -- <Nombre>); vibecodear lo pregunta con opción múltiple.",
+      "equipo:quien": "Muestra quién está registrado en este clon y sus módulos aquí y en el otro repositorio.",
+      "equipo:alcance": "¿El trabajo es tuyo o apoyas el rol de otra persona? (npm run equipo:alcance -- RF-05 RF-06 o M-MAPA).",
       "test:guardas": "Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README.",
       "env:check": "Revisa los archivos .env y que .env y .env.example tengan la misma estructura (sin mostrar valores).",
       "env:sync": "Crea o alinea tu .env con .env.example sin leer ni mostrar valores.",

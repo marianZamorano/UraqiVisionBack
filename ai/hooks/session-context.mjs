@@ -10,6 +10,7 @@ import { platform } from './lib/io.mjs';
 import { avisoPRs } from './lib/prs-resumen.mjs';
 import { revisar } from './lib/entorno-git.mjs';
 import { avisoDeSesion } from './lib/herramientas-git.mjs';
+import { lineaDeSesion } from './lib/equipo.mjs';
 
 /** Avisos locales (sin red): ramas sin subir y problemas de entorno (solo nombres, nunca valores). */
 function avisosLocales() {
@@ -52,7 +53,7 @@ try {
   } catch {
     herramientas = '';
   }
-  const texto = [CONTEXT, avisosLocales(), herramientas, aviso].filter(Boolean).join('\n\n');
+  const texto = [CONTEXT, lineaDeSesion(process.cwd()), avisosLocales(), herramientas, aviso].filter(Boolean).join('\n\n');
   if (platform() === 'claude') {
     process.stdout.write(`${texto}\n`);
   } else {

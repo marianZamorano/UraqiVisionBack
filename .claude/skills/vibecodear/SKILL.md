@@ -27,6 +27,24 @@ Los scripts hacen solo trabajo determinista (inspeccionar, verificar, ejecutar, 
 
 ## Flujo de un Sprint
 
+### 0. Identificar al colaborador (obligatorio, antes de todo)
+Cada módulo tiene responsable, apoyo y revisor en §19. Antes de analizar nada, pregunta a la persona **qué
+colaborador es**, con una pregunta de **opción múltiple**:
+
+1. Obtén las opciones de §19 (no las escribas a mano): `node ai/scripts/equipo.mjs opciones --json`. Trae hasta
+   cuatro personas con rol en este repositorio, con la descripción de sus módulos, y en `otros` al resto del
+   equipo.
+2. Pregunta «¿Qué colaborador eres?»: en Claude Code con la herramienta **AskUserQuestion** (una opción por
+   persona, con su descripción; la opción «Otro» permite escribir a alguien de `otros`); en otros asistentes,
+   con una lista numerada. **No lo deduzcas** del usuario de git, del correo ni de la conversación, y no lo
+   respondas por la persona.
+3. Registra la respuesta: `node ai/scripts/equipo.mjs soy <Nombre>`. Muestra lo que devuelve: sus módulos en
+   este repositorio, los del otro y qué revisa. Si el nombre no figura en §19, detente: una tarea sin
+   responsable se considera sin asignar.
+
+La guarda `[uraqi-guard:colaborador-sin-identificar]` no deja cargar esta skill mientras nadie se haya
+identificado en la sesión, y el hook del mensaje lo recuerda si se pide vibecodear.
+
 ### 1. Analizar
 ```bash
 python "$SKILL_DIR/scripts/inspect_project.py" "$PROJECT"
@@ -53,9 +71,21 @@ Un único objetivo **medible**, ligado a identificadores del documento y verific
 persona. Ejemplo: «El mapa 2D muestra el antes/después real de San Ignacio con el deslizador operable por
 teclado (RF-05, RF-06), con pruebas Vitest en verde».
 
+**Comprueba el alcance de la persona** con los identificadores o módulos del objetivo:
+`node ai/scripts/equipo.mjs alcance RF-05 RF-06` (o `M-MAPA`).
+- ✔ **Tuyo**: sigue.
+- ⚠ **Apoyo**: el objetivo es del módulo de otra persona. **Avísalo antes de seguir**: «Vas a apoyar el rol de
+  <responsable> en <módulo>; avísale antes de avanzar». Propón también un objetivo de sus propios módulos. Si la
+  persona confirma el apoyo, anótalo en el plan, en el issue y en la PR («Apoyo a <responsable> en <módulo>») y
+  pide la revisión a quien §19 nombra como revisor.
+- ↪ **Otro repositorio**: el módulo vive en el otro repositorio (frontend `UraqiVision` o backend
+  `UraqiVisionBack`). No lo implementes aquí: derívalo.
+- Prioriza siempre los módulos de la persona. Nunca apoyes un rol ajeno en silencio.
+
 ### 5. Planificar el Sprint
 3–7 tareas pequeñas. Cada una con: rol, responsable de §19, skill o subagente que la ejecuta o revisa,
-identificadores y cómo se verifica.
+identificadores y cómo se verifica. Marca con **⚠ Apoyo a <responsable>** cada tarea que no sea de un módulo de
+la persona (`node ai/scripts/equipo.mjs alcance <IDs>`), y repite el aviso en el punto de control.
 
 > ⛔ **Punto de control 1:** presenta diagnóstico, roles, objetivo y plan. **No modifiques nada hasta que la
 > persona lo apruebe.** Antes de pedir la aprobación, pasa el plan por el subagente `guardian-alcance`.

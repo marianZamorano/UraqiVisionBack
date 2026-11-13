@@ -27,10 +27,10 @@ consume lo que este repositorio publica: los archivos de cada estación (§17.3)
 | Subagentes | 13 | `ai/agents/` |
 | Servidores MCP | 3 | `ai/mcp/servers.json` |
 | Hooks de los asistentes | 4 | `ai/hooks/*.mjs` |
-| Reglas de las guardas | 32 | `ai/hooks/lib/` |
+| Reglas de las guardas | 33 | `ai/hooks/lib/` |
 | Hooks de git | 6 | `.githooks/` |
 | Workflows de GitHub | 9 | `.github/workflows/` |
-| Scripts npm | 21 | `package.json` |
+| Scripts npm | 25 | `package.json` |
 
 ## Instalación (primera vez)
 
@@ -126,6 +126,11 @@ npm run ai:verificar                # ¿funcionan y están activas todas las her
 npm run ai:cambios                  # qué herramientas cambian frente a origin/dev y si son coherentes
 npm run codigo:revisar              # código roto, muerto o desconectado + CI/CD por rama, con plan
 npm run codigo:cicd                 # solo el estado del CI/CD de dev, qa y main
+
+# Equipo (§19): quién eres y qué te corresponde
+npm run equipo:modulos              # módulos, responsables, apoyo y revisores
+npm run equipo:soy -- Marian        # registra quién eres en este clon (vibecodear lo pregunta)
+npm run equipo:alcance -- RF-05     # ¿es tuyo o apoyas el rol de otra persona?
 uv run --with pypdf python ai/scripts/extraer_documento.py   # regenera la copia .txt del documento maestro
 npm run test:guardas                # pruebas de guardas, flujo y README
 node .agents/skills/microauditoria/scripts/evidencia.mjs --dias 7   # evidencia de los últimos cambios
@@ -271,9 +276,9 @@ Se ejecutan en cada sesión, mensaje o herramienta del asistente. Una sola lógi
 
 | Script | Qué hace | Claude Code | Codex CLI | Gemini CLI | opencode |
 |---|---|---|---|---|---|
-| `ai/hooks/post-edit.mjs` | Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow, script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes). | PostToolUse (Write\|Edit\|MultiEdit) | PostToolUse (^apply_patch$) | AfterTool (write_file\|replace) | — |
-| `ai/hooks/pre-tool.mjs` | Hook previo a cada herramienta (PreToolUse en Claude y Codex, BeforeTool en Gemini). Bloquea secretos, rutas protegidas, comandos destructivos y push o merge directo a main. Al crear una PR hacia qa o main (promoción pedida de forma explícita) activa el revisor de código vivo: si hay código roto o muerto, o el CI/CD exigible está incompleto, bloquea y muestra el plan de solución. | PreToolUse (Bash\|PowerShell\|Write\|Edit\|MultiEdit\|NotebookEdit\|Read) | PreToolUse (^(Bash\|apply_patch)$) | BeforeTool (run_shell_command\|write_file\|replace\|read_file) | plugin: tool.execute.before |
-| `ai/hooks/prompt-guard.mjs` | Hook del mensaje del usuario (UserPromptSubmit en Claude y Codex, BeforeAgent en Gemini). 1) Si el mensaje contiene un secreto, no se envía al modelo. 2) Cada 10 minutos como máximo, revisa en GitHub si hay PR nuevas que esperan la aprobación de la persona y, si hay novedades, se las indica al asistente para que avise (sin red o sin gh, no hace nada). | UserPromptSubmit | UserPromptSubmit | BeforeAgent | plugin: chat.message |
+| `ai/hooks/post-edit.mjs` | Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow, script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes). Si lo editado cita requisitos del módulo de otra persona (§19), avisa que es apoyo a su rol. | PostToolUse (Write\|Edit\|MultiEdit) | PostToolUse (^apply_patch$) | AfterTool (write_file\|replace) | — |
+| `ai/hooks/pre-tool.mjs` | Hook previo a cada herramienta (PreToolUse en Claude y Codex, BeforeTool en Gemini). Bloquea secretos, rutas protegidas, comandos destructivos y push o merge directo a main. Al crear una PR hacia qa o main (promoción pedida de forma explícita) activa el revisor de código vivo: si hay código roto o muerto, o el CI/CD exigible está incompleto, bloquea y muestra el plan de solución. vibecodear no se carga sin saber qué colaborador es la persona en esta sesión (§19): bloquea y pide preguntarlo con opción múltiple; al registrarla (node ai/scripts/equipo.mjs soy <Nombre>) anota la sesión. | PreToolUse (Bash\|PowerShell\|Write\|Edit\|MultiEdit\|NotebookEdit\|Read\|Skill) | PreToolUse (^(Bash\|apply_patch)$) | BeforeTool (run_shell_command\|write_file\|replace\|read_file) | plugin: tool.execute.before |
+| `ai/hooks/prompt-guard.mjs` | Hook del mensaje del usuario (UserPromptSubmit en Claude y Codex, BeforeAgent en Gemini). 1) Si el mensaje contiene un secreto, no se envía al modelo. 2) Cada 10 minutos como máximo, revisa en GitHub si hay PR nuevas que esperan la aprobación de la persona y, si hay novedades, se las indica al asistente para que avise (sin red o sin gh, no hace nada). 3) Si el mensaje pide vibecodear y nadie se identificó en esta sesión, recuerda preguntar con opción múltiple qué colaborador es (§19) antes de empezar. | UserPromptSubmit | UserPromptSubmit | BeforeAgent | plugin: chat.message |
 | `ai/hooks/session-context.mjs` | Hook de inicio de sesión: recuerda al agente la fuente de verdad y las reglas clave, y avisa de las PR que esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). También avisa de las herramientas de IA que cambiaron desde la última sesión (con la ayuda regenerada si hacía falta y la coherencia con el documento maestro) y de cualquier herramienta que haya dejado de funcionar o de estar activa. Nunca bloquea. | SessionStart | SessionStart | SessionStart | — |
 
 ### Guardas
@@ -286,6 +291,7 @@ Reglas que bloquean (o avisan) antes de que el asistente actúe. Los mensajes ll
 | `ayuda-desactualizada` | Commit bloqueado: no se pudo regenerar ai/README.md (la ayuda) ni la configuración generada. | `ai/hooks/git-pre-commit.mjs` |
 | `borrar-rama` | Borrar ramas está prohibido: son parte de la trazabilidad entre issues, commits y PR. Solo una persona puede decidirlo, si la rama crea confusión o su código ya no sirve | `ai/hooks/lib/guard.mjs` |
 | `codigo-no-vivo` | PR hacia … detenida: el revisor de código vivo encontró código que no funciona o que no está conectado. | `ai/hooks/lib/promocion.mjs` |
+| `colaborador-sin-identificar` | … | `ai/hooks/lib/equipo.mjs` |
 | `commit-en-main` | No se commitea directamente en … | `ai/hooks/git-pre-commit.mjs` |
 | `commit-grande` | Este commit mezcla varios temas. | `ai/hooks/git-commit-msg.mjs` |
 | `commit-sin-issue` | Commit bloqueado: cada commit debe citar su issue para que haya trazabilidad. | `ai/hooks/git-commit-msg.mjs` |
@@ -324,7 +330,7 @@ Se activan con `npm run hooks:activar` y corren en tu máquina en cada commit, p
 
 | Hook | Qué hace | Script |
 |---|---|---|
-| `commit-msg` | trazabilidad commit → issue. - BLOQUEA si el mensaje no cita su issue (#12, GH-12 o la URL del issue). Exentos: merges, reverts, fixup!/squash!/amend!. En ramas tipo/N-descripcion, prepare-commit-msg ya agregó "Refs #N". - AVISA si no cita un identificador del documento maestro (§1, §28) o si trae Co-Authored-By de IA. - Commits grandes (varios temas mezclados): muestra la división propuesta y termina con código 3 para que el wrapper .githooks/commit-msg PREGUNTE en la terminal. Sin terminal (agentes, IDE) bloquea y pide preguntar. Se acepta un solo commit con URAQI_UN_COMMIT=1 o con la línea "Commit-grande: aprobado" en el mensaje. | `ai/hooks/git-commit-msg.mjs` |
+| `commit-msg` | trazabilidad commit → issue. - BLOQUEA si el mensaje no cita su issue (#12, GH-12 o la URL del issue). Exentos: merges, reverts, fixup!/squash!/amend!. En ramas tipo/N-descripcion, prepare-commit-msg ya agregó "Refs #N". - AVISA si no cita un identificador del documento maestro (§1, §28) o si trae Co-Authored-By de IA. - AVISA si cita requisitos del módulo de otra persona según §19 (apoyo a su rol), con la identidad del clon. - Commits grandes (varios temas mezclados): muestra la división propuesta y termina con código 3 para que el wrapper .githooks/commit-msg PREGUNTE en la terminal. Sin terminal (agentes, IDE) bloquea y pide preguntar. Se acepta un solo commit con URAQI_UN_COMMIT=1 o con la línea "Commit-grande: aprobado" en el mensaje. | `ai/hooks/git-commit-msg.mjs` |
 | `post-checkout` | 1) Toda rama nueva se sube: si la rama actual no tiene upstream, hace `git push -u origin <rama>` (o solo enlaza el upstream si la rama ya existe en origin). No actúa en dev, qa, main ni con HEAD desacoplado. 2) Variables de entorno: si .env.example cambió entre los dos commits, agrega al .env local las claves nuevas vacías y avisa qué valores pedir al equipo (ver ai/scripts/entorno.mjs). 3) Herramientas de IA: si al cambiar de rama cambian skills, subagentes, MCP, hooks, workflows, scripts o la ayuda, avisa qué cambió, regenera la ayuda si hace falta y verifica que todo siga funcionando y activo. Nunca bloquea: si no hay red, avisa para subir la rama después. URAQI_SIN_PUSH=1 desactiva el push. | `ai/hooks/git-post-checkout.mjs` |
 | `post-merge` | Nunca bloquea ni muestra valores. 1) Si cambió .env.example, agrega al .env local las claves nuevas vacías y avisa qué valores pedir al equipo. 2) Si cambiaron herramientas de IA (skills, subagentes, MCP, hooks, workflows, scripts o la ayuda), avisa qué cambió, regenera la ayuda y la configuración si hace falta, revisa la coherencia con el documento maestro y verifica que todo siga funcionando y activo. | `ai/hooks/git-post-merge.mjs` |
 | `pre-commit` | impide versionar archivos con secretos o líneas con claves. También impide commitear directamente en dev, qa o main: el trabajo va en una rama tipo/N-descripcion y llega a esas ramas por PR. Variables de entorno: solo se versionan las plantillas permitidas (.env.example y las declaradas), sin valores sensibles; no puede haber archivos .env* no permitidos; .env y .env.example deben tener la misma estructura; y si el commit cambia la estructura de una plantilla, hay una PAUSA obligatoria para comunicarlo al equipo (el .env se copia a Descargas). Tras comunicarlo: URAQI_ENV_COMUNICADO=1 git commit … Ayuda al día: si el commit toca una fuente de las herramientas, ai/README.md y la configuración generada se regeneran solas; y las herramientas del commit deben ser coherentes con el documento maestro. | `ai/hooks/git-pre-commit.mjs` |
@@ -367,7 +373,11 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | `npm run codigo:revisar` | Revisor de código vivo: código roto, muerto o desconectado, con plan de solución, y estado del CI/CD por rama (falla si hay errores). | `node ai/scripts/codigo-vivo.mjs revisar` |
 | `npm run codigo:cicd` | Estado del CI/CD de dev, qa y main: conflictos, código vivo, pruebas, build y arranque. | `node ai/scripts/codigo-vivo.mjs cicd` |
 | `npm run codigo:levantar` | Instala, construye y arranca cada aplicación del repositorio y comprueba que responde (instala dependencias: pide aprobación). | `node ai/scripts/codigo-vivo.mjs levantar` |
-| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs` |
+| `npm run equipo:modulos` | Tabla de §19: módulos, responsables, apoyo, revisores y requisitos (marca los de este repositorio). | `node ai/scripts/equipo.mjs modulos` |
+| `npm run equipo:soy` | Registra qué colaborador eres en este clon (npm run equipo:soy -- <Nombre>); vibecodear lo pregunta con opción múltiple. | `node ai/scripts/equipo.mjs soy` |
+| `npm run equipo:quien` | Muestra quién está registrado en este clon y sus módulos aquí y en el otro repositorio. | `node ai/scripts/equipo.mjs quien` |
+| `npm run equipo:alcance` | ¿El trabajo es tuyo o apoyas el rol de otra persona? (npm run equipo:alcance -- RF-05 RF-06 o M-MAPA). | `node ai/scripts/equipo.mjs alcance` |
+| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs ai/hooks/test/equipo.test.mjs` |
 | `npm run env:check` | Revisa los archivos .env y que .env y .env.example tengan la misma estructura (sin mostrar valores). | `node ai/scripts/entorno.mjs check` |
 | `npm run env:sync` | Crea o alinea tu .env con .env.example sin leer ni mostrar valores. | `node ai/scripts/entorno.mjs sync` |
 | `npm run env:compartir` | Copia tu .env a Descargas para compartirlo con el equipo por un canal seguro. | `node ai/scripts/entorno.mjs compartir` |
@@ -418,6 +428,21 @@ de esta ayuda o `AGENTS.md`. Cuando una cambia:
 
 `npm run ai:cambios` muestra qué herramientas cambian en tu rama frente a `origin/dev` y si son coherentes, antes de
 abrir la PR.
+
+## Equipo: quién eres y qué te corresponde (§19)
+
+Cada módulo tiene un responsable, a veces apoyo, y un revisor (§19 del documento maestro; se lee de la copia
+en texto, no se escribe a mano). Los módulos de este repositorio están en `package.json` → `uraqi.modulos`.
+
+- **vibecodear empieza preguntando «¿Qué colaborador eres?»** con opción múltiple: las personas con rol en este
+  repositorio y la descripción de sus módulos (`node ai/scripts/equipo.mjs opciones --json`). La respuesta se
+  registra solo en el clon (`.git/uraqi-colaborador.json`, nunca se versiona) y vale para esa sesión.
+- **Guarda** `[uraqi-guard:colaborador-sin-identificar]`: no deja cargar vibecodear mientras nadie se haya
+  identificado en la sesión. El hook del mensaje lo recuerda si se pide vibecodear.
+- **Apoyo a otro rol**: si el objetivo, lo editado o un commit citan requisitos del módulo de otra persona,
+  vibecodear, el hook tras editar y el hook commit-msg **avisan** («vas a apoyar el rol de <responsable>»), para
+  que se le avise y se anote en el issue y la PR. Si el módulo vive en el otro repositorio, se deriva.
+- El inicio de sesión muestra quién se registró por última vez en el clon.
 
 ## Revisor de código vivo y CI/CD
 

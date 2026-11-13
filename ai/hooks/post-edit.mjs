@@ -4,6 +4,7 @@
 // mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow,
 // script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el
 // cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes).
+// Si lo editado cita requisitos del módulo de otra persona (§19), avisa que es apoyo a su rol.
 // Uso: node ai/hooks/post-edit.mjs --platform=<claude|codex|gemini>
 import fs from 'node:fs';
 import path from 'node:path';
@@ -11,6 +12,7 @@ import { normalize } from './lib/guard.mjs';
 import { clasificar } from './lib/entorno.mjs';
 import { esFuenteDeHerramienta } from './lib/herramientas.mjs';
 import { raiz, regenerarAyuda, coherenciaDeCambios } from './lib/herramientas-git.mjs';
+import { avisoDeApoyo } from './lib/equipo.mjs';
 import { platform, readStdinJson, failOpen } from './lib/io.mjs';
 
 function flatKeys(obj, prefix = '', out = new Set()) {
@@ -93,6 +95,12 @@ try {
     for (const e of errores) msgs.push(`Incoherente con el documento maestro: ${e}`);
     for (const a of avisos) msgs.push(a);
   }
+  // Lo editado cita requisitos del módulo de otra persona (§19): avisa que es apoyo a su rol (una vez por sesión).
+  const editado = [event.tool_input?.content, event.tool_input?.new_string, ...(event.tool_input?.edits ?? []).map((e) => e?.new_string), event.tool_input?.patch, event.tool_input?.input].filter(Boolean).join('\n');
+  // Las herramientas de IA (skills, hooks, docs del repo) son transversales: solo cuenta el código del producto.
+  const delProducto = files.some((f) => !esFuenteDeHerramienta(root ? path.relative(root, path.resolve(cwd, f)).replace(/\\/g, '/') : f) && !/(^|[\\/])docs[\\/]/.test(f));
+  const apoyo = editado && delProducto ? avisoDeApoyo({ texto: editado, cwd, sesion: event.session_id }) : null;
+  if (apoyo) msgs.push(`${apoyo} Díselo a la persona.`);
   if (msgs.length) {
     const reason = `[uraqi-guard:post-edit] Revisa antes de seguir:\n- ${msgs.join('\n- ')}`;
     const out = platform() === 'gemini'
