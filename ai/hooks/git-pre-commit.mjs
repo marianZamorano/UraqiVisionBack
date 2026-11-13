@@ -7,10 +7,11 @@
 // sensibles; no puede haber archivos .env* no permitidos; .env y .env.example deben tener la misma estructura; y si
 // el commit cambia la estructura de una plantilla, hay una PAUSA obligatoria para comunicarlo al equipo (el .env se
 // copia a Descargas). Tras comunicarlo: URAQI_ENV_COMUNICADO=1 git commit …
-// Ayuda al día: si el commit toca una fuente de las herramientas, ai/README.md y la configuración generada deben
-// estar regenerados (npm run ai:sync) y agregados al commit.
+// Ayuda al día: si el commit toca una fuente de las herramientas, ai/README.md y la configuración generada se
+// regeneran solas; y las herramientas del commit deben ser coherentes con el documento maestro.
 import path from 'node:path';
-import { execFileSync, spawnSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
+import { regenerarAyuda, coherenciaDeCambios, parseNameStatus } from './lib/herramientas-git.mjs';
 import { findSecrets, isSecretPath, PROTECTED_BRANCHES } from './lib/guard.mjs';
 import { currentBranch, generadosSinCommitear } from './lib/git.mjs';
 import { clasificar, compararClaves, sensiblesConValor, mensajePausa, parseClaves } from './lib/entorno.mjs';
@@ -76,18 +77,30 @@ if (problems.length) {
   process.exit(1);
 }
 
-// Ayuda (ai/README.md) y configuración generada al día: si el commit toca una fuente, ai/sync.mjs --check debe pasar
-// (BLOQUEA). Si lo regenerado aún no está agregado, solo AVISA: así se pueden dividir los commits por tema; el hook
-// pre-push impide subir la rama con generados sin commitear. ai/README.md sale de ai/docs/README.plantilla.md.
+// Ayuda (ai/README.md) y configuración generada al día: si el commit toca una fuente y están desactualizadas, se
+// REGENERAN SOLAS (ai/sync.mjs); solo bloquea si el sync falla (fuente inválida). Si lo regenerado aún no está
+// agregado, AVISA: así se pueden dividir los commits por tema; el hook pre-push impide subir la rama con generados
+// sin commitear. ai/README.md sale de ai/docs/README.plantilla.md.
+// Coherencia con el documento maestro: las herramientas de IA del commit no pueden citar identificadores (RF, RNF,
+// MC, RN, CQ, VC, PS, DP, CU, HU) ni secciones (§N) que no existen (BLOQUEA); las decisiones pendientes se avisan.
 const FUENTES = /^(\.agents\/skills\/|ai\/|\.githooks\/|\.github\/workflows\/|\.specify\/|specs\/|package\.json$|\.claude\/|\.gemini\/|\.codex\/|\.opencode\/|\.mcp\.json$|opencode\.json$)/;
-if (git('diff', '--cached', '--name-only').split('\n').some((f) => FUENTES.test(f))) {
+const enIndice = parseNameStatus(git('diff', '--cached', '--name-status', '-M'));
+if (enIndice.some((e) => FUENTES.test(e.path))) {
   const root = git('rev-parse', '--show-toplevel').trim();
-  const r = spawnSync(process.execPath, [path.join(root, 'ai', 'sync.mjs'), '--check'], { cwd: root, encoding: 'utf8' });
-  if (r.status !== 0) {
-    const detalle = `${r.stdout ?? ''}${r.stderr ?? ''}`.split('\n').filter((l) => /desactualizado|sobra|no se puede generar|^- /.test(l)).slice(0, 12);
-    process.stderr.write(`[uraqi-guard:ayuda-desactualizada] Commit bloqueado: ai/README.md (la ayuda) o la configuración generada no están al día con las fuentes.\n- ${detalle.join('\n- ')}\nEjecuta \`npm run ai:sync\`, revisa el resultado y agrégalo al commit.\n`);
+  const ayuda = regenerarAyuda(root);
+  if (ayuda.error) {
+    process.stderr.write(`[uraqi-guard:ayuda-desactualizada] Commit bloqueado: no se pudo regenerar ai/README.md (la ayuda) ni la configuración generada.\n- ${ayuda.error}\nCorrige la fuente y ejecuta \`npm run ai:sync\`.\n`);
     process.exit(1);
   }
+  if (ayuda.regenerado) process.stderr.write(`[uraqi] Ayuda y configuración regeneradas automáticamente (${ayuda.archivos.length} archivo(s)).\n`);
+
+  const { errores, avisos } = coherenciaDeCambios(enIndice, { root, fuente: 'indice', diff: git('diff', '--cached', '-U0', '--no-color') });
+  for (const a of avisos) process.stderr.write(`[uraqi] Aviso: ${a}\n`);
+  if (errores.length) {
+    process.stderr.write(`[uraqi-guard:incoherente-con-documento] Commit bloqueado: las herramientas de IA del commit no son coherentes con el documento maestro.\n- ${errores.join('\n- ')}\nBusca el identificador o la sección correctos en docs/UraqiVisionDocumentoMaestrov1.0.txt (skill documento-maestro).\n`);
+    process.exit(1);
+  }
+
   const sinAgregar = generadosSinCommitear(root, { soloSinAgregar: true });
   if (sinAgregar.length) process.stderr.write(`[uraqi] Aviso: hay archivos regenerados sin agregar (${sinAgregar.slice(0, 5).join(', ')}${sinAgregar.length > 5 ? ', …' : ''}). Inclúyelos en este commit o en uno siguiente: el push se bloquea mientras falten.\n`);
 }

@@ -137,6 +137,12 @@ al día (instalación, cómo funciona, ejemplos y el catálogo de cada skill, su
 y script) está en **`ai/README.md`**: lo genera el mismo sync desde `ai/docs/README.plantilla.md` y las
 fuentes. Nunca lo edites a mano. Para consultarlo: skill `ayuda` o `npm run ayuda -- <tema>`.
 
+**Cuando cambia una herramienta de IA** (skill, subagente, MCP, hook, guarda, workflow, script o la ayuda): la
+ayuda y la configuración se regeneran solas (al editar, al commitear y tras un pull); el pre-commit y el CI
+exigen coherencia con el documento maestro (identificadores y secciones que existen; decisiones pendientes
+señaladas); al fusionarse en `dev`, el workflow Herramientas de IA avisa a los demás colaboradores con una mención.
+`npm run ai:verificar` comprueba que todo funciona y está activo; `npm run ai:cambios`, qué cambia en tu rama.
+
 | Tipo | Dónde se define | Claude Code | Gemini CLI | Codex CLI | opencode |
 |---|---|---|---|---|---|
 | Skills | `.agents/skills/` | `.claude/skills/` (copia) · `/nombre` | `.agents/skills/` | `.agents/skills/` · `$nombre` | `.agents/skills/` |

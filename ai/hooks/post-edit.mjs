@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 // Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al
 // agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a
-// mano ai/README.md, que es generado.
+// mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow,
+// script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el
+// cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes).
 // Uso: node ai/hooks/post-edit.mjs --platform=<claude|codex|gemini>
 import fs from 'node:fs';
 import path from 'node:path';
 import { normalize } from './lib/guard.mjs';
 import { clasificar } from './lib/entorno.mjs';
+import { esFuenteDeHerramienta } from './lib/herramientas.mjs';
+import { raiz, regenerarAyuda, coherenciaDeCambios } from './lib/herramientas-git.mjs';
 import { platform, readStdinJson, failOpen } from './lib/io.mjs';
 
 function flatKeys(obj, prefix = '', out = new Set()) {
@@ -77,6 +81,17 @@ try {
     if (path.relative(cwd, path.resolve(cwd, f)).replace(/\\/g, '/') === 'ai/README.md') {
       msgs.push('ai/README.md lo genera ai/sync.mjs: esta edición se perderá. Edita ai/docs/README.plantilla.md (texto) o la fuente de la pieza (skill, subagente, MCP, hook, workflow o package.json → uraqi.scripts) y ejecuta `npm run ai:sync`.');
     }
+  }
+  // Herramienta de IA editada: ayuda y configuración regeneradas solas, y coherencia con el documento maestro.
+  const root = (() => { try { return raiz(cwd); } catch { return null; } })();
+  const herramientas = root ? files.map((f) => path.relative(root, path.resolve(cwd, f)).replace(/\\/g, '/')).filter(esFuenteDeHerramienta) : [];
+  if (herramientas.length) {
+    const ayuda = regenerarAyuda(root);
+    if (ayuda.error) msgs.push(`No se pudo regenerar la ayuda (ai/sync.mjs): ${ayuda.error}. Corrige la fuente; se reintenta en la siguiente edición.`);
+    else if (ayuda.regenerado) msgs.push(`Ayuda y configuración regeneradas automáticamente (${ayuda.archivos.slice(0, 4).join(', ')}${ayuda.archivos.length > 4 ? ', …' : ''}): inclúyelas en el commit.`);
+    const { errores, avisos } = coherenciaDeCambios(herramientas.map((p) => ({ status: 'M', path: p })), { root });
+    for (const e of errores) msgs.push(`Incoherente con el documento maestro: ${e}`);
+    for (const a of avisos) msgs.push(a);
   }
   if (msgs.length) {
     const reason = `[uraqi-guard:post-edit] Revisa antes de seguir:\n- ${msgs.join('\n- ')}`;

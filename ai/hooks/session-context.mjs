@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 // Hook de inicio de sesión: recuerda al agente la fuente de verdad y las reglas clave, y avisa de las PR que
-// esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). Nunca bloquea.
+// esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). También avisa de
+// las herramientas de IA que cambiaron desde la última sesión (con la ayuda regenerada si hacía falta y la
+// coherencia con el documento maestro) y de cualquier herramienta que haya dejado de funcionar o de estar activa.
+// Nunca bloquea.
 // Uso: node ai/hooks/session-context.mjs --platform=<claude|codex|gemini>
 import { execFileSync } from 'node:child_process';
 import { platform } from './lib/io.mjs';
 import { avisoPRs } from './lib/prs-resumen.mjs';
 import { revisar } from './lib/entorno-git.mjs';
+import { avisoDeSesion } from './lib/herramientas-git.mjs';
 
 /** Avisos locales (sin red): ramas sin subir y problemas de entorno (solo nombres, nunca valores). */
 function avisosLocales() {
@@ -42,7 +46,13 @@ export const CONTEXT = `[UraqiVision] Contexto del proyecto
 
 try {
   const aviso = await avisoPRs({ modo: 'inicio' });
-  const texto = [CONTEXT, avisosLocales(), aviso].filter(Boolean).join('\n\n');
+  let herramientas = '';
+  try {
+    herramientas = await avisoDeSesion();
+  } catch {
+    herramientas = '';
+  }
+  const texto = [CONTEXT, avisosLocales(), herramientas, aviso].filter(Boolean).join('\n\n');
   if (platform() === 'claude') {
     process.stdout.write(`${texto}\n`);
   } else {
