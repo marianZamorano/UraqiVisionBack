@@ -158,13 +158,12 @@ descargas) están en `UraqiVision`.
 | QA | `qa-project-discovery`, `qa-test-strategy`, `qa-test-design`, `qa-automation`, `qa-regression-analysis`, `qa-quality-gates`, `qa-test-reporting`, `qa-defect-analysis`, `qa-security-testing`, `test-driven-development`, `systematic-debugging`, `verification-before-completion` |
 | DevSecOps | `devops-secrets-management`, `devops-dependency-security`, `devops-git-workflow`, `devops-release-readiness`, `devops-free-tier-audit`, `devops-supervised-execution` |
 
-Subagentes (16). De solo lectura: `guardian-alcance`, `revisor-cientifico`, `auditor-publicacion`,
-`revisor-interfaz`, `revisor-insight`, `revisor-qa`, `security-qa-engineer`, `test-evidence-analyst`,
-`devsecops-engineer`, `free-tier-architect` (con web), `release-readiness-reviewer`, `uiux-design-auditor`.
-Pueden escribir con aprobación: `qa-architect`, `automation-qa-engineer`, `react-performance-auditor`,
-`react-ui-reviewer`.
+Subagentes (12). De solo lectura: `guardian-alcance`, `revisor-cientifico`, `auditor-publicacion`,
+`revisor-insight`, `revisor-qa`, `security-qa-engineer`, `test-evidence-analyst`, `devsecops-engineer`,
+`free-tier-architect` (con web), `release-readiness-reviewer`. Pueden escribir con aprobación: `qa-architect`,
+`automation-qa-engineer`. (Los revisores de interfaz y de React están en `UraqiVision`.)
 
-MCP: `playwright` (navegador, solo contra `localhost` salvo aprobación), `context7` (documentación vigente de
-librerías, para no inventar APIs), `qa-evidence` y `devops-readiness` (servidores propios de solo lectura:
+MCP: `context7` (documentación vigente de librerías, para no inventar APIs), `qa-evidence` y
+`devops-readiness` (servidores propios de solo lectura:
 resultados de pruebas, quality gates, secretos por nombre, preparación del despliegue). Scripts de apoyo en
 `ai/qa/scripts/` y `ai/devops/scripts/`.
