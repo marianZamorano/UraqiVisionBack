@@ -4,13 +4,16 @@
 import { evaluateTool, evaluatePrompt } from '../../ai/hooks/lib/guard.mjs';
 import { currentBranch } from '../../ai/hooks/lib/git.mjs';
 import { revisarPromocion } from '../../ai/hooks/lib/promocion.mjs';
+import { guardaVibecodear } from '../../ai/hooks/lib/equipo.mjs';
 
 export const UraqiGuardas = async ({ directory }) => ({
   'tool.execute.before': async (input, output) => {
     const result = evaluateTool(input.tool, output.args ?? {}, directory, { branch: currentBranch(directory) });
     if (result.decision === 'deny') throw new Error(result.reason);
     // PR hacia qa o main: revisor de código vivo (bloquea si hay código roto o muerto).
-    const motivo = revisarPromocion(output.args?.command, directory);
+    // vibecodear: no se carga sin saber qué colaborador es la persona (§19).
+    const motivo = revisarPromocion(output.args?.command, directory)
+      ?? guardaVibecodear({ tool: input.tool, input: output.args ?? {}, cwd: directory, sesion: input.sessionID });
     if (motivo) throw new Error(motivo);
   },
   'chat.message': async (_input, output) => {
