@@ -75,9 +75,3 @@ export function writeOutput(outPath, content, { force = false } = {}) {
   return abs;
 }
 
-export function toNumber(value, label) {
-  if (value === undefined) return undefined;
-  const n = Number(value);
-  if (!Number.isFinite(n)) throw new UsageError(`${label} debe ser numérico: ${value}`);
-  return n;
-}

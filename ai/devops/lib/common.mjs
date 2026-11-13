@@ -70,11 +70,6 @@ export function readJson(file) {
   }
 }
 
-/** Nunca devuelve el valor: solo su longitud. Se usa en todo informe que mencione secretos. */
-export function redact(value) {
-  return `[REDACTED len=${String(value ?? '').length}]`;
-}
-
 /** Comprueba si un ejecutable existe en PATH sin ejecutarlo de forma peligrosa. */
 export function hasCommand(cmd) {
   const probe = process.platform === 'win32' ? 'where' : 'which';

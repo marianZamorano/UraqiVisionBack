@@ -53,13 +53,10 @@ Los esquemas JSON completos se publican en `tools/list` (ver `tools.mjs`). Todas
 
 ## Instalación y configuración
 
-Se registra automáticamente al cargar el plugin (`QA/.mcp.json`):
+En UraqiVision se declara en `ai/mcp/servers.json` y `npm run ai:sync` lo registra en `.mcp.json` y en la
+configuración de cada asistente.
 
-```json
-{ "mcpServers": { "qa-evidence": { "command": "node", "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-servers/qa-evidence/server.mjs"] } } }
-```
-
-- Nombre de las herramientas en Claude Code: `mcp__plugin_qa-ecosystem_qa-evidence__<herramienta>`.
+- Nombre de las herramientas en Claude Code: `mcp__qa-evidence__<herramienta>`.
 - Raíz de lectura: `QA_EVIDENCE_ROOT` si está definida; si no, el directorio de trabajo del proceso (la
   carpeta desde la que se lanzó Claude Code).
 - Dependencias: solo Node.js ≥ 18. Sin autenticación (no accede a sistemas externos).
@@ -67,14 +64,13 @@ Se registra automáticamente al cargar el plugin (`QA/.mcp.json`):
 Uso fuera de Claude Code (p. ej. con otro cliente MCP):
 
 ```bash
-QA_EVIDENCE_ROOT=/ruta/proyecto node QA/mcp-servers/qa-evidence/server.mjs
+QA_EVIDENCE_ROOT=/ruta/proyecto node ai/qa/mcp-servers/qa-evidence/server.mjs
 ```
 
 ## Pruebas
 
-`node --test QA/tests/mcp.test.mjs`: ciclo de vida, catálogo, cada herramienta, path traversal, archivos de
-secretos, redacción de salida, argumentos inválidos, herramientas inexistentes e integración real por stdio.
-Todas usan la carpeta de fixtures o directorios temporales como raíz.
+Las pruebas del repositorio de origen no se importaron (en `ai/qa/tests/` solo quedan sus fixtures).
+`npm run ai:verificar` comprueba que el servidor arranca y responde al handshake `initialize`.
 
 ## Extensiones no implementadas (requieren autorización)
 
