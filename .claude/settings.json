@@ -82,6 +82,17 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/ai/hooks/fin-turno.mjs\" --platform=claude",
+            "timeout": 15
+          }
+        ]
+      }
     ]
   }
 }

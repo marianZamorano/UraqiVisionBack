@@ -9,9 +9,13 @@
 // copia a Descargas). Tras comunicarlo: URAQI_ENV_COMUNICADO=1 git commit …
 // Ayuda al día: si el commit toca una fuente de las herramientas, ai/README.md y la configuración generada se
 // regeneran solas; y las herramientas del commit deben ser coherentes con el documento maestro.
+// SDD: si el commit toca sdd/*.md, los SDD deben seguir la estructura común (sdd/00-estructura.md).
+import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { regenerarAyuda, coherenciaDeCambios, parseNameStatus } from './lib/herramientas-git.mjs';
+import { cargarSdds, validar as validarSdd } from './lib/sdd.mjs';
+import { cargarEquipo, colaboradores } from './lib/equipo.mjs';
 import { findSecrets, isSecretPath, PROTECTED_BRANCHES } from './lib/guard.mjs';
 import { currentBranch, generadosSinCommitear } from './lib/git.mjs';
 import { clasificar, compararClaves, sensiblesConValor, mensajePausa, parseClaves } from './lib/entorno.mjs';
@@ -83,7 +87,7 @@ if (problems.length) {
 // sin commitear. ai/README.md sale de ai/docs/README.plantilla.md.
 // Coherencia con el documento maestro: las herramientas de IA del commit no pueden citar identificadores (RF, RNF,
 // MC, RN, CQ, VC, PS, DP, CU, HU) ni secciones (§N) que no existen (BLOQUEA); las decisiones pendientes se avisan.
-const FUENTES = /^(\.agents\/skills\/|ai\/|\.githooks\/|\.github\/workflows\/|\.specify\/|specs\/|package\.json$|\.claude\/|\.gemini\/|\.codex\/|\.opencode\/|\.mcp\.json$|opencode\.json$)/;
+const FUENTES = /^(\.agents\/skills\/|ai\/|\.githooks\/|\.github\/workflows\/|\.specify\/|specs\/|sdd\/|package\.json$|\.claude\/|\.gemini\/|\.codex\/|\.opencode\/|\.mcp\.json$|opencode\.json$)/;
 const enIndice = parseNameStatus(git('diff', '--cached', '--name-status', '-M'));
 if (enIndice.some((e) => FUENTES.test(e.path))) {
   const root = git('rev-parse', '--show-toplevel').trim();
@@ -99,6 +103,17 @@ if (enIndice.some((e) => FUENTES.test(e.path))) {
   if (errores.length) {
     process.stderr.write(`[uraqi-guard:incoherente-con-documento] Commit bloqueado: las herramientas de IA del commit no son coherentes con el documento maestro.\n- ${errores.join('\n- ')}\nBusca el identificador o la sección correctos en docs/UraqiVisionDocumentoMaestrov1.0.txt (skill documento-maestro).\n`);
     process.exit(1);
+  }
+
+  // SDD por área: si el commit toca sdd/*.md, todos los SDD deben conservar la estructura común.
+  if (enIndice.some((e) => /^sdd\/[^/]+\.md$/.test(e.path))) {
+    const { modulos, repoModulos } = cargarEquipo(root);
+    const skills = fs.existsSync(path.join(root, '.agents/skills')) ? fs.readdirSync(path.join(root, '.agents/skills')) : [];
+    const erroresSdd = validarSdd(cargarSdds(root), { colaboradores: colaboradores(modulos), repoModulos, skills });
+    if (erroresSdd.length) {
+      process.stderr.write(`[uraqi-guard:sdd-invalido] Commit bloqueado: los SDD de sdd/ no siguen la estructura común (sdd/00-estructura.md).\n- ${erroresSdd.slice(0, 15).join('\n- ')}\nRevísalo con: npm run sdd:validar\n`);
+      process.exit(1);
+    }
   }
 
   const sinAgregar = generadosSinCommitear(root, { soloSinAgregar: true });

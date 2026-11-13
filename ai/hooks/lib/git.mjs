@@ -28,7 +28,7 @@ export const EXEMPT_MESSAGE = /^(Merge |Revert "|fixup! |squash! |amend! )/;
 export const gitRaw = (args, cwd) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
 
 /** Lo que genera ai/sync.mjs, incluida la ayuda ai/README.md. */
-export const GENERADOS = ['ai/README.md', '.claude', '.gemini', '.codex', '.opencode', '.mcp.json', 'opencode.json'];
+export const GENERADOS = ['ai/README.md', 'sdd/README.md', '.claude', '.gemini', '.codex', '.opencode', '.mcp.json', 'opencode.json'];
 
 /**
  * Archivos generados con cambios sin commitear (modificados, nuevos o borrados). Con soloSinAgregar, solo los que

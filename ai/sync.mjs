@@ -7,6 +7,7 @@
 //   ai/hooks/                 guardas (scripts compartidos)
 //   ai/mcp/servers.json       servidores MCP
 //   ai/docs/README.plantilla.md  texto del ai/README.md (el resto del README se genera de las fuentes)
+//   sdd/*.md                  SDD por área (la tabla de orden de sdd/README.md se genera desde ellos)
 //
 // Uso:
 //   node ai/sync.mjs           genera o actualiza los archivos de cada plataforma
@@ -18,6 +19,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseFrontmatter } from './hooks/lib/frontmatter.mjs';
 import { generarReadme } from './docs/readme.mjs';
+import { cargarSdds, readmeConOrden } from './hooks/lib/sdd.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
@@ -236,6 +238,8 @@ emit(path.join('.claude', 'settings.json'), json({
       matcher: 'Write|Edit|MultiEdit',
       hooks: [{ type: 'command', command: claudeHook('post-edit.mjs'), timeout: 15 }],
     }],
+    // Fin de turno: si un prompt del SDD se ejecutó sin registrarse, pide registrarlo y mostrar el siguiente.
+    Stop: [{ hooks: [{ type: 'command', command: claudeHook('fin-turno.mjs'), timeout: 15 }] }],
   },
 }));
 
@@ -246,6 +250,7 @@ emit(path.join('.codex', 'hooks.json'), json({
     UserPromptSubmit: [{ hooks: [{ type: 'command', command: hook('prompt-guard.mjs', 'codex'), timeout: 30 }] }],
     PreToolUse: [{ matcher: '^(Bash|apply_patch)$', hooks: [{ type: 'command', command: hook('pre-tool.mjs', 'codex'), timeout: 10 }] }],
     PostToolUse: [{ matcher: '^apply_patch$', hooks: [{ type: 'command', command: hook('post-edit.mjs', 'codex'), timeout: 15 }] }],
+    Stop: [{ hooks: [{ type: 'command', command: hook('fin-turno.mjs', 'codex'), timeout: 15 }] }],
   },
 }));
 
@@ -267,6 +272,7 @@ emit(path.join('.gemini', 'settings.json'), json({
       matcher: 'write_file|replace',
       hooks: [{ type: 'command', name: 'uraqi-post-edit', command: hook('post-edit.mjs', 'gemini'), timeout: 15000 }],
     }],
+    AfterAgent: [{ hooks: [{ type: 'command', name: 'uraqi-fin-turno', command: hook('fin-turno.mjs', 'gemini'), timeout: 15000 }] }],
   },
 }));
 
@@ -314,6 +320,16 @@ export const UraqiGuardas = async ({ directory }) => ({
   },
 });
 `);
+
+// ------------------------------------------------------------------ sdd/README.md (orden de los prompts)
+
+// La tabla del orden global de prompts se genera desde los SDD de sdd/*.md; el resto del README se escribe a mano.
+if (fs.existsSync(rel('sdd', 'README.md'))) {
+  const readme = fs.readFileSync(rel('sdd', 'README.md'), 'utf8').replace(/\r\n/g, '\n');
+  const nuevo = readmeConOrden(readme, cargarSdds(ROOT));
+  if (!nuevo) throw new Error('sdd/README.md: faltan las marcas del orden de prompts (<!-- sdd:orden … --> y <!-- /sdd:orden -->)');
+  emit(path.join('sdd', 'README.md'), nuevo);
+}
 
 // ------------------------------------------------------------------ ai/README.md (ayuda siempre al día)
 

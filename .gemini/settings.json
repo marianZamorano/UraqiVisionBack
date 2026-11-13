@@ -78,6 +78,18 @@
           }
         ]
       }
+    ],
+    "AfterAgent": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "name": "uraqi-fin-turno",
+            "command": "node ai/hooks/fin-turno.mjs --platform=gemini",
+            "timeout": 15000
+          }
+        ]
+      }
     ]
   }
 }

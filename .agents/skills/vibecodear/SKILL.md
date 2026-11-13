@@ -71,6 +71,12 @@ Un único objetivo **medible**, ligado a identificadores del documento y verific
 persona. Ejemplo: «El mapa 2D muestra el antes/después real de San Ignacio con el deslizador operable por
 teclado (RF-05, RF-06), con pruebas Vitest en verde».
 
+**Parte del SDD de la persona** (`sdd/`, un SDD por área con sus prompts en orden):
+`node ai/scripts/sdd.mjs siguiente --yo` da el siguiente prompt de sus módulos y `node ai/scripts/sdd.mjs estado`
+muestra el avance y los conflictos. El objetivo del Sprint es completar uno o varios prompts seguidos de su SDD;
+cada prompt se ejecuta con la skill `sdd-prompts` (confirmación de la persona, historial y siguiente prompt). Si el
+SDD tiene conflictos, resolverlos es el primer objetivo.
+
 **Comprueba el alcance de la persona** con los identificadores o módulos del objetivo:
 `node ai/scripts/equipo.mjs alcance RF-05 RF-06` (o `M-MAPA`).
 - ✔ **Tuyo**: sigue.
@@ -124,7 +130,9 @@ Detecta puertos ocupados, espera a que la app responda, guarda el final del log 
 ### 9. Documentar
 Completa `.vibecodear/sprints/sprint-NN.md` con diagnóstico, roles (con skills, subagentes y responsable),
 decisiones, tareas con identificadores, cambios, pruebas, problemas, feedback y **estado final** (✅ Cumplido /
-🔄 Parcial / ❌ No cumplido). Marca `[X]` en `tasks.md` lo que quedó terminado y verificado.
+🔄 Parcial / ❌ No cumplido). Marca `[X]` en `tasks.md` lo que quedó terminado y verificado. Registra cada
+prompt del SDD ejecutado en el Sprint (`node ai/scripts/sdd.mjs registrar <ID> --resultado …`) y termina
+mostrando a la persona su siguiente prompt, listo para copiar.
 ```bash
 python "$SKILL_DIR/scripts/sprint_doc.py" list "$PROJECT"
 ```
