@@ -95,7 +95,7 @@ El sábado 14 a las 9:00 empieza el hackathon y la primera meta es un antes/desp
 (§25). Con poco tiempo:
 
 1. **Antes del sábado** (si las reglas lo permiten, DP-02): fase 1 (constitución) y fase 2 de
-   `001-pipeline-estacion` y `003-mapa-analisis`.
-2. **Sábado temprano**: fases 4–6 de esas dos specs en un mismo turno, aceptando las opciones recomendadas.
+   `001-pipeline-estacion` (y, en `UraqiVision`, la del mapa de análisis, que consumirá estos datos).
+2. **Sábado temprano**: fases 4–6 de la spec del pipeline en un mismo turno, aceptando las opciones recomendadas.
 3. Las demás features entran con `feature <nombre>` a medida que su responsable las empieza.
 4. Fase 8 para cada feature antes de integrarla. `speckit-converge` el domingo por la tarde.
