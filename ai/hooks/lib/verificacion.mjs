@@ -153,16 +153,82 @@ export function pruebas(root) {
   return resultado('pruebas', r.status === 0, r.status === 0 ? `${pasan ?? '?'} pruebas en verde` : `${fallan ?? '?'} prueba(s) fallan → npm run test:guardas`);
 }
 
+const dirs = (root, rel) => (fs.existsSync(path.join(root, rel)) ? fs.readdirSync(path.join(root, rel), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name) : []);
+
+/** Skills activas: cada skill de .agents/skills (que leen Gemini, Codex y opencode) tiene su copia en .claude/skills. */
+export function skillsActivas(root) {
+  const propias = dirs(root, '.agents/skills').filter((s) => !s.startsWith('speckit-') && fs.existsSync(path.join(root, '.agents/skills', s, 'SKILL.md')));
+  const faltan = propias.filter((s) => !fs.existsSync(path.join(root, '.claude/skills', s, 'SKILL.md')));
+  return resultado('skills', propias.length > 0 && !faltan.length, faltan.length ? `sin copia para Claude Code: ${faltan.join(', ')}` : `${propias.length} skills activas en los cuatro asistentes`);
+}
+
+/** Spec Kit activo en cada asistente: skills (Claude Code y Codex), comandos de Gemini CLI y de opencode. */
+export function specKitActivo(root) {
+  const cmds = dirs(root, '.agents/skills').filter((s) => s.startsWith('speckit-')).map((s) => s.slice(8));
+  if (!cmds.length) return resultado('spec-kit', false, 'Spec Kit no está instalado (.agents/skills/speckit-*)');
+  const faltan = [];
+  for (const c of cmds) {
+    if (!fs.existsSync(path.join(root, '.claude/skills', `speckit-${c}`, 'SKILL.md'))) faltan.push(`Claude Code: speckit-${c}`);
+    if (!fs.existsSync(path.join(root, '.gemini/commands', `speckit.${c}.toml`))) faltan.push(`Gemini CLI: speckit.${c}`);
+    if (!fs.existsSync(path.join(root, '.opencode/commands', `speckit.${c}.md`))) faltan.push(`opencode: speckit.${c}`);
+  }
+  return resultado('spec-kit', !faltan.length, faltan.length ? `faltan: ${faltan.slice(0, 6).join(', ')}${faltan.length > 6 ? ` (+${faltan.length - 6})` : ''}` : `${cmds.length} comandos de Spec Kit en los cuatro asistentes`);
+}
+
+/** Subagentes generados para los cuatro asistentes. */
+export function subagentesActivos(root) {
+  const nombres = listar(root, 'ai/agents', /\.md$/).map((f) => path.basename(f, '.md'));
+  const faltan = [];
+  for (const n of nombres) {
+    for (const [asistente, rel] of [['Claude Code', `.claude/agents/${n}.md`], ['Gemini CLI', `.gemini/agents/${n}.md`], ['Codex CLI', `.codex/agents/${n}.toml`], ['opencode', `.opencode/agents/${n}.md`]]) {
+      if (!fs.existsSync(path.join(root, rel))) faltan.push(`${asistente}: ${n}`);
+    }
+  }
+  return resultado('subagentes', nombres.length > 0 && !faltan.length, faltan.length ? `faltan: ${faltan.slice(0, 6).join(', ')}${faltan.length > 6 ? ` (+${faltan.length - 6})` : ''}` : `${nombres.length} subagentes en los cuatro asistentes`);
+}
+
+/** Claude Code solo usa los MCP del proyecto si la persona los aprobó (aviso: los demás asistentes no lo necesitan). */
+export function mcpAprobadosClaude(root) {
+  const leerJson = (rel) => { try { return JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8')); } catch { return {}; } };
+  const servidores = Object.keys(leerJson('.mcp.json').mcpServers ?? {});
+  const local = { ...leerJson('.claude/settings.json'), ...leerJson('.claude/settings.local.json') };
+  const desactivados = (local.disabledMcpjsonServers ?? []).filter((s) => servidores.includes(s));
+  const aprobados = local.enableAllProjectMcpServers === true ? servidores : (local.enabledMcpjsonServers ?? []);
+  const faltan = servidores.filter((s) => !aprobados.includes(s) || desactivados.includes(s));
+  return resultado('mcp-claude', !faltan.length, faltan.length ? `servidores sin aprobar o desactivados en Claude Code: ${faltan.join(', ')}` : 'servidores MCP del proyecto aprobados en Claude Code', 'aviso');
+}
+
+/** Node 20 o superior (hooks, sync y servidores MCP propios). */
+export function nodeVersion() {
+  const mayor = Number(process.versions.node.split('.')[0]);
+  return resultado('node', mayor >= 20, `Node ${process.versions.node}${mayor >= 20 ? '' : ' (se necesita 20 o superior)'}`);
+}
+
+/** Python 3 (scripts de vibecodear y regeneración del documento maestro en texto). */
+export function pythonDisponible(root) {
+  const ok = ['python', 'python3', 'py'].some((cmd) => spawnSync(cmd, ['--version'], { cwd: root, encoding: 'utf8', timeout: 8000 }).status === 0);
+  return resultado('python', ok, ok ? 'Python disponible' : 'no se encontró Python 3 (lo usan los scripts de vibecodear y extraer_documento.py)', 'aviso');
+}
+
+/** Sesión de GitHub CLI (issues, PR, avisos de aprobación y del SDD). No muestra el token. */
+export function sesionGh(root) {
+  const r = spawnSync('gh', ['auth', 'status'], { cwd: root, encoding: 'utf8', timeout: 10000 });
+  return resultado('gh', r.status === 0, r.status === 0 ? 'GitHub CLI con sesión iniciada' : (r.error ? 'GitHub CLI no está instalado' : 'GitHub CLI sin sesión iniciada'), 'aviso');
+}
+
 /**
  * Ejecuta las comprobaciones. rapido: sin node --check, sin MCP ni pruebas (para hooks y el inicio de sesión).
  * ci: omite lo que solo tiene sentido en un clon (hooks de git activos, commitlint instalado).
  */
 export async function verificar(root, { rapido = false, ci = false, conPruebas = false } = {}) {
   const r = [];
-  if (!ci) r.push(hooksDeGitActivos(root));
+  if (!ci) r.push(hooksDeGitActivos(root), nodeVersion());
   r.push(...hooksDeGitCompletos(root).filter((x) => !(ci && x.id === 'commitlint')));
-  r.push(hooksDeAsistentes(root), configuracionAlDia(root), guardasResponden(root), coherenciaTotal(root));
+  r.push(hooksDeAsistentes(root), skillsActivas(root), specKitActivo(root), subagentesActivos(root));
+  if (!ci) r.push(mcpAprobadosClaude(root));
+  r.push(configuracionAlDia(root), guardasResponden(root), coherenciaTotal(root));
   if (!rapido) r.push(sintaxis(root), await servidoresMcp(root));
+  if (!rapido && !ci) r.push(pythonDisponible(root), sesionGh(root));
   if (conPruebas) r.push(pruebas(root));
   return r;
 }

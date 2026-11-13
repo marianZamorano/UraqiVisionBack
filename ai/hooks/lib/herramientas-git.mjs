@@ -5,7 +5,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { resumirCambios, textoResumen, coherencia, cargarDocumento, lineasAgregadas, esFuenteDeHerramienta } from './herramientas.mjs';
-import { verificar, fallidas, textoVerificacion } from './verificacion.mjs';
+import { verificar, fallidas } from './verificacion.mjs';
+import { textoGuia } from './guia-activacion.mjs';
 
 const git = (args, cwd) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 });
 
@@ -100,7 +101,7 @@ export async function avisoDeCambios(entries, root, { titulo, rapido = true } = 
   for (const a of avisos) lineas.push(`⚠ ${a}`);
   const r = await verificar(root, { rapido });
   const malas = r.filter((x) => !x.ok);
-  lineas.push(malas.length ? `Verificación de las herramientas:\n${textoVerificacion(malas)}` : `✔ Verificación: las herramientas funcionan y están activas (${r.length} comprobaciones). Detalle: npm run ai:verificar`);
+  lineas.push(malas.length ? textoGuia(malas, { titulo: 'Herramientas de IA que no están activas' }) : `✔ Verificación: las herramientas funcionan y están activas (${r.length} comprobaciones). Detalle: npm run ai:verificar`);
   lineas.push('Consulta qué hace cada pieza con la skill ayuda o npm run ayuda -- <tema>.');
   return lineas.join('\n');
 }
@@ -129,7 +130,7 @@ export async function avisoDeSesion(cwd = process.cwd()) {
   }
   if (!texto) {
     const malas = (await verificar(root, { rapido: true })).filter((x) => !x.ok);
-    if (malas.length) texto = `[UraqiVision] Herramientas de IA con problemas (díselo a la persona):\n${textoVerificacion(malas)}`;
+    if (malas.length) texto = textoGuia(malas);
   }
   guardarVisto(root, head);
   return texto;

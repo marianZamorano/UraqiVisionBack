@@ -30,7 +30,7 @@ consume lo que este repositorio publica: los archivos de cada estación (§17.3)
 | Reglas de las guardas | 34 | `ai/hooks/lib/` |
 | Hooks de git | 6 | `.githooks/` |
 | Workflows de GitHub | 9 | `.github/workflows/` |
-| Scripts npm | 30 | `package.json` |
+| Scripts npm | 31 | `package.json` |
 
 ## Instalación (primera vez)
 
@@ -123,6 +123,7 @@ node ai/scripts/issues-de-promocion.mjs dev qa   # lista "Refs #N" de una promoc
 npm run ai:sync                     # regenera configuraciones y esta ayuda tras editar una fuente
 npm run ai:check                    # falla si algo quedó desactualizado
 npm run ai:verificar                # ¿funcionan y están activas todas las herramientas?
+npm run ai:activar                  # guía paso a paso para activar lo que falte
 npm run ai:cambios                  # qué herramientas cambian frente a origin/dev y si son coherentes
 npm run codigo:revisar              # código roto, muerto o desconectado + CI/CD por rama, con plan
 npm run codigo:cicd                 # solo el estado del CI/CD de dev, qa y main
@@ -285,8 +286,8 @@ Se ejecutan en cada sesión, mensaje o herramienta del asistente. Una sola lógi
 | `ai/hooks/fin-turno.mjs` | Hook de fin de turno (Stop en Claude y Codex, AfterAgent en Gemini). Si un prompt del SDD se ejecutó en esta sesión y no quedó en el historial, pide al asistente que lo registre y que muestre a la persona el siguiente prompt listo para copiar y pegar. No insiste dos veces seguidas ni interrumpe si se espera una respuesta de la persona. | Stop | Stop | AfterAgent | — |
 | `ai/hooks/post-edit.mjs` | Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow, script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes). Si lo editado cita requisitos del módulo de otra persona (§19), avisa que es apoyo a su rol. | PostToolUse (Write\|Edit\|MultiEdit) | PostToolUse (^apply_patch$) | AfterTool (write_file\|replace) | — |
 | `ai/hooks/pre-tool.mjs` | Hook previo a cada herramienta (PreToolUse en Claude y Codex, BeforeTool en Gemini). Bloquea secretos, rutas protegidas, comandos destructivos y push o merge directo a main. Al crear una PR hacia qa o main (promoción pedida de forma explícita) activa el revisor de código vivo: si hay código roto o muerto, o el CI/CD exigible está incompleto, bloquea y muestra el plan de solución. vibecodear no se carga sin saber qué colaborador es la persona en esta sesión (§19): bloquea y pide preguntarlo con opción múltiple; al registrarla (node ai/scripts/equipo.mjs soy <Nombre>) anota la sesión. | PreToolUse (Bash\|PowerShell\|Write\|Edit\|MultiEdit\|NotebookEdit\|Read\|Skill) | PreToolUse (^(Bash\|apply_patch)$) | BeforeTool (run_shell_command\|write_file\|replace\|read_file) | plugin: tool.execute.before |
-| `ai/hooks/prompt-guard.mjs` | Hook del mensaje del usuario (UserPromptSubmit en Claude y Codex, BeforeAgent en Gemini). 1) Si el mensaje contiene un secreto, no se envía al modelo. 2) Cada 10 minutos como máximo, revisa en GitHub si hay PR nuevas que esperan la aprobación de la persona y, si hay novedades, se las indica al asistente para que avise (sin red o sin gh, no hace nada). 3) Si el mensaje pide vibecodear y nadie se identificó en esta sesión, recuerda preguntar con opción múltiple qué colaborador es (§19) antes de empezar. 4) Si el mensaje trae un prompt del SDD («[SDD P-…]»), pide confirmarlo con la persona (opción múltiple), avisa de dependencias, cambios, re-ejecuciones y de quién lo ejecuta, y recuerda registrar el resultado al terminar. | UserPromptSubmit | UserPromptSubmit | BeforeAgent | plugin: chat.message |
-| `ai/hooks/session-context.mjs` | Hook de inicio de sesión: recuerda al agente la fuente de verdad y las reglas clave, y avisa de las PR que esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). También avisa de las herramientas de IA que cambiaron desde la última sesión (con la ayuda regenerada si hacía falta y la coherencia con el documento maestro) y de cualquier herramienta que haya dejado de funcionar o de estar activa. Nunca bloquea. | SessionStart | SessionStart | SessionStart | — |
+| `ai/hooks/prompt-guard.mjs` | Hook del mensaje del usuario (UserPromptSubmit en Claude y Codex, BeforeAgent en Gemini). 1) Si el mensaje contiene un secreto, no se envía al modelo. 2) Cada 10 minutos como máximo, revisa en GitHub si hay PR nuevas que esperan la aprobación de la persona y, si hay novedades, se las indica al asistente para que avise (sin red o sin gh, no hace nada). 3) Si el mensaje pide vibecodear y nadie se identificó en esta sesión, recuerda preguntar con opción múltiple qué colaborador es (§19) antes de empezar. 4) Si el mensaje trae un prompt del SDD («[SDD P-…]»), pide confirmarlo con la persona (opción múltiple), avisa de dependencias, cambios, re-ejecuciones y de quién lo ejecuta, y recuerda registrar el resultado al terminar. 5) Vigilancia en segundo plano: como máximo cada 5 minutos lanza la verificación completa de las herramientas en un proceso aparte; si algo no está activo, entrega al asistente la guía paso a paso (una vez por problema y sesión). | UserPromptSubmit | UserPromptSubmit | BeforeAgent | plugin: chat.message |
+| `ai/hooks/session-context.mjs` | Hook de inicio de sesión: recuerda al agente la fuente de verdad y las reglas clave, y avisa de las PR que esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). También avisa de las herramientas de IA que cambiaron desde la última sesión (con la ayuda regenerada si hacía falta y la coherencia con el documento maestro) y de cualquier herramienta que haya dejado de funcionar o de estar activa, con la guía paso a paso para activarla, y lanza la vigilancia completa en segundo plano. Nunca bloquea. | SessionStart | SessionStart | SessionStart | — |
 
 ### Guardas
 
@@ -377,6 +378,7 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | `npm run ai:sync` | Genera la configuración de los cuatro asistentes y ai/README.md desde las fuentes. | `node ai/sync.mjs` |
 | `npm run ai:check` | Falla si la configuración generada o ai/README.md están desactualizados (no escribe nada). | `node ai/sync.mjs --check` |
 | `npm run ai:verificar` | Verifica que las herramientas de IA funcionan y están activas: hooks, guardas, MCP, ayuda al día, coherencia con el documento maestro y pruebas. | `node ai/scripts/herramientas.mjs verificar --pruebas` |
+| `npm run ai:activar` | Guía paso a paso para activar las skills, Spec Kit, subagentes, MCP, hooks y su entorno que no estén activos (la vigilancia en segundo plano la entrega sola). | `node ai/scripts/herramientas.mjs activar` |
 | `npm run ai:cambios` | Resume qué herramientas de IA cambian frente a origin/dev y si son coherentes con el documento maestro (-- --desde <ref> --hasta <ref>). | `node ai/scripts/herramientas.mjs cambios` |
 | `npm run codigo:revisar` | Revisor de código vivo: código roto, muerto o desconectado, con plan de solución, y estado del CI/CD por rama (falla si hay errores). | `node ai/scripts/codigo-vivo.mjs revisar` |
 | `npm run codigo:cicd` | Estado del CI/CD de dev, qa y main: conflictos, código vivo, pruebas, build y arranque. | `node ai/scripts/codigo-vivo.mjs cicd` |
@@ -390,7 +392,7 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | `npm run sdd:ver` | Muestra un prompt del SDD con su contexto: npm run sdd:ver -- <ID>. | `node ai/scripts/sdd.mjs ver` |
 | `npm run sdd:historial` | Historial de los prompts del SDD: decisiones, resultados, cambios y conflictos (-- --id <ID>). | `node ai/scripts/sdd.mjs historial` |
 | `npm run sdd:validar` | Comprueba que todos los SDD de sdd/ sigan la estructura común (sdd/00-estructura.md). | `node ai/scripts/sdd.mjs validar` |
-| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs ai/hooks/test/equipo.test.mjs ai/hooks/test/sdd.test.mjs` |
+| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs ai/hooks/test/equipo.test.mjs ai/hooks/test/sdd.test.mjs ai/hooks/test/vigilancia.test.mjs` |
 | `npm run env:check` | Revisa los archivos .env y que .env y .env.example tengan la misma estructura (sin mostrar valores). | `node ai/scripts/entorno.mjs check` |
 | `npm run env:sync` | Crea o alinea tu .env con .env.example sin leer ni mostrar valores. | `node ai/scripts/entorno.mjs sync` |
 | `npm run env:compartir` | Copia tu .env a Descargas para compartirlo con el equipo por un canal seguro. | `node ai/scripts/entorno.mjs compartir` |
@@ -441,6 +443,21 @@ de esta ayuda o `AGENTS.md`. Cuando una cambia:
 
 `npm run ai:cambios` muestra qué herramientas cambian en tu rama frente a `origin/dev` y si son coherentes, antes de
 abrir la PR.
+
+### Vigilancia en segundo plano y guía para activar
+
+Ningún asistente tiene un hook con temporizador, así que la vigilancia se apoya en los eventos: al iniciar sesión y
+con cada mensaje (como máximo cada 5 minutos) se lanza la verificación completa **en un proceso aparte** que no
+hace esperar al asistente; el resultado queda en `.git/uraqi-vigilancia.json`. Si algo no está activo, el siguiente
+mensaje entrega al asistente una **guía paso a paso** para ayudar a la persona a activarlo (una vez por problema y
+sesión) y, cuando todo vuelve a estar activo, también lo avisa. Además de lo anterior, comprueba:
+
+- skills en cada asistente (copia en `.claude/skills/` para Claude Code) y los comandos de Spec Kit en los cuatro;
+- subagentes generados para Claude Code, Gemini CLI, Codex CLI y opencode;
+- servidores MCP aprobados en Claude Code (aviso; los demás asistentes no lo necesitan);
+- Node 20 o superior, dependencias (`npm install`), Python (aviso) y sesión de GitHub CLI (aviso).
+
+`npm run ai:activar` muestra la misma guía cuando quieras.
 
 ## SDD por área: orden de prompts e historial
 

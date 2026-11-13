@@ -111,6 +111,7 @@ node ai/scripts/issues-de-promocion.mjs dev qa   # lista "Refs #N" de una promoc
 npm run ai:sync                     # regenera configuraciones y esta ayuda tras editar una fuente
 npm run ai:check                    # falla si algo quedó desactualizado
 npm run ai:verificar                # ¿funcionan y están activas todas las herramientas?
+npm run ai:activar                  # guía paso a paso para activar lo que falte
 npm run ai:cambios                  # qué herramientas cambian frente a origin/dev y si son coherentes
 npm run codigo:revisar              # código roto, muerto o desconectado + CI/CD por rama, con plan
 npm run codigo:cicd                 # solo el estado del CI/CD de dev, qa y main
@@ -271,6 +272,21 @@ de esta ayuda o `AGENTS.md`. Cuando una cambia:
 
 `npm run ai:cambios` muestra qué herramientas cambian en tu rama frente a `origin/dev` y si son coherentes, antes de
 abrir la PR.
+
+### Vigilancia en segundo plano y guía para activar
+
+Ningún asistente tiene un hook con temporizador, así que la vigilancia se apoya en los eventos: al iniciar sesión y
+con cada mensaje (como máximo cada 5 minutos) se lanza la verificación completa **en un proceso aparte** que no
+hace esperar al asistente; el resultado queda en `.git/uraqi-vigilancia.json`. Si algo no está activo, el siguiente
+mensaje entrega al asistente una **guía paso a paso** para ayudar a la persona a activarlo (una vez por problema y
+sesión) y, cuando todo vuelve a estar activo, también lo avisa. Además de lo anterior, comprueba:
+
+- skills en cada asistente (copia en `.claude/skills/` para Claude Code) y los comandos de Spec Kit en los cuatro;
+- subagentes generados para Claude Code, Gemini CLI, Codex CLI y opencode;
+- servidores MCP aprobados en Claude Code (aviso; los demás asistentes no lo necesitan);
+- Node 20 o superior, dependencias (`npm install`), Python (aviso) y sesión de GitHub CLI (aviso).
+
+`npm run ai:activar` muestra la misma guía cuando quieras.
 
 ## SDD por área: orden de prompts e historial
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Herramientas de IA: verificar que funcionan y están activas, revisar la coherencia de sus cambios con el documento
 // maestro y avisar a los demás colaboradores cuando cambian.
-//   node ai/scripts/herramientas.mjs verificar [--rapido] [--pruebas] [--ci] [--json]
+//   node ai/scripts/herramientas.mjs verificar [--rapido] [--pruebas] [--ci] [--json] [--guardar]
+//   node ai/scripts/herramientas.mjs activar                                   (guía paso a paso de lo que no está activo)
 //   node ai/scripts/herramientas.mjs cambios [--desde <ref>] [--hasta <ref>]   (por defecto: origin/dev → árbol de trabajo)
 //   node ai/scripts/herramientas.mjs revisar-pr --pr <N> --base <ref>          (CI: falla si algo no funciona o es incoherente)
 //   node ai/scripts/herramientas.mjs notificar --pr <N> [--simular]            (CI: comenta mencionando a los colaboradores)
@@ -11,6 +12,8 @@ import { resumirCambios, textoResumen, textoAviso, MARCA_REVISION, MARCA_AVISO }
 import { raiz, cambiosEntre, cambiosDeTrabajo, coherenciaDeCambios, parseNameStatus } from '../hooks/lib/herramientas-git.mjs';
 import { verificar, fallidas, textoVerificacion } from '../hooks/lib/verificacion.mjs';
 import { api, repoSlug, colaboradores } from '../hooks/lib/github.mjs';
+import { guardarVigilancia } from '../hooks/lib/vigilancia.mjs';
+import { textoGuia } from '../hooks/lib/guia-activacion.mjs';
 
 const args = process.argv.slice(2);
 const comando = args[0] ?? 'verificar';
@@ -22,6 +25,11 @@ const resumenPaso = (texto) => { if (process.env.GITHUB_STEP_SUMMARY) fs.appendF
 
 async function cmdVerificar() {
   const r = await verificar(root, { rapido: tiene('--rapido'), ci: tiene('--ci'), conPruebas: tiene('--pruebas') });
+  // --guardar: lo usa la vigilancia en segundo plano; deja el resultado en .git/ y no imprime nada.
+  if (tiene('--guardar')) {
+    guardarVigilancia(root, { fecha: Date.now(), enCurso: null, resultados: r });
+    return;
+  }
   if (tiene('--json')) console.log(JSON.stringify(r, null, 2));
   else console.log(`Herramientas de IA · verificación\n${textoVerificacion(r)}`);
   const malas = fallidas(r);
@@ -125,7 +133,17 @@ async function cmdNotificar() {
   console.log(`Aviso publicado en la PR #${numero}${menciones.length ? ` para ${menciones.join(', ')}` : ''}.`);
 }
 
-const comandos = { verificar: cmdVerificar, cambios: cmdCambios, 'revisar-pr': cmdRevisarPr, notificar: cmdNotificar };
+/** Guía paso a paso de lo que no está activo (verificación completa, sin las pruebas). */
+async function cmdActivar() {
+  const r = await verificar(root, {});
+  guardarVigilancia(root, { fecha: Date.now(), enCurso: null, resultados: r });
+  const fallos = r.filter((x) => !x.ok);
+  if (!fallos.length) { console.log(`✔ Todas las herramientas de IA están activas (${r.length} comprobaciones).`); return; }
+  console.log(textoGuia(fallos, { titulo: 'Herramientas de IA que no están activas' }));
+  process.exitCode = fallidas(r).length ? 1 : 0;
+}
+
+const comandos = { verificar: cmdVerificar, activar: cmdActivar, cambios: cmdCambios, 'revisar-pr': cmdRevisarPr, notificar: cmdNotificar };
 if (!comandos[comando]) {
   console.error(`Comando desconocido: ${comando}. Usa: ${Object.keys(comandos).join(', ')}.`);
   process.exit(2);
