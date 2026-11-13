@@ -38,16 +38,18 @@ $ARGUMENTS
 ## Features recomendadas (una spec cada una)
 
 Descomposición propuesta a partir de §19 y del plan del hackathon (§25). Es una propuesta: confírmala con
-el equipo en la fase 2.
+el equipo en la fase 2. En **este repositorio (backend)** van las specs del pipeline, la publicación e
+Insight; las de la web van en `UraqiVision`.
 
-| Spec | Módulos | Requisitos principales | Primera meta |
-|---|---|---|---|
-| `001-pipeline-estacion` | M-INGESTA, M-CIENCIA, M-VALIDACIÓN | MC-01–MC-07, CQ-01–CQ-06, VC-01–VC-05, RF-26 | Antes/después real de San Ignacio (sáb 13:00) |
-| `002-publicacion-estacion` | M-PUBLICACIÓN | RF-05–RF-09, RF-22, RF-27, RNF-02, RNF-09 | Carpeta publicada que la web pueda leer |
-| `003-mapa-analisis` | M-MAPA | RF-05–RF-08, RF-10, RF-35, RF-36, RF-38 | Mapa 2D con deslizador y el primer par real |
-| `004-globo-atlas` | M-GLOBO, M-ATLAS | RF-01–RF-03, RF-25–RF-30, RF-32 | Globo con departamentos y vuelo de cámara |
-| `005-insight` | M-INSIGHT | RF-16–RF-18, RN-09, RN-10, RN-14, RNF-06, RNF-07 | `POST /api/insight` con plantillas de respaldo |
-| `006-interfaz-bilingue` | M-INTERFAZ | RF-19–RF-24, RF-31, RF-33, RF-34, RF-37, RNF-03, RNF-04, RNF-12 | Cambio de idioma y estados de la vista |
+| Spec | Repositorio | Módulos | Requisitos principales | Primera meta |
+|---|---|---|---|---|
+| `001-pipeline-estacion` | este (backend) | M-INGESTA, M-CIENCIA, M-VALIDACIÓN | MC-01–MC-07, CQ-01–CQ-06, VC-01–VC-05, RF-26 | Antes/después real de San Ignacio (sáb 13:00) |
+| `002-publicacion-estacion` | este (backend) | M-PUBLICACIÓN | RF-22, RF-26, RF-27, RNF-02, RNF-08, RNF-09 | Carpeta publicada (§17.3) que la web pueda leer |
+| `003-insight` | este (backend) | M-INSIGHT | RF-16–RF-18, RN-09, RN-10, RN-14, RNF-06, RNF-07 | `POST /api/insight` con plantillas de respaldo |
+| mapa, globo, atlas e interfaz | `UraqiVision` | M-MAPA, M-GLOBO, M-ATLAS, M-INTERFAZ | RF-01–RF-08, RF-19–RF-38 | La web que consume lo publicado |
+
+El backend y la web se coordinan por dos contratos del documento maestro: los archivos publicados de cada
+estación (§17.3) y `POST /api/insight` (§21.1). Un cambio de contrato se acuerda entre ambos repositorios.
 
 ## Fases
 
@@ -64,15 +66,15 @@ el equipo en la fase 2.
 | 8 Verificar | Cada criterio de aceptación con evidencia; subagentes revisores | `speckit-converge` si falta algo | informe y spec actualizada |
 
 En la fase 8 usa el subagente que corresponda al módulo: `revisor-cientifico` (pipeline),
-`auditor-publicacion` (carpeta publicada), `revisor-interfaz` (web), `revisor-insight` (Insight) y
-`revisor-qa` (pruebas y evidencia de todo el diff).
+`auditor-publicacion` (carpeta publicada), `revisor-insight` (Insight) y `revisor-qa` (pruebas y evidencia
+de todo el diff).
 
 ## Prompts listos
 
 **Fase 1, constitución:**
 
 ```text
-/speckit-constitution Crea la constitución de UraqiVision a partir de docs/UraqiVisionDocumentoMaestrov1.0.pdf (usa la copia .txt para leerlo), que es la fuente de verdad y prevalece sobre la constitución. Principios: I. Documento maestro primero: nada fuera del alcance de §8 sin consultar; las DP de §29 no se implementan hasta resolverse. II. Ciencia honesta: RN-01 a RN-06 y RN-13 son obligatorias (misma órbita y grilla, sin BETA, sin datos simulados como resultados, causas como hipótesis, hectáreas con rango, ausencia de dato nunca como cero). III. Arquitectura estática primero (§17): procesamiento en Python antes, web que solo lee archivos publicados, Insight como única pieza en servidor; cambiar el stack de §18 requiere enmendar el documento. IV. Reproducibilidad e integridad (RNF-08, RNF-09, CQ-06): manifiesto con gránulos, CRID y sumas de verificación; COG float32 sin pérdida. V. Bilingüe y accesible (RNF-03, RNF-04, RNF-12): 100 % es/en, WCAG 2.2 AA, movimiento reducido. VI. Seguridad y costo (RNF-06, RNF-07, RNF-10): ninguna clave en el navegador ni en el repo; todo en planes gratuitos salvo el proveedor de IA. VII. Trazabilidad: cada spec, tarea, prueba y commit cita sus identificadores (RF, RNF, MC, RN, CQ, VC, PS). Restricciones: TypeScript estricto, pytest y Vitest, licencia MIT para código y CC BY 4.0 para textos y datos derivados. Flujo: una tarea a la vez con su prueba, commits sin Co-Authored-By de IA.
+/speckit-constitution Crea la constitución del backend de UraqiVision a partir de docs/UraqiVisionDocumentoMaestrov1.0.pdf (usa la copia .txt para leerlo), que es la fuente de verdad y prevalece sobre la constitución. Este repositorio es el pipeline en Python y la función Insight; la web vive en UraqiVision. Principios: I. Documento maestro primero: nada fuera del alcance de §8 sin consultar; las DP de §29 no se implementan hasta resolverse. II. Ciencia honesta: RN-01 a RN-06 y RN-13 son obligatorias (misma órbita y grilla, sin BETA, sin datos simulados como resultados, causas como hipótesis, hectáreas con rango, ausencia de dato nunca como cero). III. Arquitectura estática primero (§17): procesamiento en Python antes; la web solo lee los archivos publicados (§17.3) e Insight es la única pieza en servidor (§21); cambiar el stack de §18 o un contrato requiere acordarlo con el frontend y enmendar el documento. IV. Reproducibilidad e integridad (RNF-08, RNF-09, CQ-06): manifiesto con gránulos, CRID y sumas de verificación; COG float32 sin pérdida. V. Textos de la estación en español e inglés (RNF-03). VI. Seguridad y costo (RNF-06, RNF-07, RNF-10): ninguna clave en el repo; la del proveedor de IA solo en el servidor; todo en planes gratuitos salvo el proveedor de IA. VII. Trazabilidad: cada spec, tarea, prueba y commit cita sus identificadores (RF, RNF, MC, RN, CQ, VC, PS). Restricciones: pytest para el pipeline e Insight, licencia MIT para código y CC BY 4.0 para datos derivados. Flujo: una tarea a la vez con su prueba, commits sin Co-Authored-By de IA.
 ```
 
 **Fase 2, ejemplo para la primera feature:**

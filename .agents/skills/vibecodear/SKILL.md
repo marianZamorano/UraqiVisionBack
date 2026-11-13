@@ -68,7 +68,7 @@ python "$SKILL_DIR/scripts/sprint_doc.py" new "$PROJECT" --objective "<objetivo>
 ### 6. Implementar (delegando)
 Trabaja sobre el código existente respetando su estilo, una tarea a la vez, prueba primero
 (`test-driven-development`). Delega en el subagente del rol cuando la tarea es suya (por ejemplo
-`automation-qa-engineer` para una suite, `react-ui-reviewer` para un componente). Verifica lo que reporte cada
+`automation-qa-engineer` para una suite de pytest, `revisor-cientifico` para el pipeline). Verifica lo que reporte cada
 subagente contra el diff: no confíes en su informe.
 
 ### 7. Probar
@@ -87,7 +87,7 @@ revisión del subagente del módulo (tabla de roles) y de `revisor-qa`.
 python "$SKILL_DIR/scripts/run_local.py" "$PROJECT/<carpeta>" --cmd "npm run dev" --port 5173 --path /
 ```
 Detecta puertos ocupados, espera a que la app responda, guarda el final del log y detiene solo lo que levantó
-(`--keep` para que la persona pruebe). Para revisar la interfaz usa el MCP `playwright` solo contra `localhost`.
+(`--keep` para que la persona pruebe).
 
 > ⛔ **Punto de control 2:** muestra cómo abrir la app y pide feedback. Espera la respuesta.
 
