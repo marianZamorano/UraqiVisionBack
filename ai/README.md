@@ -62,6 +62,7 @@ las de API, contratos, integración con base de datos y carga.
 |---|---|---|
 | `documento-maestro` | Encontrar requisitos por identificador, comprobar el alcance, clasificar hechos e hipótesis | Todos |
 | `sdd-uraqivision` | Flujo de Spec Kit adaptado al documento y al hackathon, con prompts listos | Todos |
+| `microauditoria` | Últimas decisiones y cambios con evidencia, comprobaciones rápidas y contrato con el otro repositorio (igual en backend y frontend) | Todos |
 | `ciencia-radar-nisar` | MC-01–MC-09, CQ, VC, unidades lineal/dB, sin dato ≠ 0 | M-INGESTA, M-CIENCIA, M-VALIDACIÓN |
 | `publicacion-estacion` | Contrato de la carpeta publicada (§17.3), COG sin pérdida, peso | M-PUBLICACIÓN |
 | `insight-lector-radar` | Contrato, adaptador, plantillas, límites y seguridad de la clave | M-INSIGHT |

@@ -145,12 +145,12 @@ Todo se define una sola vez y se genera para cada plataforma con `node ai/sync.m
 **Coordinador**: la skill `vibecodear` actúa como Engineering Manager: diagnostica, elige roles y reparte el
 trabajo entre las skills y subagentes de cada rol (tabla en `.agents/skills/vibecodear/references/roles.md`).
 
-Skills por rol (31; detalle en `ai/README.md`). Las de la web (globo, mapa, interfaz, accesibilidad, atlas y
+Skills por rol (32; detalle en `ai/README.md`). Las de la web (globo, mapa, interfaz, accesibilidad, atlas y
 descargas) están en `UraqiVision`.
 
 | Rol | Skills |
 |---|---|
-| Proyecto y SDD | `documento-maestro`, `sdd-uraqivision`, `flujo-issues-y-pr`, `entrega-hackathon`, `rigor-y-fuentes`, `vibecodear` |
+| Proyecto y SDD | `documento-maestro`, `sdd-uraqivision`, `flujo-issues-y-pr`, `entrega-hackathon`, `rigor-y-fuentes`, `vibecodear`, `microauditoria` |
 | Ingesta | `ingesta-nisar-asf`, `python-geoespacial` |
 | Ciencia y validación | `ciencia-radar-nisar`, `python-geoespacial`, `validacion-optica-firms`, `notebook-reproducible` |
 | Publicación | `publicacion-estacion` |
