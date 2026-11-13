@@ -22,15 +22,15 @@ consume lo que este repositorio publica: los archivos de cada estación (§17.3)
 
 | Pieza | Cantidad | Fuente |
 |---|---|---|
-| Skills propias | 33 | `.agents/skills/` |
+| Skills propias | 34 | `.agents/skills/` |
 | Skills de Spec Kit (SDD) | 10 | `.agents/skills/speckit-*` |
-| Subagentes | 12 | `ai/agents/` |
+| Subagentes | 13 | `ai/agents/` |
 | Servidores MCP | 3 | `ai/mcp/servers.json` |
 | Hooks de los asistentes | 4 | `ai/hooks/*.mjs` |
-| Reglas de las guardas | 31 | `ai/hooks/lib/` |
+| Reglas de las guardas | 32 | `ai/hooks/lib/` |
 | Hooks de git | 6 | `.githooks/` |
-| Workflows de GitHub | 8 | `.github/workflows/` |
-| Scripts npm | 18 | `package.json` |
+| Workflows de GitHub | 9 | `.github/workflows/` |
+| Scripts npm | 21 | `package.json` |
 
 ## Instalación (primera vez)
 
@@ -124,6 +124,9 @@ npm run ai:sync                     # regenera configuraciones y esta ayuda tras
 npm run ai:check                    # falla si algo quedó desactualizado
 npm run ai:verificar                # ¿funcionan y están activas todas las herramientas?
 npm run ai:cambios                  # qué herramientas cambian frente a origin/dev y si son coherentes
+npm run codigo:revisar              # código roto, muerto o desconectado + CI/CD por rama, con plan
+npm run codigo:cicd                 # solo el estado del CI/CD de dev, qa y main
+uv run --with pypdf python ai/scripts/extraer_documento.py   # regenera la copia .txt del documento maestro
 npm run test:guardas                # pruebas de guardas, flujo y README
 node .agents/skills/microauditoria/scripts/evidencia.mjs --dias 7   # evidencia de los últimos cambios
 
@@ -152,6 +155,7 @@ persona las pide (`/nombre` en Claude Code, `$nombre` en Codex CLI). Fuente: `.a
 |---|---|---|---|
 | `ayuda` | Ayuda de UraqiVision que explica cómo se instala y cómo funciona el repositorio, con ejemplos de ejecución, a partir de ai/README.md (generado por ai/sync.mjs y siempre al día). Cubre cada skill, subagente, servidor MCP, hook, guarda, workflow y script npm, y el SDD con Spec Kit. | Usar cuando se pida «ayuda», «help», «cómo se instala», «cómo funciona», «cómo uso…», «qué skills, subagentes, MCP o hooks hay», «para qué sirve…», «dame un ejemplo de…» o «qué comando…», o cuando alguien empieza en el proyecto. | — |
 | `ciencia-radar-nisar` | Reglas científicas para el pipeline de UraqiVision con NISAR L2 GCOV en banda L (HH, HV), métodos MC-01 a MC-09, controles de calidad CQ-01 a CQ-06 y validación VC-01 a VC-05. | Usar al escribir o revisar código Python de ingesta, línea base, cociente de HV, parches, fenología, clases de parche, hectáreas o validación con Sentinel-2 y FIRMS. | — |
+| `codigo-vivo` | Revisor de código vivo de UraqiVision que detecta código que no funciona o que no está conectado aunque dé la impresión de funcionar (imports rotos, paquetes sin declarar, referencias a archivos inexistentes, código muerto o que solo usan las pruebas, trabajo sin terminar, datos simulados, pruebas desactivadas), da un plan de solución, revisa que cada rama tenga su CI/CD (conflictos, código vivo, pruebas, build y arranque) y comprueba que el proyecto vuelva a levantar. | Usar al pedir una PR hacia qa o main (promoción), cuando se pregunte «hay código muerto», «esto está conectado», «funciona de verdad», «está listo el CI/CD», antes de dar por terminada una funcionalidad o al implementar el CI/CD. | — |
 | `devops-dependency-security` | Evalúa la seguridad de la cadena de suministro de dependencias — vulnerabilidades conocidas (npm audit), lockfiles reproducibles, scripts de instalación, versiones fijadas, paquetes abandonados o typosquatting — y propone actualizaciones mínimas verificadas. Úsala antes de releases, al añadir dependencias o tras avisos de seguridad. | Solo la invoca la persona (`/devops-dependency-security [ruta-del-paquete]`). | — |
 | `devops-free-tier-audit` | Evalúa si una arquitectura puede ejecutarse con planes gratuitos reales (Vercel Hobby, Neon, Supabase, GitHub Actions u otros), compara consumo previsto o real con las cuotas documentadas, detecta riesgos de cargos, suspensión o uso comercial prohibido y propone alternativas gratuitas compatibles. Úsala antes de elegir proveedores o cuando el consumo se acerque a los límites. | Solo la invoca la persona (`/devops-free-tier-audit [proveedor\|all] [archivo-de-consumo.json]`). | — |
 | `devops-git-workflow` | Aplica un flujo Git seguro para trabajo DevOps — inspección del estado, ramas de trabajo derivadas de la rama correcta, commits atómicos y descriptivos, preview por rama, protección de la rama de producción y push sin force — preservando siempre el trabajo ajeno. Úsala al empezar una tarea, antes de commitear o al preparar un PR. | Solo la invoca la persona (`/devops-git-workflow [start <rama>\|commit\|pr]`). | — |
@@ -239,6 +243,7 @@ hacen solo con aprobación. Cómo invocarlos: en Claude Code, «usa el subagente
 | `qa-architect` | Escribe con aprobación | Arquitecto/a de QA. Analiza el proyecto con evidencias y define la estrategia de pruebas basada en riesgo, los niveles y tipos de prueba, los casos prioritarios y los criterios de salida, trazados a PS-01 a PS-09, VC-01 a VC-05 y CQ-01 a CQ-06 del documento maestro. Usar al iniciar QA en una feature, para planificar pruebas de una spec o de la entrega, o cuando se pida una estrategia o plan de pruebas. | `qa-project-discovery`, `qa-test-strategy`, `qa-test-design`, `documento-maestro`, `verification-before-completion` | `qa-evidence` |
 | `release-readiness-reviewer` | Solo lectura | Revisor de go/no-go. Antes de desplegar el sitio o la función Insight, emite un veredicto con evidencias (Git, build, lint, pruebas, configuración, secretos, dependencias, variables, peso de las estaciones, rollback) en niveles NOT_READY / CONFIG_PREPARED / BUILD_VERIFIED. No despliega. | `devops-release-readiness`, `devops-git-workflow`, `entrega-hackathon` | `devops-readiness` |
 | `revisor-cientifico` | Solo lectura | Revisor científico del pipeline de UraqiVision (M-INGESTA, M-CIENCIA, M-VALIDACIÓN). Revisa código Python, notebooks y resultados contra los métodos MC-01 a MC-09, las reglas RN-01, RN-02, RN-05, RN-06 y RN-13, los controles CQ-01 a CQ-06 y la validación VC-01 a VC-05. No modifica archivos. Usar al terminar una parte del pipeline, antes de publicar una estación o cuando una cifra de hectáreas o un umbral parezcan dudosos. | `ciencia-radar-nisar`, `python-geoespacial`, `validacion-optica-firms`, `verification-before-completion` | — |
+| `revisor-codigo-vivo` | Solo lectura | Revisor de código vivo y CI/CD de UraqiVision. Comprueba que no haya código que no funciona o que no está conectado (imports rotos, código muerto o que solo usan las pruebas, trabajo sin terminar, datos simulados, comandos documentados que no existen), que cada rama tenga su CI/CD con conflictos, código vivo, pruebas, build y arranque, y entrega un plan de solución. No modifica archivos. Usar cuando se pida de forma explícita una PR hacia qa o main, antes de una promoción o al implementar el CI/CD. | `codigo-vivo`, `verification-before-completion`, `documento-maestro` | — |
 | `revisor-insight` | Solo lectura | Revisor de seguridad y comportamiento de Insight, el lector de radar de UraqiVision (M-INSIGHT). Verifica el contrato POST /api/insight, que la clave del proveedor nunca llegue al navegador ni al repositorio, los límites de uso, las plantillas de respaldo y que las respuestas se ciñan a la estación abierta sin pronosticar ni confirmar causas. No modifica archivos. Usar al terminar la función Insight, al cambiar su prompt o antes de desplegarla. | `insight-lector-radar`, `verification-before-completion` | — |
 | `revisor-qa` | Solo lectura | Revisor de calidad de UraqiVision. Revisa un diff, una rama o una tarea terminada y comprueba que lo que cambia esté probado según PS-01 a PS-09, que las pruebas sean buenas y que haya evidencia ejecutada de que pasan. No modifica archivos. Usar antes de marcar una tarea como completada, antes de integrar una rama o para validar lo que reporta otro agente. | `verification-before-completion`, `documento-maestro` | — |
 | `security-qa-engineer` | Solo lectura | Ingeniero/a de QA de seguridad DEFENSIVA. Dentro de un alcance autorizado, busca secretos (claves del proveedor de IA, credenciales de Earthdata), patrones inseguros (CWE), validación de entradas de Insight, configuración y cabeceras, y reporta hallazgos con evidencia y recomendación sin aplicar cambios (RNF-06, RNF-07, PS-06). Usar para revisiones de seguridad, auditoría de secretos o checklist OWASP. | `qa-security-testing`, `verification-before-completion` | `qa-evidence` |
@@ -267,7 +272,7 @@ Se ejecutan en cada sesión, mensaje o herramienta del asistente. Una sola lógi
 | Script | Qué hace | Claude Code | Codex CLI | Gemini CLI | opencode |
 |---|---|---|---|---|---|
 | `ai/hooks/post-edit.mjs` | Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow, script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes). | PostToolUse (Write\|Edit\|MultiEdit) | PostToolUse (^apply_patch$) | AfterTool (write_file\|replace) | — |
-| `ai/hooks/pre-tool.mjs` | Hook previo a cada herramienta (PreToolUse en Claude y Codex, BeforeTool en Gemini). Bloquea secretos, rutas protegidas, comandos destructivos y push o merge directo a main. | PreToolUse (Bash\|PowerShell\|Write\|Edit\|MultiEdit\|NotebookEdit\|Read) | PreToolUse (^(Bash\|apply_patch)$) | BeforeTool (run_shell_command\|write_file\|replace\|read_file) | plugin: tool.execute.before |
+| `ai/hooks/pre-tool.mjs` | Hook previo a cada herramienta (PreToolUse en Claude y Codex, BeforeTool en Gemini). Bloquea secretos, rutas protegidas, comandos destructivos y push o merge directo a main. Al crear una PR hacia qa o main (promoción pedida de forma explícita) activa el revisor de código vivo: si hay código roto o muerto, o el CI/CD exigible está incompleto, bloquea y muestra el plan de solución. | PreToolUse (Bash\|PowerShell\|Write\|Edit\|MultiEdit\|NotebookEdit\|Read) | PreToolUse (^(Bash\|apply_patch)$) | BeforeTool (run_shell_command\|write_file\|replace\|read_file) | plugin: tool.execute.before |
 | `ai/hooks/prompt-guard.mjs` | Hook del mensaje del usuario (UserPromptSubmit en Claude y Codex, BeforeAgent en Gemini). 1) Si el mensaje contiene un secreto, no se envía al modelo. 2) Cada 10 minutos como máximo, revisa en GitHub si hay PR nuevas que esperan la aprobación de la persona y, si hay novedades, se las indica al asistente para que avise (sin red o sin gh, no hace nada). | UserPromptSubmit | UserPromptSubmit | BeforeAgent | plugin: chat.message |
 | `ai/hooks/session-context.mjs` | Hook de inicio de sesión: recuerda al agente la fuente de verdad y las reglas clave, y avisa de las PR que esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). También avisa de las herramientas de IA que cambiaron desde la última sesión (con la ayuda regenerada si hacía falta y la coherencia con el documento maestro) y de cualquier herramienta que haya dejado de funcionar o de estar activa. Nunca bloquea. | SessionStart | SessionStart | SessionStart | — |
 
@@ -280,6 +285,7 @@ Reglas que bloquean (o avisan) antes de que el asistente actúe. Los mensajes ll
 |---|---|---|
 | `ayuda-desactualizada` | Commit bloqueado: no se pudo regenerar ai/README.md (la ayuda) ni la configuración generada. | `ai/hooks/git-pre-commit.mjs` |
 | `borrar-rama` | Borrar ramas está prohibido: son parte de la trazabilidad entre issues, commits y PR. Solo una persona puede decidirlo, si la rama crea confusión o su código ya no sirve | `ai/hooks/lib/guard.mjs` |
+| `codigo-no-vivo` | PR hacia … detenida: el revisor de código vivo encontró código que no funciona o que no está conectado. | `ai/hooks/lib/promocion.mjs` |
 | `commit-en-main` | No se commitea directamente en … | `ai/hooks/git-pre-commit.mjs` |
 | `commit-grande` | Este commit mezcla varios temas. | `ai/hooks/git-commit-msg.mjs` |
 | `commit-sin-issue` | Commit bloqueado: cada commit debe citar su issue para que haya trazabilidad. | `ai/hooks/git-commit-msg.mjs` |
@@ -334,6 +340,7 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 |---|---|---|---|
 | Aprobaciones | pull_request, pull_request_review | Aprobaciones de PR (reglas en ai/hooks/lib/aprobaciones.mjs): - Hacia dev: el autor puede fusionar su propia PR tras confirmar; no se exige la aprobación de otros. - Hacia qa y main: deben aprobar TODOS los colaboradores excepto el autor, sobre el último commit. Al abrir una PR hacia qa o main pide revisión automáticamente a quienes faltan (GitHub les notifica). El check falla mientras falten aprobaciones o haya cambios solicitados; se reevalúa con cada revisión. | `.github/workflows/aprobaciones.yml` |
 | Buenas prácticas de PR | pull_request | Buenas prácticas de PR hacia dev, qa y main (reglas en ai/hooks/lib/buenas-practicas-pr.mjs): título (Conventional Commits o "Promoción dev → qa"), rama tipo/N que cierra su issue, descripción completa (salvo borrador), issues válidos, sin conflictos ni secretos, archivos generados al día y pruebas en verde. Pone etiquetas de tipo y tamaño, asigna al autor y comenta un resumen. Las ramas NUNCA se borran al fusionar: son parte de la trazabilidad. | `.github/workflows/buenas-practicas-pr.yml` |
+| Código vivo | pull_request | Revisor de código vivo en las PR hacia qa y main (las promociones, que solo se abren cuando se piden de forma explícita): detecta código que no funciona o que no está conectado (imports rotos, paquetes sin declarar, referencias a archivos inexistentes, código muerto o que solo usan las pruebas, trabajo sin terminar, datos simulados, pruebas desactivadas), revisa que cada rama tenga su CI/CD (conflictos, código vivo, pruebas, build y arranque) y construye y levanta el proyecto si ya existe. Comenta los hallazgos con su plan de solución y falla si hay errores. Lógica en ai/scripts/codigo-vivo.mjs y ai/hooks/lib/codigo-vivo.mjs. | `.github/workflows/codigo-vivo.yml` |
 | Entorno | pull_request | Variables de entorno (ai/scripts/aviso-entorno.mjs): cuando una PR cambia la estructura de .env.example (o de un .env.<x>.example permitido), comenta mencionando a todos los colaboradores excepto el autor con las claves nuevas y eliminadas, sin valores. Falla si una plantilla trae valores en claves sensibles. | `.github/workflows/entorno.yml` |
 | Estado de issues | pull_request, workflow_dispatch | Estado de los issues según sus PR (reglas en ai/hooks/lib/estado-issues.mjs): PR hacia dev: borrador → "en progreso"; lista → "en revisión"; fusionada (aceptada) → "en dev" y se cierra; cerrada sin fusionar → se quitan "en progreso"/"en revisión". PR hacia qa o main: al abrirla se crea su issue de promoción; al fusionarla, SOLO con la aprobación completa (todos los colaboradores excepto el autor, sobre el último commit), los issues pasan a "en preproducción" o "en producción" y se cierra el issue de promoción. Sin aprobación completa no cambia ningún estado. Para aplicar a mano una PR ya fusionada: gh workflow run estado-issues.yml --ref dev -f pr=<N> | `.github/workflows/estado-issues.yml` |
 | Herramientas de IA | pull_request | Herramientas de IA (skills, subagentes, servidores MCP, hooks, guardas, workflows, scripts y ayuda): - En cada PR hacia dev, qa o main que cambie alguna: verifica que sigan funcionando y activas (ayuda y configuración generadas al día, scripts sin errores, guardas que responden, MCP propios que arrancan y pruebas) y que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes señaladas, frontmatter y MCP válidos). Resume el resultado en la PR y falla si algo no cumple. - Al fusionarse en dev: avisa a los demás colaboradores con un comentario nuevo que los menciona (GitHub les notifica) y les dice qué cambió y qué hacer. Lógica en ai/scripts/herramientas.mjs. | `.github/workflows/herramientas.yml` |
@@ -357,7 +364,10 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | `npm run ai:check` | Falla si la configuración generada o ai/README.md están desactualizados (no escribe nada). | `node ai/sync.mjs --check` |
 | `npm run ai:verificar` | Verifica que las herramientas de IA funcionan y están activas: hooks, guardas, MCP, ayuda al día, coherencia con el documento maestro y pruebas. | `node ai/scripts/herramientas.mjs verificar --pruebas` |
 | `npm run ai:cambios` | Resume qué herramientas de IA cambian frente a origin/dev y si son coherentes con el documento maestro (-- --desde <ref> --hasta <ref>). | `node ai/scripts/herramientas.mjs cambios` |
-| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs` |
+| `npm run codigo:revisar` | Revisor de código vivo: código roto, muerto o desconectado, con plan de solución, y estado del CI/CD por rama (falla si hay errores). | `node ai/scripts/codigo-vivo.mjs revisar` |
+| `npm run codigo:cicd` | Estado del CI/CD de dev, qa y main: conflictos, código vivo, pruebas, build y arranque. | `node ai/scripts/codigo-vivo.mjs cicd` |
+| `npm run codigo:levantar` | Instala, construye y arranca cada aplicación del repositorio y comprueba que responde (instala dependencias: pide aprobación). | `node ai/scripts/codigo-vivo.mjs levantar` |
+| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs` |
 | `npm run env:check` | Revisa los archivos .env y que .env y .env.example tengan la misma estructura (sin mostrar valores). | `node ai/scripts/entorno.mjs check` |
 | `npm run env:sync` | Crea o alinea tu .env con .env.example sin leer ni mostrar valores. | `node ai/scripts/entorno.mjs sync` |
 | `npm run env:compartir` | Copia tu .env a Descargas para compartirlo con el equipo por un canal seguro. | `node ai/scripts/entorno.mjs compartir` |
@@ -408,6 +418,32 @@ de esta ayuda o `AGENTS.md`. Cuando una cambia:
 
 `npm run ai:cambios` muestra qué herramientas cambian en tu rama frente a `origin/dev` y si son coherentes, antes de
 abrir la PR.
+
+## Revisor de código vivo y CI/CD
+
+Evita que llegue a `qa` o a `main` código que da la idea de funcionar sin funcionar. Se activa solo cuando se pide
+una promoción (PR hacia `qa` o `main`, que solo se abre si la persona lo pide de forma explícita):
+
+- **Guarda de los asistentes** (`[uraqi-guard:codigo-no-vivo]`): `gh pr create --base qa|main` se detiene si hay
+  errores, y el asistente muestra los hallazgos con su plan de solución.
+- **Workflow Código vivo**: comenta en la PR los hallazgos con el plan, el estado del CI/CD por rama y el
+  resultado del build y el arranque; falla si hay errores.
+- **Subagente `revisor-codigo-vivo`** (skill `codigo-vivo`): añade la revisión de sentido que el análisis
+  estático no ve (controles sin acción, endpoints inexistentes, errores silenciados) y da el dictamen.
+
+| Hallazgo | Nivel |
+|---|---|
+| Import roto, paquete sin declarar, referencia a un archivo inexistente, código muerto, prueba con `.only` | error |
+| Código o exportación que solo usan las pruebas o nadie usa, trabajo sin terminar, datos simulados (RN-04), prueba desactivada, documentación que cita un comando inexistente | aviso |
+
+Cada hallazgo trae su acción: **conectar** (con su RF/RNF), **eliminar** en una rama con su issue, **declarar
+como pendiente** o, si es intencional, marcar el archivo con `uraqi: vivo — <motivo>`.
+
+**CI/CD por rama.** Cuando se implemente, cada rama (`dev`, `qa`, `main`) debe verificar cinco etapas:
+conflictos con la rama destino, código vivo, pruebas, build y que el proyecto vuelva a levantar
+(`npm run codigo:levantar` construye y arranca cada aplicación y espera a que responda). Mientras no haya web,
+pipeline ni despliegue (hospedaje pendiente, DP-06), lo que falta sale como pendiente; desde que existan, es
+error. La skill `codigo-vivo` trae los pasos listos para el pipeline.
 
 ## Añadir algo
 

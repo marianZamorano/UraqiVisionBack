@@ -93,6 +93,10 @@ el commit, el push o la PR se rechazan con el motivo.
    con `Refs #N` todos los issues que lleva**. Genera la lista con
    `node ai/scripts/issues-de-promocion.mjs dev qa` (o `qa main`) y pégala en la descripción. Antes de
    la PR a `main`, el subagente `release-readiness-reviewer` da su veredicto.
+   Las promociones se abren **solo cuando la persona las pide de forma explícita**. Antes de abrirlas, el
+   subagente `revisor-codigo-vivo` (skill `codigo-vivo`) revisa que no haya código roto, muerto o desconectado
+   y el CI/CD por rama: `npm run codigo:revisar`. La guarda `[uraqi-guard:codigo-no-vivo]` detiene
+   `gh pr create --base qa|main` si hay errores, y el workflow Código vivo los comenta en la PR con su plan.
 
 ## Buenas prácticas de PR (automáticas)
 

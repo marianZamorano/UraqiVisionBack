@@ -1,0 +1,37 @@
+# Revisor de código vivo en las PR hacia qa y main (las promociones, que solo se abren cuando se piden de forma
+# explícita): detecta código que no funciona o que no está conectado (imports rotos, paquetes sin declarar,
+# referencias a archivos inexistentes, código muerto o que solo usan las pruebas, trabajo sin terminar, datos
+# simulados, pruebas desactivadas), revisa que cada rama tenga su CI/CD (conflictos, código vivo, pruebas, build y
+# arranque) y construye y levanta el proyecto si ya existe. Comenta los hallazgos con su plan de solución y falla si
+# hay errores. Lógica en ai/scripts/codigo-vivo.mjs y ai/hooks/lib/codigo-vivo.mjs.
+name: Código vivo
+
+on:
+  pull_request:
+    branches: [qa, main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  codigo-vivo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Revisar código vivo y CI/CD
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node ai/scripts/codigo-vivo.mjs revisar --pr "$PR_NUMBER"
+
+      - name: Build y arranque del proyecto
+        if: always()
+        run: node ai/scripts/codigo-vivo.mjs levantar

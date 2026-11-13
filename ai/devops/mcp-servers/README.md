@@ -43,20 +43,17 @@ Todas las salidas incluyen `summary` por severidad y truncan a 200 hallazgos (`t
 | `isError: true` | Fallo interno al ejecutar la herramienta (mensaje sin datos sensibles) |
 
 ### Instalación
-Con el instalador (`--with-mcp`) o manualmente en `.mcp.json` del proyecto:
-```json
-{ "mcpServers": { "devops-readiness": { "type": "stdio", "command": "node",
-  "args": ["DevOps/mcp-servers/devops-readiness/server.mjs"], "env": { "DEVOPS_MCP_ROOT": "." } } } }
-```
-o `claude mcp add devops-readiness -- node DevOps/mcp-servers/devops-readiness/server.mjs`.
+En UraqiVision se declara en `ai/mcp/servers.json` y `npm run ai:sync` lo registra en `.mcp.json` y en la
+configuración de cada asistente. Equivale a `node ai/devops/mcp-servers/devops-readiness/server.mjs`.
 Autenticación: ninguna (local, solo lectura). Permisos: lectura de archivos bajo la raíz y `git` de lectura (readiness).
 
 ### Pruebas
-`node --test DevOps/tests/integration.test.mjs` arranca el servidor contra un proyecto sintético y ejecuta handshake, listado, cada herramienta, confinamiento de rutas y errores.
+Las pruebas de integración del repositorio de origen no se importaron. `npm run ai:verificar` comprueba que el
+servidor arranca y responde al handshake `initialize`.
 Prueba manual rápida:
 ```bash
 printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18"}}' \
-  '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' | DEVOPS_MCP_ROOT=. node DevOps/mcp-servers/devops-readiness/server.mjs
+  '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' | DEVOPS_MCP_ROOT=. node ai/devops/mcp-servers/devops-readiness/server.mjs
 ```
 La integración en una sesión real de Claude Code (`/mcp`) no se ha probado en esta etapa porque instalarla activa el servidor en el proyecto; queda como paso de la persona.
 
