@@ -31,6 +31,7 @@ const PIEZAS = [
   ['herramienta de QA o DevOps', /^ai\/(qa|devops)\/(.+)$/, (m) => `${m[1]}/${m[2]}`, () => true],
   ['scripts npm', /^(package\.json|commitlint\.config\.mjs)$/, (m) => m[1], () => true],
   ['instrucciones de los asistentes', /^(AGENTS\.md|CLAUDE\.md|GEMINI\.md)$/, (m) => m[1], () => true],
+  ['referencias del documento', /^ai\/referencias\/(.+)$/, (m) => m[1], () => true],
   ['historial del SDD', /^sdd\/historial\/(.+)$/, (m) => m[1], () => true],
   ['SDD', /^sdd\/(.+)$/, (m) => m[1], () => true],
 ];

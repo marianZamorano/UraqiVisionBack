@@ -1,0 +1,848 @@
+{
+  "$comentario": "Referencias de §31 del documento maestro (APA 7; recursos web consultados el 12 de noviembre de 2026). citadaEn: dónde las cita el cuerpo del documento (evidencia). aplicaA: requisitos, módulos y skills a los que aplican (propuesta del equipo cuando el documento no la cita por nombre: ver citadaEn vacío). claves: textos que identifican la referencia en el código o la documentación. El contenido de cada enlace no se resume aquí: se consulta en la fuente antes de usar una afirmación concreta. Lo valida ai/hooks/lib/referencias.mjs contra §31.",
+  "referencias": [
+    {
+      "id": "asf-nisar-guia",
+      "corta": "Alaska Satellite Facility (2026). NISAR data user guide",
+      "tipo": "guia-oficial",
+      "enlace": "https://nisar-docs.asf.alaska.edu/",
+      "claves": [
+        "nisar-docs.asf.alaska.edu",
+        "NISAR data user guide"
+      ],
+      "citadaEn": [],
+      "aplicaA": {
+        "ids": [
+          "MC-01",
+          "RF-26",
+          "RF-37",
+          "RN-02",
+          "CQ-02",
+          "CQ-06"
+        ],
+        "modulos": [
+          "M-INGESTA",
+          "M-CIENCIA",
+          "M-INTERFAZ"
+        ],
+        "skills": [
+          "ingesta-nisar-asf",
+          "ciencia-radar-nisar",
+          "publicacion-estacion",
+          "metodo-y-creditos"
+        ]
+      },
+      "comoConsiderarla": "Guía de uso de los productos NISAR (GCOV, madurez, CRID, órbitas) que respaldan §10.1: cítala donde se busca, lee y describe el producto, y en la página de método."
+    },
+    {
+      "id": "asf-open-source",
+      "corta": "Alaska Satellite Facility (2026). Open source software packages",
+      "tipo": "guia-oficial",
+      "enlace": "https://nisar-docs.asf.alaska.edu/using-open-source/",
+      "claves": [
+        "nisar-docs.asf.alaska.edu/using-open-source",
+        "Open source software packages"
+      ],
+      "citadaEn": [],
+      "aplicaA": {
+        "ids": [
+          "MC-01",
+          "RNF-08"
+        ],
+        "modulos": [
+          "M-INGESTA"
+        ],
+        "skills": [
+          "ingesta-nisar-asf",
+          "python-geoespacial",
+          "notebook-reproducible"
+        ]
+      },
+      "comoConsiderarla": "Paquetes de código abierto para trabajar con NISAR (respalda las herramientas de §18): consúltala al elegir y fijar versiones y cítala en el notebook reproducible."
+    },
+    {
+      "id": "asf-gdal",
+      "corta": "Alaska Satellite Facility (2026). Using NISAR data with GDAL",
+      "tipo": "guia-oficial",
+      "enlace": "https://hyp3-docs.asf.alaska.edu/nisar-docs/gdal",
+      "claves": [
+        "hyp3-docs.asf.alaska.edu/nisar-docs/gdal",
+        "Using NISAR data with GDAL"
+      ],
+      "citadaEn": [],
+      "aplicaA": {
+        "ids": [
+          "MC-01",
+          "RNF-09"
+        ],
+        "modulos": [
+          "M-INGESTA"
+        ],
+        "skills": [
+          "ingesta-nisar-asf",
+          "python-geoespacial"
+        ]
+      },
+      "comoConsiderarla": "Lectura y recorte del GCOV con GDAL desde la nube (§17.2, §18, §22): cítala en el código de recorte y extracción de HHHH y HVHV."
+    },
+    {
+      "id": "abt-boletin-222",
+      "corta": "Autoridad de Bosques y Tierra (2026). Boletín oficial 222 de focos de calor",
+      "tipo": "fuente-boliviana",
+      "enlace": "https://www.abt.gob.bo/images/2026/Focos%20de%20Calor/2026%2008%2010%20Boletin%20oficial%20222%20MM.pdf",
+      "claves": [
+        "abt.gob.bo",
+        "Boletín oficial 222",
+        "Autoridad de Bosques y Tierra"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§10.3",
+          "uso": "boletines de focos de calor 2026: contexto oficial de incendios"
+        },
+        {
+          "seccion": "§10.4",
+          "uso": "fuente boliviana de la ficha de Santa Cruz (FAN, ABT, SENAMHI)"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-03",
+          "RF-12",
+          "RF-24"
+        ],
+        "modulos": [
+          "M-ATLAS",
+          "M-INTERFAZ",
+          "M-VALIDACIÓN"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes",
+          "metodo-y-creditos",
+          "validacion-optica-firms"
+        ]
+      },
+      "comoConsiderarla": "Contexto oficial de incendios: cítala en la ficha de Santa Cruz, en las hipótesis de la estación y en Acerca de; es contexto, no validación."
+    },
+    {
+      "id": "belenguer-2019",
+      "corta": "Belenguer-Plomer, Tanase, Fernandez-Carrillo y Chuvieco (2019). Burned area detection and mapping using Sentinel-1 backscatter coefficient and thermal anomalies",
+      "tipo": "articulo",
+      "enlace": "https://doi.org/10.1016/j.rse.2019.111345",
+      "claves": [
+        "Belenguer-Plomer",
+        "10.1016/j.rse.2019.111345"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§11.1",
+          "uso": "fundamento de la pregunta 1 en banda C; la extensión a banda L es una propuesta del equipo"
+        },
+        {
+          "seccion": "§12",
+          "ids": [
+            "MC-08"
+          ],
+          "uso": "detector RXD: distancia de Mahalanobis frente a la línea base"
+        },
+        {
+          "seccion": "§23.1",
+          "ids": [
+            "VC-01"
+          ],
+          "uso": "Dice 0,59 en banda C como antecedente de la comparación con Sentinel-2"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "MC-03",
+          "MC-08",
+          "VC-01",
+          "RF-11",
+          "RF-15"
+        ],
+        "modulos": [
+          "M-CIENCIA",
+          "M-VALIDACIÓN",
+          "M-INTERFAZ"
+        ],
+        "skills": [
+          "ciencia-radar-nisar",
+          "validacion-optica-firms",
+          "metodo-y-creditos",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Cítala en la implementación de MC-03 y MC-08, en las métricas de VC-01 y en la página de método. El Dice de 0,59 es de banda C: no lo presentes como meta ni como resultado de banda L."
+    },
+    {
+      "id": "bonafilia-2020",
+      "corta": "Bonafilia, Tellman, Anderson e Issenberg (2020). Sen1Floods11",
+      "tipo": "articulo",
+      "enlace": "https://doi.org/10.1109/CVPRW50498.2020.00113",
+      "claves": [
+        "Bonafilia",
+        "Sen1Floods11",
+        "10.1109/CVPRW50498.2020.00113"
+      ],
+      "citadaEn": [],
+      "aplicaA": {
+        "ids": [
+          "RF-03"
+        ],
+        "modulos": [
+          "M-ATLAS"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Antecedente de detección de inundaciones con radar (el documento no la cita en el cuerpo): solo como contexto de la ficha del Beni o de la evolución futura (§27); las inundaciones del Beni están fuera del MVP (§8.2)."
+    },
+    {
+      "id": "cesium",
+      "corta": "Cesium GS (2026). CesiumJS [Software]",
+      "tipo": "software",
+      "enlace": "https://github.com/CesiumGS/cesium",
+      "claves": [
+        "CesiumGS/cesium",
+        "CesiumJS"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§18",
+          "uso": "globo 3D: licencia Apache 2.0, mapa base abierto, sin token de Cesium ion y con su atribución"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-02",
+          "RF-25",
+          "RF-26",
+          "RF-27",
+          "RF-28",
+          "RF-29",
+          "RF-30",
+          "RF-32",
+          "RF-24",
+          "RNF-11"
+        ],
+        "modulos": [
+          "M-GLOBO",
+          "M-INTERFAZ"
+        ],
+        "skills": [
+          "globo-y-mapa",
+          "metodo-y-creditos",
+          "vite-bundle-optimization"
+        ]
+      },
+      "comoConsiderarla": "Usa la documentación vigente (MCP context7) al implementar el globo; muestra su atribución y licencia en el globo y en Acerca de (RF-24, RNF-11)."
+    },
+    {
+      "id": "correodelsur-2026-07-20",
+      "corta": "Correo del Sur (2026, 20 de julio). Cochabamba registra 37 incendios forestales y más de 1.200 hectáreas afectadas en 2026",
+      "tipo": "noticia",
+      "enlace": "https://correodelsur.com/sociedad/20260720/cochabamba-registra-37-incendios-forestales-y-mas-de-1-200-hectareas-afectadas-en-2026.html",
+      "claves": [
+        "correodelsur.com/sociedad/20260720",
+        "Cochabamba registra 37 incendios"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§4.2",
+          "uso": "dato: Cochabamba registró 37 incendios forestales y más de 1.200 ha afectadas en 2026 hasta julio (Gobernación de Cochabamba)"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-01",
+          "RF-03"
+        ],
+        "modulos": [
+          "M-ATLAS"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Fuente del dato de Cochabamba en la portada o en la ficha de Cochabamba (Tunari): cítala con su fecha junto a la cifra (RN-03)."
+    },
+    {
+      "id": "correodelsur-2026-10-27",
+      "corta": "Correo del Sur (2026, 27 de octubre). Bolivia reporta menos del 1% de afectación por incendios forestales respecto a años críticos",
+      "tipo": "noticia",
+      "enlace": "https://correodelsur.com/sociedad/20261027/bolivia-reporta-menos-del-1-de-afectacion-por-incendios-forestales-respecto-a-anos-criticos.html",
+      "claves": [
+        "correodelsur.com/sociedad/20261027",
+        "menos del 1% de afectación"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§4.2",
+          "uso": "dato: los incendios de 2026 afectaron 1,25 millones de ha hasta el 11 de octubre; en 2024 superaron los 10 millones (Viceministerio de Defensa Civil)"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-01"
+        ],
+        "modulos": [
+          "M-ATLAS"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Fuente de las cifras nacionales del problema en la portada: cítala con su fecha junto a la cifra (RN-03)."
+    },
+    {
+      "id": "eju-2026-07-21",
+      "corta": "eju.tv (2026, 21 de julio). Bolivia cierra este martes con 2.835 focos de calor; Santa Cruz el más afectado",
+      "tipo": "noticia",
+      "enlace": "https://eju.tv/?p=5043100",
+      "claves": [
+        "eju.tv/?p=5043100",
+        "2.835 focos de calor"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§4.2",
+          "uso": "dato: el 21 de julio de 2026 San Ignacio de Velasco fue el municipio con más focos de calor (735 de 2.835), SIMB"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-01",
+          "RF-13"
+        ],
+        "modulos": [
+          "M-ATLAS"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Fuente del dato de focos de San Ignacio en la portada y el relato de la estación: cítala con su fecha; es contexto del problema, el análisis radar usa eventos posteriores al 10 de agosto (§11)."
+    },
+    {
+      "id": "fricker-2005",
+      "corta": "Fricker et al. (2005). Assessment of ICESat performance at the Salar de Uyuni, Bolivia",
+      "tipo": "articulo",
+      "enlace": "https://doi.org/10.1029/2005GL023423",
+      "claves": [
+        "Fricker",
+        "10.1029/2005GL023423"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§10.4",
+          "uso": "fuente de la ficha de Potosí: Salar de Uyuni como superficie de referencia"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-03"
+        ],
+        "modulos": [
+          "M-ATLAS"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Cítala en la ficha de Potosí."
+    },
+    {
+      "id": "fan-deforestacion-2023",
+      "corta": "Fundación Amigos de la Naturaleza (2023). Deforestación en Bolivia 1956–2022",
+      "tipo": "fuente-boliviana",
+      "enlace": "https://fan-bo.org/wp-content/uploads/2024/08/Deforestacionen-Bolivia-1956-2022.pdf",
+      "claves": [
+        "fan-bo.org/wp-content",
+        "Deforestación en Bolivia 1956",
+        "FAN (2023)"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§4.2",
+          "uso": "dato: San Ignacio de Velasco, primer municipio en deforestación en 2021–2022, con 117.659 ha (FAN, 2023, con Landsat y MapBiomas)"
+        },
+        {
+          "seccion": "§10.3",
+          "uso": "estudio de deforestación por municipio"
+        },
+        {
+          "seccion": "§11",
+          "uso": "contexto de la estación San Ignacio de Velasco"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-01",
+          "RF-03",
+          "RF-12",
+          "RF-13",
+          "MC-06"
+        ],
+        "modulos": [
+          "M-ATLAS",
+          "M-PUBLICACIÓN",
+          "M-CIENCIA"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes",
+          "publicacion-estacion",
+          "ciencia-radar-nisar"
+        ]
+      },
+      "comoConsiderarla": "Cítala en la portada, en la ficha de Santa Cruz, en el relato y las hipótesis de San Ignacio y como contexto de la pregunta 2 (quema o desmonte)."
+    },
+    {
+      "id": "fan-satrifo",
+      "corta": "Fundación Amigos de la Naturaleza (s. f.). SATRIFO: Sistema de alerta temprana de riesgo de incendios forestales",
+      "tipo": "fuente-boliviana",
+      "enlace": "https://incendios.fan-bo.org/Satrifo/mapa-interactivo/",
+      "claves": [
+        "incendios.fan-bo.org",
+        "SATRIFO"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§10.3",
+          "uso": "focos y áreas quemadas históricas"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-03",
+          "RF-12"
+        ],
+        "modulos": [
+          "M-ATLAS",
+          "M-VALIDACIÓN"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes",
+          "validacion-optica-firms"
+        ]
+      },
+      "comoConsiderarla": "Contexto de áreas quemadas históricas para fichas e hipótesis; no sustituye la validación de §23.1."
+    },
+    {
+      "id": "gdal-cog",
+      "corta": "GDAL/OGR contributors (2026). COG: Cloud Optimized GeoTIFF generator",
+      "tipo": "software",
+      "enlace": "https://gdal.org/drivers/raster/cog.html",
+      "claves": [
+        "gdal.org/drivers/raster/cog",
+        "Cloud Optimized GeoTIFF"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§22",
+          "uso": "compresión sin pérdida: COG con DEFLATE o ZSTD y predictor, en float32"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RNF-09",
+          "RF-22",
+          "PS-02",
+          "MC-01"
+        ],
+        "modulos": [
+          "M-INGESTA",
+          "M-PUBLICACIÓN",
+          "M-INTERFAZ"
+        ],
+        "skills": [
+          "ingesta-nisar-asf",
+          "publicacion-estacion",
+          "python-geoespacial",
+          "descargas-y-exportacion"
+        ]
+      },
+      "comoConsiderarla": "Opciones del driver COG al escribir change.tif y los COG por fecha sin pérdida; cítala donde se escriben y en la prueba de integridad (PS-02)."
+    },
+    {
+      "id": "lostiempos-2026-07-10",
+      "corta": "Los Tiempos (2026, 10 de julio). Cuatro incendios afectaron al Parque Tunari en lo que va del año",
+      "tipo": "noticia",
+      "enlace": "https://www.lostiempos.com/actualidad/cochabamba/20260710/cuatro-incendios-afectaron-al-parque-tunari-que-va-del-ano",
+      "claves": [
+        "lostiempos.com/actualidad/cochabamba/20260710",
+        "Parque Tunari"
+      ],
+      "citadaEn": [],
+      "aplicaA": {
+        "ids": [
+          "RF-03"
+        ],
+        "modulos": [
+          "M-ATLAS"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Fuente de prensa para la ficha de Cochabamba y Tunari (§10.4: «Gobernación (prensa)», §11.3)."
+    },
+    {
+      "id": "maillard-2023",
+      "corta": "Maillard (2023). Post-fire natural regeneration trends in Bolivia: 2001–2021",
+      "tipo": "articulo",
+      "enlace": "https://doi.org/10.3390/fire6010018",
+      "claves": [
+        "Maillard",
+        "10.3390/fire6010018"
+      ],
+      "citadaEn": [],
+      "aplicaA": {
+        "ids": [
+          "RF-03",
+          "RF-12"
+        ],
+        "modulos": [
+          "M-ATLAS",
+          "M-CIENCIA"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "ciencia-radar-nisar",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Regeneración después del fuego en Bolivia: contexto de «recuperación del bosque» de la ficha de Santa Cruz (§10.4) y de las hipótesis; el documento no la cita en el cuerpo."
+    },
+    {
+      "id": "maillard-2022",
+      "corta": "Maillard et al. (2022). Phenology patterns and postfire vegetation regeneration in the Chiquitania region of Bolivia using Sentinel-2",
+      "tipo": "articulo",
+      "enlace": "https://doi.org/10.3390/fire5030070",
+      "claves": [
+        "Maillard",
+        "10.3390/fire5030070"
+      ],
+      "citadaEn": [],
+      "aplicaA": {
+        "ids": [
+          "MC-05",
+          "VC-01",
+          "VC-03"
+        ],
+        "modulos": [
+          "M-CIENCIA",
+          "M-VALIDACIÓN"
+        ],
+        "skills": [
+          "ciencia-radar-nisar",
+          "validacion-optica-firms",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Fenología del bosque chiquitano con Sentinel-2: respaldo de la corrección por fenología (MC-05) y de las zonas de control (VC-03); el documento no la cita en el cuerpo."
+    },
+    {
+      "id": "mapbiomas-capas",
+      "corta": "MapBiomas Bolivia (s. f.). Capas",
+      "tipo": "fuente-boliviana",
+      "enlace": "https://bolivia.mapbiomas.org/en/capas/",
+      "claves": [
+        "bolivia.mapbiomas.org",
+        "MapBiomas"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§10.3",
+          "uso": "capas territoriales: límites, áreas protegidas (SERNAP 2024), TIOC y sitios Ramsar"
+        },
+        {
+          "seccion": "§17",
+          "uso": "capas de contexto de la arquitectura"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-14",
+          "RF-35",
+          "RF-03"
+        ],
+        "modulos": [
+          "M-MAPA",
+          "M-ATLAS",
+          "M-PUBLICACIÓN"
+        ],
+        "skills": [
+          "globo-y-mapa",
+          "fichas-atlas",
+          "publicacion-estacion",
+          "metodo-y-creditos"
+        ]
+      },
+      "comoConsiderarla": "Fuente de límites, áreas protegidas y territorios: cada capa que la use muestra fuente y año (RF-14, RF-35) y aparece en Acerca de."
+    },
+    {
+      "id": "spaceapps-2026",
+      "corta": "NASA Space Apps Challenge (2026). Dancing with the SARs",
+      "tipo": "reto",
+      "enlace": "https://www.spaceappschallenge.org/2026/challenges/dancing-with-the-sars/",
+      "claves": [
+        "spaceappschallenge.org/2026",
+        "Dancing with the SARs"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§3",
+          "uso": "el reto al que responde UraqiVision"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-01",
+          "RF-24"
+        ],
+        "modulos": [
+          "M-ATLAS",
+          "M-INTERFAZ"
+        ],
+        "skills": [
+          "entrega-hackathon",
+          "metodo-y-creditos"
+        ]
+      },
+      "comoConsiderarla": "Enlázalo en Acerca de y en la entrega; sin logos ni marcas de la NASA en contenido generado con IA (RN-12)."
+    },
+    {
+      "id": "nisar-handbook",
+      "corta": "NISAR (2025). NASA-ISRO SAR (NISAR) mission science users' handbook (2.ª ed.)",
+      "tipo": "guia-oficial",
+      "enlace": "https://doi.org/10.48577/jpl.UD4HV3",
+      "claves": [
+        "10.48577/jpl.UD4HV3",
+        "science users' handbook"
+      ],
+      "citadaEn": [],
+      "aplicaA": {
+        "ids": [
+          "RN-11",
+          "RF-08",
+          "RF-15",
+          "RF-19",
+          "RF-24",
+          "RF-16"
+        ],
+        "modulos": [
+          "M-CIENCIA",
+          "M-INTERFAZ",
+          "M-INSIGHT",
+          "M-MAPA"
+        ],
+        "skills": [
+          "ciencia-radar-nisar",
+          "metodo-y-creditos",
+          "insight-lector-radar",
+          "interfaz-bilingue-accesible",
+          "globo-y-mapa"
+        ]
+      },
+      "comoConsiderarla": "Fundamentos de la misión y del radar (§9): respalda el texto de qué resalta cada polarización (RF-08), el glosario (RF-19), la página de método y las citas de datos (RN-11, RF-24) y las explicaciones de Insight; el documento no la cita en el cuerpo."
+    },
+    {
+      "id": "oakes-2024",
+      "corta": "Oakes, Hardy, Bunting y Rosenqvist (2024). RadWet-L",
+      "tipo": "articulo",
+      "enlace": "https://doi.org/10.3390/rs16122078",
+      "claves": [
+        "Oakes",
+        "RadWet-L",
+        "10.3390/rs16122078"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§27",
+          "uso": "antecedente de la estación futura del Beni con el doble rebote en bosque inundado"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-03"
+        ],
+        "modulos": [
+          "M-ATLAS"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Evolución futura (§27): solo como contexto de la ficha del Beni; no implementes la estación del Beni en el MVP (§8.2)."
+    },
+    {
+      "id": "ovando-2016",
+      "corta": "Ovando et al. (2016). Extreme flood events in the Bolivian Amazon wetlands",
+      "tipo": "articulo",
+      "enlace": "https://doaj.org/article/1c212c78528541e28a5421fbd6b2ef09",
+      "claves": [
+        "Ovando",
+        "doaj.org/article/1c212c78528541e28a5421fbd6b2ef09"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§10.4",
+          "uso": "fuente de la ficha del Beni: inundación y humedales de Moxos"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-03"
+        ],
+        "modulos": [
+          "M-ATLAS"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Cítala en la ficha del Beni."
+    },
+    {
+      "id": "rabatel-2013",
+      "corta": "Rabatel et al. (2013). Current state of glaciers in the tropical Andes",
+      "tipo": "articulo",
+      "enlace": "https://doi.org/10.5194/tc-7-81-2013",
+      "claves": [
+        "Rabatel",
+        "10.5194/tc-7-81-2013"
+      ],
+      "citadaEn": [],
+      "aplicaA": {
+        "ids": [
+          "RF-03"
+        ],
+        "modulos": [
+          "M-ATLAS"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Contexto de la ficha de La Paz (glaciares de la Cordillera Real, §10.4); el documento no la cita en el cuerpo."
+    },
+    {
+      "id": "satge-2017",
+      "corta": "Satgé et al. (2017). Role of climate variability and human activity on Poopó Lake droughts between 1990 and 2015",
+      "tipo": "articulo",
+      "enlace": "https://doi.org/10.3390/rs9030218",
+      "claves": [
+        "Satgé",
+        "10.3390/rs9030218"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§10.4",
+          "uso": "fuente de la ficha de Oruro: desecamiento del lago Poopó"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-03"
+        ],
+        "modulos": [
+          "M-ATLAS"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes"
+        ]
+      },
+      "comoConsiderarla": "Cítala en la ficha de Oruro."
+    },
+    {
+      "id": "senamhi-focos-2026",
+      "corta": "Servicio Nacional de Meteorología e Hidrología (2026). Pronóstico de focos de calor en Bolivia",
+      "tipo": "fuente-boliviana",
+      "enlace": "https://senamhi.gob.bo/focoscalor/2026/FC_7_JULIO_2026/Pron_Focos_Bolivia_20260713.pdf",
+      "claves": [
+        "senamhi.gob.bo/focoscalor",
+        "Pronóstico de focos de calor"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§10.3",
+          "uso": "contexto nacional y por departamento"
+        },
+        {
+          "seccion": "§10.4",
+          "uso": "SENAMHI figura como fuente boliviana en las fichas de Santa Cruz, Cochabamba, Beni, Oruro y Tarija; el documento no precisa cuál de sus dos publicaciones usa cada ficha"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-03",
+          "RF-12",
+          "RF-24"
+        ],
+        "modulos": [
+          "M-ATLAS",
+          "M-INTERFAZ",
+          "M-VALIDACIÓN"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes",
+          "metodo-y-creditos",
+          "validacion-optica-firms"
+        ]
+      },
+      "comoConsiderarla": "Cítala en las fichas que usen el pronóstico de focos y en Acerca de; es contexto (un pronóstico), no un resultado ni una validación (RN-10)."
+    },
+    {
+      "id": "senamhi-hidrologico-2026",
+      "corta": "Servicio Nacional de Meteorología e Hidrología (2026). Pronóstico hidrológico",
+      "tipo": "fuente-boliviana",
+      "enlace": "https://senamhi.gob.bo/meteorologia/boletines/pronostico_hidrologico/2026/JULIO/RESUMEN%20EN%20PLANILLA%20PRON%C3%93STICO%20HIDROL%C3%93GICO%20SENAMHI%20LUNES%2027-07-2026.pdf",
+      "claves": [
+        "senamhi.gob.bo/meteorologia/boletines/pronostico_hidrologico",
+        "Pronóstico hidrológico"
+      ],
+      "citadaEn": [
+        {
+          "seccion": "§10.3",
+          "uso": "pronóstico hidrológico: contexto nacional y por departamento"
+        },
+        {
+          "seccion": "§10.4",
+          "uso": "SENAMHI figura como fuente boliviana en las fichas de Santa Cruz, Cochabamba, Beni, Oruro y Tarija; el documento no precisa cuál de sus dos publicaciones usa cada ficha"
+        }
+      ],
+      "aplicaA": {
+        "ids": [
+          "RF-03",
+          "RF-24"
+        ],
+        "modulos": [
+          "M-ATLAS",
+          "M-INTERFAZ"
+        ],
+        "skills": [
+          "fichas-atlas",
+          "rigor-y-fuentes",
+          "metodo-y-creditos"
+        ]
+      },
+      "comoConsiderarla": "Cítala en las fichas que usen el pronóstico hidrológico (inundaciones o sequía) y en Acerca de; es contexto, no un resultado."
+    }
+  ]
+}
