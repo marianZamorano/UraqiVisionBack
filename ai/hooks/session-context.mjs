@@ -2,7 +2,8 @@
 // Hook de inicio de sesión: recuerda al agente la fuente de verdad y las reglas clave, y avisa de las PR que
 // esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). También avisa de
 // las herramientas de IA que cambiaron desde la última sesión (con la ayuda regenerada si hacía falta y la
-// coherencia con el documento maestro) y de cualquier herramienta que haya dejado de funcionar o de estar activa.
+// coherencia con el documento maestro) y de cualquier herramienta que haya dejado de funcionar o de estar activa,
+// con la guía paso a paso para activarla, y lanza la vigilancia completa en segundo plano.
 // Nunca bloquea.
 // Uso: node ai/hooks/session-context.mjs --platform=<claude|codex|gemini>
 import { execFileSync } from 'node:child_process';
@@ -12,6 +13,7 @@ import { revisar } from './lib/entorno-git.mjs';
 import { avisoDeSesion } from './lib/herramientas-git.mjs';
 import { lineaDeSesion } from './lib/equipo.mjs';
 import { lineaSdd } from './lib/sdd-hooks.mjs';
+import { refrescarEnSegundoPlano } from './lib/vigilancia.mjs';
 
 /** Avisos locales (sin red): ramas sin subir y problemas de entorno (solo nombres, nunca valores). */
 function avisosLocales() {
@@ -47,6 +49,8 @@ export const CONTEXT = `[UraqiVision] Contexto del proyecto
 - Las guardas [uraqi-guard:<regla>] bloquean secretos, .env/.netrc y comandos destructivos.`;
 
 try {
+  // Vigilancia: la verificación completa corre en segundo plano; el hook del mensaje entrega la guía si algo falla.
+  refrescarEnSegundoPlano(process.cwd());
   const aviso = await avisoPRs({ modo: 'inicio' });
   let herramientas = '';
   try {

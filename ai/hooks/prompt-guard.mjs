@@ -7,11 +7,14 @@
 //    qué colaborador es (§19) antes de empezar.
 // 4) Si el mensaje trae un prompt del SDD («[SDD P-…]»), pide confirmarlo con la persona (opción múltiple), avisa de
 //    dependencias, cambios, re-ejecuciones y de quién lo ejecuta, y recuerda registrar el resultado al terminar.
+// 5) Vigilancia en segundo plano: como máximo cada 5 minutos lanza la verificación completa de las herramientas en
+//    un proceso aparte; si algo no está activo, entrega al asistente la guía paso a paso (una vez por problema y sesión).
 import { evaluatePrompt } from './lib/guard.mjs';
 import { readStdinJson, block, failOpen, platform } from './lib/io.mjs';
 import { avisoPRs } from './lib/prs-resumen.mjs';
 import { recordatorioVibecodear } from './lib/equipo.mjs';
 import { contextoDePromptSdd } from './lib/sdd-hooks.mjs';
+import { avisoVigilancia } from './lib/vigilancia.mjs';
 
 try {
   const event = await readStdinJson();
@@ -21,6 +24,7 @@ try {
   const aviso = [
     contextoDePromptSdd({ prompt, cwd: event.cwd || process.cwd(), sesion: event.session_id }),
     recordatorioVibecodear({ prompt, cwd: event.cwd || process.cwd(), sesion: event.session_id }),
+    avisoVigilancia({ cwd: event.cwd || process.cwd(), sesion: event.session_id }),
     await avisoPRs({ modo: 'periodico', intervaloMin: 10 }),
   ].filter(Boolean).join('\n\n');
   if (aviso) {
