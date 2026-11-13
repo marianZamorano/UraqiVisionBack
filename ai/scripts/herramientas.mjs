@@ -6,6 +6,8 @@
 //   node ai/scripts/herramientas.mjs cambios [--desde <ref>] [--hasta <ref>]   (por defecto: origin/dev → árbol de trabajo)
 //   node ai/scripts/herramientas.mjs revisar-pr --pr <N> --base <ref>          (CI: falla si algo no funciona o es incoherente)
 //   node ai/scripts/herramientas.mjs notificar --pr <N> [--simular]            (CI: comenta mencionando a los colaboradores)
+// Primero: en Windows, los subprocesos de la verificación en segundo plano no deben abrir ventanas de terminal.
+import '../hooks/lib/sin-ventanas.mjs';
 import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { resumirCambios, textoResumen, textoAviso, MARCA_REVISION, MARCA_AVISO } from '../hooks/lib/herramientas.mjs';

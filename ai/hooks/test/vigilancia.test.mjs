@@ -77,6 +77,20 @@ test('comprobaciones nuevas en el repositorio real: skills, Spec Kit, subagentes
   assert.equal(mcpAprobadosClaude(ROOT).nivel, 'aviso');
 });
 
+test('en Windows los subprocesos de la vigilancia no abren ventanas de terminal', async () => {
+  const { conVentanaOculta } = await import('../lib/sin-ventanas.mjs');
+  assert.deepEqual(conVentanaOculta(['git', ['status'], { cwd: '.' }]), ['git', ['status'], { windowsHide: true, cwd: '.' }]);
+  assert.deepEqual(conVentanaOculta(['git', ['status']]), ['git', ['status'], { windowsHide: true }]);
+  assert.deepEqual(conVentanaOculta(['git']), ['git', { windowsHide: true }]);
+  const cb = () => {};
+  assert.deepEqual(conVentanaOculta(['git', ['status'], cb]), ['git', ['status'], { windowsHide: true }, cb]);
+  assert.deepEqual(conVentanaOculta(['git', { windowsHide: false }]), ['git', { windowsHide: false }], 'respeta un valor explícito');
+  const fuente = fs.readFileSync(path.join(ROOT, 'ai/scripts/herramientas.mjs'), 'utf8');
+  assert.match(fuente.split('\n').find((l) => l.startsWith('import ')), /sin-ventanas\.mjs/, 'el proceso en segundo plano lo importa primero');
+  const { spawnSync } = await import('node:child_process');
+  assert.equal(spawnSync(process.execPath, ['-e', 'process.exit(0)']).status, 0, 'los subprocesos siguen funcionando');
+});
+
 test('las comprobaciones detectan lo que falta en un repositorio incompleto', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'uraqi-vig-'));
   try {
