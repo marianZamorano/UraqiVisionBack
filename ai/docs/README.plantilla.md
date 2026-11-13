@@ -115,6 +115,8 @@ npm run ai:activar                  # guía paso a paso para activar lo que falt
 npm run ai:cambios                  # qué herramientas cambian frente a origin/dev y si son coherentes
 npm run codigo:revisar              # código roto, muerto o desconectado + CI/CD por rama, con plan
 npm run codigo:cicd                 # solo el estado del CI/CD de dev, qa y main
+npm run referencias:para -- MC-03   # referencias de §31 que aplican a un requisito
+npm run referencias:revisar         # ¿la implementación cita sus referencias?
 
 # SDD: orden de prompts e historial
 npm run sdd:estado                  # avance por área, conflictos y tu siguiente prompt
@@ -307,6 +309,22 @@ intervienen.
 - **Estructura**: `npm run sdd:validar`; el pre-commit bloquea un SDD que la rompa (`[uraqi-guard:sdd-invalido]`) y
   `npm run ai:sync` regenera la tabla de orden de `sdd/README.md`.
 - `vibecodear` toma el siguiente prompt de los módulos de la persona como objetivo del Sprint.
+
+## Referencias del documento maestro (§31)
+
+Las referencias de §31 (guías de NISAR y ASF, GDAL, CesiumJS, artículos, fuentes bolivianas y noticias) están en
+`ai/referencias/catalogo.json`, validado contra §31: mismas referencias, enlaces idénticos, y para cada una dónde la
+cita el documento (evidencia) y a qué requisitos, módulos y skills aplica (propuesta del equipo cuando el cuerpo
+no la cita por nombre).
+
+- **Las skills y los SDD conocen sus enlaces**: `npm run ai:sync` genera en cada skill y en cada SDD de área la
+  sección «Referencias del documento maestro (§31)» con las que le aplican. La skill `referencias-documento` las
+  tiene todas y explica cómo citarlas.
+- **Al implementar**: al editar código del producto que cita un requisito con referencias, y al ejecutar un prompt
+  del SDD, el asistente recibe los enlaces que aplican.
+- **Verificación**: `npm run referencias:revisar` (también en `npm run ai:verificar` y en el revisor de código
+  vivo de las promociones) avisa si se implementa un requisito sin citar su referencia y de DOI que §31 no recoge.
+- `npm run referencias:para -- MC-03` dice qué referencias aplican a unos requisitos o módulos.
 
 ## Equipo: quién eres y qué te corresponde (§19)
 

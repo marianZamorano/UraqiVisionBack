@@ -22,7 +22,7 @@ consume lo que este repositorio publica: los archivos de cada estación (§17.3)
 
 | Pieza | Cantidad | Fuente |
 |---|---|---|
-| Skills propias | 35 | `.agents/skills/` |
+| Skills propias | 36 | `.agents/skills/` |
 | Skills de Spec Kit (SDD) | 10 | `.agents/skills/speckit-*` |
 | Subagentes | 13 | `ai/agents/` |
 | Servidores MCP | 3 | `ai/mcp/servers.json` |
@@ -30,7 +30,7 @@ consume lo que este repositorio publica: los archivos de cada estación (§17.3)
 | Reglas de las guardas | 34 | `ai/hooks/lib/` |
 | Hooks de git | 6 | `.githooks/` |
 | Workflows de GitHub | 9 | `.github/workflows/` |
-| Scripts npm | 31 | `package.json` |
+| Scripts npm | 34 | `package.json` |
 
 ## Instalación (primera vez)
 
@@ -127,6 +127,8 @@ npm run ai:activar                  # guía paso a paso para activar lo que falt
 npm run ai:cambios                  # qué herramientas cambian frente a origin/dev y si son coherentes
 npm run codigo:revisar              # código roto, muerto o desconectado + CI/CD por rama, con plan
 npm run codigo:cicd                 # solo el estado del CI/CD de dev, qa y main
+npm run referencias:para -- MC-03   # referencias de §31 que aplican a un requisito
+npm run referencias:revisar         # ¿la implementación cita sus referencias?
 
 # SDD: orden de prompts e historial
 npm run sdd:estado                  # avance por área, conflictos y tu siguiente prompt
@@ -191,6 +193,7 @@ persona las pide (`/nombre` en Claude Code, `$nombre` en Codex CLI). Fuente: `.a
 | `qa-test-design` | Diseña casos de prueba con técnicas de caja negra - particiones de equivalencia, valores límite, tablas de decisión, pairwise y transición de estados - incluyendo datos de prueba y criterios de aceptación Given/When/Then. | Usar cuando se pidan casos de prueba, escenarios, datos de prueba o criterios de aceptación para una funcionalidad, formulario, endpoint o regla de negocio. | `templates/` |
 | `qa-test-reporting` | Genera informes de pruebas basados en evidencia - resultados de ejecución (JUnit, Jest/Vitest), rendimiento (k6), quality gates, métricas, defectos y pruebas no ejecutadas - separando hechos verificados, hipótesis y recomendaciones, sin afirmar éxitos no demostrados. | Usar cuando se pida un informe, resumen de resultados, estado de calidad, métricas de pruebas o evidencias para una release. | — |
 | `qa-test-strategy` | Define la estrategia de pruebas de un proyecto o funcionalidad - alcance, niveles (unitario, integración, sistema, aceptación, E2E), tipos funcionales y no funcionales, análisis de riesgos con matriz probabilidad×impacto, priorización, entornos, datos, criterios de entrada/salida y trazabilidad. | Usar cuando se pida una estrategia o plan de pruebas, priorizar qué probar o evaluar riesgos de calidad. | `templates/` |
+| `referencias-documento` | Especialista en las referencias de §31 del documento maestro de UraqiVision (guías de NISAR y ASF, GDAL, CesiumJS, artículos científicos como Belenguer-Plomer et al. 2019, fuentes bolivianas como ABT, SENAMHI, FAN y MapBiomas, y noticias). Sabe qué enlace respalda cada requisito, método, módulo y skill, dónde las cita el documento y cómo deben notarse en el código, las specs, las fichas, la página de método y Acerca de, y verifica que la implementación las tenga en cuenta sin inventar referencias. | Usar al implementar o revisar algo que se apoya en una fuente, al redactar método, Acerca de, fichas o hipótesis, al citar datos, cuando se pregunte «qué referencia uso para…», «de dónde sale…» o «está bien citado…», o antes de una promoción. | — |
 | `rigor-y-fuentes` | Reglas de rigor para los contenidos de UraqiVision (fichas del atlas, hipótesis, relato local, página de método, Acerca de, láminas y textos de Insight). Fuentes con fecha de consulta, citas APA 7, cita de datos NISAR y FIRMS, hechos frente a hipótesis, sin cifras ni referencias inventadas y sin marcas de la NASA en contenido generado con IA. | Usar al redactar o revisar cualquier texto con datos, cifras, fuentes o referencias. | — |
 | `sdd-prompts` | Ejecuta los prompts del SDD por área de UraqiVision (sdd/*.md) uno a uno, confirmando antes con la persona que va a ejecutarlo (opción múltiple: ejecutar tal cual, modificar o posponer), comprobando que le corresponde según §19, registrando cada decisión y resultado en el historial (sdd/historial/) y entregando al final el siguiente prompt listo para copiar y pegar. También detecta cambios y conflictos entre prompts. | Usar cuando un mensaje traiga «[SDD P-…]», cuando se pida «siguiente prompt», «qué sigue en el SDD», «estado del SDD», «historial de prompts», o al cambiar un prompt del SDD. | — |
 | `sdd-uraqivision` | Guía el Spec-Driven Development de UraqiVision con Spec Kit, del documento maestro a la constitución, las specs por módulo, el plan, las tareas, la implementación y la verificación, con una ruta rápida para el hackathon (14 y 15 de noviembre de 2026). | Usar con "fase N", "ruta rápida" o "estado" para saber qué sigue, o cuando se vaya a empezar una feature nueva. Solo la invoca la persona (`/sdd-uraqivision estado \| fase N (0-8) \| ruta rápida \| feature <nombre>`). | — |
@@ -284,7 +287,7 @@ Se ejecutan en cada sesión, mensaje o herramienta del asistente. Una sola lógi
 | Script | Qué hace | Claude Code | Codex CLI | Gemini CLI | opencode |
 |---|---|---|---|---|---|
 | `ai/hooks/fin-turno.mjs` | Hook de fin de turno (Stop en Claude y Codex, AfterAgent en Gemini). Si un prompt del SDD se ejecutó en esta sesión y no quedó en el historial, pide al asistente que lo registre y que muestre a la persona el siguiente prompt listo para copiar y pegar. No insiste dos veces seguidas ni interrumpe si se espera una respuesta de la persona. | Stop | Stop | AfterAgent | — |
-| `ai/hooks/post-edit.mjs` | Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow, script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes). Si lo editado cita requisitos del módulo de otra persona (§19), avisa que es apoyo a su rol. | PostToolUse (Write\|Edit\|MultiEdit) | PostToolUse (^apply_patch$) | AfterTool (write_file\|replace) | — |
+| `ai/hooks/post-edit.mjs` | Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow, script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes). Si lo editado cita requisitos del módulo de otra persona (§19), avisa que es apoyo a su rol. Si cita requisitos respaldados por referencias de §31, entrega sus enlaces para tenerlas en cuenta y citarlas. | PostToolUse (Write\|Edit\|MultiEdit) | PostToolUse (^apply_patch$) | AfterTool (write_file\|replace) | — |
 | `ai/hooks/pre-tool.mjs` | Hook previo a cada herramienta (PreToolUse en Claude y Codex, BeforeTool en Gemini). Bloquea secretos, rutas protegidas, comandos destructivos y push o merge directo a main. Al crear una PR hacia qa o main (promoción pedida de forma explícita) activa el revisor de código vivo: si hay código roto o muerto, o el CI/CD exigible está incompleto, bloquea y muestra el plan de solución. vibecodear no se carga sin saber qué colaborador es la persona en esta sesión (§19): bloquea y pide preguntarlo con opción múltiple; al registrarla (node ai/scripts/equipo.mjs soy <Nombre>) anota la sesión. | PreToolUse (Bash\|PowerShell\|Write\|Edit\|MultiEdit\|NotebookEdit\|Read\|Skill) | PreToolUse (^(Bash\|apply_patch)$) | BeforeTool (run_shell_command\|write_file\|replace\|read_file) | plugin: tool.execute.before |
 | `ai/hooks/prompt-guard.mjs` | Hook del mensaje del usuario (UserPromptSubmit en Claude y Codex, BeforeAgent en Gemini). 1) Si el mensaje contiene un secreto, no se envía al modelo. 2) Cada 10 minutos como máximo, revisa en GitHub si hay PR nuevas que esperan la aprobación de la persona y, si hay novedades, se las indica al asistente para que avise (sin red o sin gh, no hace nada). 3) Si el mensaje pide vibecodear y nadie se identificó en esta sesión, recuerda preguntar con opción múltiple qué colaborador es (§19) antes de empezar. 4) Si el mensaje trae un prompt del SDD («[SDD P-…]»), pide confirmarlo con la persona (opción múltiple), avisa de dependencias, cambios, re-ejecuciones y de quién lo ejecuta, y recuerda registrar el resultado al terminar. 5) Vigilancia en segundo plano: como máximo cada 5 minutos lanza la verificación completa de las herramientas en un proceso aparte; si algo no está activo, entrega al asistente la guía paso a paso (una vez por problema y sesión). | UserPromptSubmit | UserPromptSubmit | BeforeAgent | plugin: chat.message |
 | `ai/hooks/session-context.mjs` | Hook de inicio de sesión: recuerda al agente la fuente de verdad y las reglas clave, y avisa de las PR que esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). También avisa de las herramientas de IA que cambiaron desde la última sesión (con la ayuda regenerada si hacía falta y la coherencia con el documento maestro) y de cualquier herramienta que haya dejado de funcionar o de estar activa, con la guía paso a paso para activarla, y lanza la vigilancia completa en segundo plano. Nunca bloquea. | SessionStart | SessionStart | SessionStart | — |
@@ -383,6 +386,9 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | `npm run codigo:revisar` | Revisor de código vivo: código roto, muerto o desconectado, con plan de solución, y estado del CI/CD por rama (falla si hay errores). | `node ai/scripts/codigo-vivo.mjs revisar` |
 | `npm run codigo:cicd` | Estado del CI/CD de dev, qa y main: conflictos, código vivo, pruebas, build y arranque. | `node ai/scripts/codigo-vivo.mjs cicd` |
 | `npm run codigo:levantar` | Instala, construye y arranca cada aplicación del repositorio y comprueba que responde (instala dependencias: pide aprobación). | `node ai/scripts/codigo-vivo.mjs levantar` |
+| `npm run referencias:revisar` | Referencias de §31: catálogo frente al documento, citas donde se implementan sus requisitos y DOI que §31 no recoge. | `node ai/scripts/referencias.mjs revisar` |
+| `npm run referencias:para` | Referencias de §31 que aplican a unos requisitos o módulos: npm run referencias:para -- MC-03 M-GLOBO. | `node ai/scripts/referencias.mjs para` |
+| `npm run referencias:lista` | Lista de referencias de §31 con su enlace, dónde las cita el documento y cómo considerarlas (-- --modulo M-… o --skill nombre). | `node ai/scripts/referencias.mjs lista` |
 | `npm run equipo:modulos` | Tabla de §19: módulos, responsables, apoyo, revisores y requisitos (marca los de este repositorio). | `node ai/scripts/equipo.mjs modulos` |
 | `npm run equipo:soy` | Registra qué colaborador eres en este clon (npm run equipo:soy -- <Nombre>); vibecodear lo pregunta con opción múltiple. | `node ai/scripts/equipo.mjs soy` |
 | `npm run equipo:quien` | Muestra quién está registrado en este clon y sus módulos aquí y en el otro repositorio. | `node ai/scripts/equipo.mjs quien` |
@@ -392,7 +398,7 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | `npm run sdd:ver` | Muestra un prompt del SDD con su contexto: npm run sdd:ver -- <ID>. | `node ai/scripts/sdd.mjs ver` |
 | `npm run sdd:historial` | Historial de los prompts del SDD: decisiones, resultados, cambios y conflictos (-- --id <ID>). | `node ai/scripts/sdd.mjs historial` |
 | `npm run sdd:validar` | Comprueba que todos los SDD de sdd/ sigan la estructura común (sdd/00-estructura.md). | `node ai/scripts/sdd.mjs validar` |
-| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs ai/hooks/test/equipo.test.mjs ai/hooks/test/sdd.test.mjs ai/hooks/test/vigilancia.test.mjs` |
+| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs ai/hooks/test/equipo.test.mjs ai/hooks/test/sdd.test.mjs ai/hooks/test/vigilancia.test.mjs ai/hooks/test/referencias.test.mjs` |
 | `npm run env:check` | Revisa los archivos .env y que .env y .env.example tengan la misma estructura (sin mostrar valores). | `node ai/scripts/entorno.mjs check` |
 | `npm run env:sync` | Crea o alinea tu .env con .env.example sin leer ni mostrar valores. | `node ai/scripts/entorno.mjs sync` |
 | `npm run env:compartir` | Copia tu .env a Descargas para compartirlo con el equipo por un canal seguro. | `node ai/scripts/entorno.mjs compartir` |
@@ -478,6 +484,22 @@ intervienen.
 - **Estructura**: `npm run sdd:validar`; el pre-commit bloquea un SDD que la rompa (`[uraqi-guard:sdd-invalido]`) y
   `npm run ai:sync` regenera la tabla de orden de `sdd/README.md`.
 - `vibecodear` toma el siguiente prompt de los módulos de la persona como objetivo del Sprint.
+
+## Referencias del documento maestro (§31)
+
+Las referencias de §31 (guías de NISAR y ASF, GDAL, CesiumJS, artículos, fuentes bolivianas y noticias) están en
+`ai/referencias/catalogo.json`, validado contra §31: mismas referencias, enlaces idénticos, y para cada una dónde la
+cita el documento (evidencia) y a qué requisitos, módulos y skills aplica (propuesta del equipo cuando el cuerpo
+no la cita por nombre).
+
+- **Las skills y los SDD conocen sus enlaces**: `npm run ai:sync` genera en cada skill y en cada SDD de área la
+  sección «Referencias del documento maestro (§31)» con las que le aplican. La skill `referencias-documento` las
+  tiene todas y explica cómo citarlas.
+- **Al implementar**: al editar código del producto que cita un requisito con referencias, y al ejecutar un prompt
+  del SDD, el asistente recibe los enlaces que aplican.
+- **Verificación**: `npm run referencias:revisar` (también en `npm run ai:verificar` y en el revisor de código
+  vivo de las promociones) avisa si se implementa un requisito sin citar su referencia y de DOI que §31 no recoge.
+- `npm run referencias:para -- MC-03` dice qué referencias aplican a unos requisitos o módulos.
 
 ## Equipo: quién eres y qué te corresponde (§19)
 
