@@ -46,6 +46,17 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ai/hooks/fin-turno.mjs --platform=codex",
+            "timeout": 15
+          }
+        ]
+      }
     ]
   }
 }
