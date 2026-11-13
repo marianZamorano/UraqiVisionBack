@@ -147,8 +147,9 @@ export function pruebas(root) {
   const cmd = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).scripts?.['test:guardas'] ?? '';
   const args = cmd.replace(/^node\s+/, '').split(/\s+/).filter(Boolean);
   const r = node(root, args, { timeout: 120000 });
-  const pasan = /ℹ pass (\d+)/.exec(r.stdout ?? '')?.[1];
-  const fallan = /ℹ fail (\d+)/.exec(r.stdout ?? '')?.[1];
+  // Con terminal, node --test imprime «ℹ pass N»; sin terminal (CI), TAP: «# pass N».
+  const pasan = /^(?:ℹ|#) pass (\d+)/m.exec(r.stdout ?? '')?.[1];
+  const fallan = /^(?:ℹ|#) fail (\d+)/m.exec(r.stdout ?? '')?.[1];
   return resultado('pruebas', r.status === 0, r.status === 0 ? `${pasan ?? '?'} pruebas en verde` : `${fallan ?? '?'} prueba(s) fallan → npm run test:guardas`);
 }
 
