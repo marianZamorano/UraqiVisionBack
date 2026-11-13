@@ -146,6 +146,9 @@ ayuda y la configuración se regeneran solas (al editar, al commitear y tras un 
 exigen coherencia con el documento maestro (identificadores y secciones que existen; decisiones pendientes
 señaladas); al fusionarse en `dev`, el workflow Herramientas de IA avisa a los demás colaboradores con una mención.
 `npm run ai:verificar` comprueba que todo funciona y está activo; `npm run ai:cambios`, qué cambia en tu rama.
+Una **vigilancia en segundo plano** (al iniciar sesión y con cada mensaje, como máximo cada 5 minutos) verifica que
+skills, Spec Kit, subagentes, MCP, hooks y su entorno estén activos; si algo falta, entrega una **guía paso a paso**
+para ayudar a la persona a activarlo (`npm run ai:activar`).
 
 **Código vivo en las promociones**: al pedir de forma explícita una PR hacia `qa` o `main`, el revisor de código
 vivo (skill `codigo-vivo`, subagente `revisor-codigo-vivo`, guarda `[uraqi-guard:codigo-no-vivo]` y workflow
