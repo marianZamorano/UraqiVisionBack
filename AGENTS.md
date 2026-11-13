@@ -159,6 +159,10 @@ pruebas, build y que el proyecto vuelva a levantar (`npm run codigo:revisar`, `n
 
 **Coordinador**: la skill `vibecodear` actúa como Engineering Manager: diagnostica, elige roles y reparte el
 trabajo entre las skills y subagentes de cada rol (tabla en `.agents/skills/vibecodear/references/roles.md`).
+Antes de todo **pregunta con opción múltiple qué colaborador es la persona** (§19) y, si el trabajo es del
+módulo de otra persona, **avisa** que va a apoyar su rol; la guarda `[uraqi-guard:colaborador-sin-identificar]`
+no la deja empezar sin esa respuesta, y los hooks tras editar y commit-msg avisan del apoyo
+(`npm run equipo:quien`, `npm run equipo:alcance -- <IDs>`).
 
 Skills por rol (la lista completa, con su descripción, está en `ai/README.md`). Las de la web (globo, mapa, interfaz, accesibilidad, atlas y
 descargas) están en `UraqiVision`.
