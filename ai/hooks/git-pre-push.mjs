@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-// Hook de git pre-push: nada llega a dev, qa ni main sin PR y todo commit que se sube cita su issue.
+// Hook de git pre-push: nada llega a dev, qa ni main sin PR, todo commit que se sube cita su issue y no quedan
+// archivos generados por ai/sync.mjs (incluida la ayuda ai/README.md) sin commitear.
 // git pasa <remoto> <url> como argumentos y por stdin una línea por referencia:
 //   <ref local> <sha local> <ref remota> <sha remoto>
-import { git, ISSUE_REF, EXEMPT_MESSAGE } from './lib/git.mjs';
+import { git, ISSUE_REF, EXEMPT_MESSAGE, generadosSinCommitear } from './lib/git.mjs';
 
 const ZERO = /^0+$/;
 const PROTECTED = /^refs\/heads\/(main|qa|dev)$/;
@@ -33,6 +34,12 @@ for (const line of lines) {
     const msg = git(['log', '-1', '--format=%B', sha]);
     if (!EXEMPT_MESSAGE.test(msg) && !ISSUE_REF.test(msg)) problems.push(`${sha.slice(0, 7)} "${msg.split('\n')[0]}" no cita ningún issue (#N).`);
   }
+}
+
+// La ayuda (ai/README.md) y la configuración generada no pueden quedar fuera de lo que se sube.
+const sinCommitear = lines.some((l) => !PROTECTED.test(l.split(/\s+/)[2] ?? '')) ? generadosSinCommitear() : [];
+if (sinCommitear.length) {
+  problems.push(`Hay archivos generados por ai/sync.mjs sin commitear (${sinCommitear.slice(0, 5).join(', ')}${sinCommitear.length > 5 ? ', …' : ''}): la rama subiría con la ayuda o la configuración desactualizada. Commitéalos con su issue y vuelve a hacer push.`);
 }
 
 for (const w of warnings) process.stderr.write(`[uraqi] Aviso: ${w}\n`);
