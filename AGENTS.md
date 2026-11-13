@@ -132,7 +132,10 @@ protegidas y territorios indígenas. Reto: NASA Space Apps 2026, *Dancing with t
 
 ## 7. Herramientas de IA del repositorio
 
-Todo se define una sola vez y se genera para cada plataforma con `node ai/sync.mjs` (ver `ai/README.md`).
+Todo se define una sola vez y se genera para cada plataforma con `node ai/sync.mjs`. La ayuda completa y siempre
+al día (instalación, cómo funciona, ejemplos y el catálogo de cada skill, subagente, MCP, hook, guarda, workflow
+y script) está en **`ai/README.md`**: lo genera el mismo sync desde `ai/docs/README.plantilla.md` y las
+fuentes. Nunca lo edites a mano. Para consultarlo: skill `ayuda` o `npm run ayuda -- <tema>`.
 
 | Tipo | Dónde se define | Claude Code | Gemini CLI | Codex CLI | opencode |
 |---|---|---|---|---|---|
@@ -145,12 +148,12 @@ Todo se define una sola vez y se genera para cada plataforma con `node ai/sync.m
 **Coordinador**: la skill `vibecodear` actúa como Engineering Manager: diagnostica, elige roles y reparte el
 trabajo entre las skills y subagentes de cada rol (tabla en `.agents/skills/vibecodear/references/roles.md`).
 
-Skills por rol (32; detalle en `ai/README.md`). Las de la web (globo, mapa, interfaz, accesibilidad, atlas y
+Skills por rol (la lista completa, con su descripción, está en `ai/README.md`). Las de la web (globo, mapa, interfaz, accesibilidad, atlas y
 descargas) están en `UraqiVision`.
 
 | Rol | Skills |
 |---|---|
-| Proyecto y SDD | `documento-maestro`, `sdd-uraqivision`, `flujo-issues-y-pr`, `entrega-hackathon`, `rigor-y-fuentes`, `vibecodear`, `microauditoria` |
+| Proyecto y SDD | `documento-maestro`, `sdd-uraqivision`, `flujo-issues-y-pr`, `entrega-hackathon`, `rigor-y-fuentes`, `vibecodear`, `microauditoria`, `ayuda` |
 | Ingesta | `ingesta-nisar-asf`, `python-geoespacial` |
 | Ciencia y validación | `ciencia-radar-nisar`, `python-geoespacial`, `validacion-optica-firms`, `notebook-reproducible` |
 | Publicación | `publicacion-estacion` |
@@ -158,7 +161,7 @@ descargas) están en `UraqiVision`.
 | QA | `qa-project-discovery`, `qa-test-strategy`, `qa-test-design`, `qa-automation`, `qa-regression-analysis`, `qa-quality-gates`, `qa-test-reporting`, `qa-defect-analysis`, `qa-security-testing`, `test-driven-development`, `systematic-debugging`, `verification-before-completion` |
 | DevSecOps | `devops-secrets-management`, `devops-dependency-security`, `devops-git-workflow`, `devops-release-readiness`, `devops-free-tier-audit`, `devops-supervised-execution` |
 
-Subagentes (12). De solo lectura: `guardian-alcance`, `revisor-cientifico`, `auditor-publicacion`,
+Subagentes. De solo lectura: `guardian-alcance`, `revisor-cientifico`, `auditor-publicacion`,
 `revisor-insight`, `revisor-qa`, `security-qa-engineer`, `test-evidence-analyst`, `devsecops-engineer`,
 `free-tier-architect` (con web), `release-readiness-reviewer`. Pueden escribir con aprobación: `qa-architect`,
 `automation-qa-engineer`. (Los revisores de interfaz y de React están en `UraqiVision`.)
