@@ -14,15 +14,34 @@
     "commits:dividir": "node ai/scripts/dividir-commits.mjs --aplicar",
     "ai:sync": "node ai/sync.mjs",
     "ai:check": "node ai/sync.mjs --check",
-    "test:guardas": "node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs",
+    "test:guardas": "node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs",
     "env:check": "node ai/scripts/entorno.mjs check",
     "env:sync": "node ai/scripts/entorno.mjs sync",
     "env:compartir": "node ai/scripts/entorno.mjs compartir",
-    "hooks:activar": "git config core.hooksPath .githooks"
+    "hooks:activar": "git config core.hooksPath .githooks",
+    "ayuda": "node ai/docs/ayuda.mjs"
   },
   "uraqi": {
-    "$comentario": "envPermitidos: entornos extra (.env.<nombre>) solo si son imprescindibles para que algo funcione; cada uno necesita su .env.<nombre>.example. Por defecto solo existen .env y .env.example.",
-    "envPermitidos": []
+    "$comentario": "envPermitidos: entornos extra (.env.<nombre>) solo si son imprescindibles para que algo funcione; cada uno necesita su .env.<nombre>.example. Por defecto solo existen .env y .env.example. scripts: descripción de cada script npm para ai/README.md (ai/sync.mjs falla si falta una).",
+    "envPermitidos": [],
+    "scripts": {
+      "commitlint": "Valida un mensaje de commit con Conventional Commits (lo usa el hook commit-msg).",
+      "pr:pendientes": "Lista las PR que esperan tu aprobación y las tuyas listas para fusionar.",
+      "pr:estado": "Checks, aprobaciones y reglas de una PR: npm run pr:estado -- <N>.",
+      "pr:aprobar": "Aprueba una PR tras mostrar su resumen y pedir confirmación: npm run pr:aprobar -- <N>.",
+      "pr:fusionar": "Fusiona una PR con merge commit si cumple las reglas, tras confirmar: npm run pr:fusionar -- <N>.",
+      "issues:estado": "Actualiza el estado de los issues de una PR (lo usa el CI); simular con -- --pr <N> --simular.",
+      "commits:plan": "Propone dividir los cambios en commits por tema, sin tocar nada.",
+      "commits:dividir": "Muestra la división propuesta, pregunta y crea un commit por tema.",
+      "ai:sync": "Genera la configuración de los cuatro asistentes y ai/README.md desde las fuentes.",
+      "ai:check": "Falla si la configuración generada o ai/README.md están desactualizados (no escribe nada).",
+      "test:guardas": "Pruebas de las guardas, el flujo de git, el entorno y el generador del README.",
+      "env:check": "Revisa los archivos .env y que .env y .env.example tengan la misma estructura (sin mostrar valores).",
+      "env:sync": "Crea o alinea tu .env con .env.example sin leer ni mostrar valores.",
+      "env:compartir": "Copia tu .env a Descargas para compartirlo con el equipo por un canal seguro.",
+      "hooks:activar": "Activa los hooks de git de .githooks/ en tu clon.",
+      "ayuda": "Muestra esta ayuda en la terminal: índice, o las secciones de un tema (npm run ayuda -- <tema>)."
+    }
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.4",

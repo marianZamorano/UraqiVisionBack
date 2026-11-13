@@ -27,4 +27,22 @@ export const EXEMPT_MESSAGE = /^(Merge |Revert "|fixup! |squash! |amend! )/;
 /** Salida de git sin recortar: necesaria para formatos donde el espacio inicial importa (status --porcelain). */
 export const gitRaw = (args, cwd) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
 
+/** Lo que genera ai/sync.mjs, incluida la ayuda ai/README.md. */
+export const GENERADOS = ['ai/README.md', '.claude', '.gemini', '.codex', '.opencode', '.mcp.json', 'opencode.json'];
+
+/**
+ * Archivos generados con cambios sin commitear (modificados, nuevos o borrados). Con soloSinAgregar, solo los que
+ * aún no están en el índice (lo que quedaría fuera del commit).
+ */
+export function generadosSinCommitear(cwd = process.cwd(), { soloSinAgregar = false } = {}) {
+  try {
+    return gitRaw(['status', '--porcelain', '--untracked-files=all', '--', ...GENERADOS], cwd)
+      .split('\n').filter(Boolean)
+      .filter((l) => !soloSinAgregar || l.startsWith('??') || l[1] !== ' ')
+      .map((l) => l.slice(3));
+  } catch {
+    return [];
+  }
+}
+
 export { run as git };

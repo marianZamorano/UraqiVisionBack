@@ -6,6 +6,7 @@
 //   ai/agents/<agente>.md     subagentes
 //   ai/hooks/                 guardas (scripts compartidos)
 //   ai/mcp/servers.json       servidores MCP
+//   ai/docs/README.plantilla.md  texto del ai/README.md (el resto del README se genera de las fuentes)
 //
 // Uso:
 //   node ai/sync.mjs           genera o actualiza los archivos de cada plataforma
@@ -15,6 +16,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseFrontmatter } from './hooks/lib/frontmatter.mjs';
+import { generarReadme } from './docs/readme.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
@@ -29,31 +32,6 @@ const emit = (p, content) => outputs.set(rel(p), content.endsWith('\n') ? conten
 const json = (obj) => `${JSON.stringify(obj, null, 2)}\n`;
 
 // ------------------------------------------------------------------ Lectura de fuentes
-
-function parseFrontmatter(text, file) {
-  const m = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/.exec(text);
-  if (!m) throw new Error(`${file}: falta el frontmatter`);
-  const data = {};
-  let listKey = null;
-  for (const line of m[1].split(/\r?\n/)) {
-    const item = /^\s+-\s+(.+)$/.exec(line);
-    if (item && listKey) {
-      data[listKey].push(item[1].trim());
-      continue;
-    }
-    const kv = /^([\w-]+):\s*(.*)$/.exec(line);
-    if (!kv) continue;
-    if (kv[2] === '') {
-      listKey = kv[1];
-      data[listKey] = [];
-    } else {
-      listKey = null;
-      data[kv[1]] = kv[2].replace(/^"(.*)"$/, '$1');
-    }
-  }
-  for (const k of ['name', 'description']) if (!data[k]) throw new Error(`${file}: falta "${k}" en el frontmatter`);
-  return { data, body: m[2].trim() };
-}
 
 const agents = fs.readdirSync(rel('ai', 'agents')).filter((f) => f.endsWith('.md')).sort().map((f) => {
   const { data, body } = parseFrontmatter(fs.readFileSync(rel('ai', 'agents', f), 'utf8'), `ai/agents/${f}`);
@@ -329,6 +307,15 @@ export const UraqiGuardas = async ({ directory }) => ({
   },
 });
 `);
+
+// ------------------------------------------------------------------ ai/README.md (ayuda siempre al día)
+
+// Se genera después de la configuración de hooks para documentar exactamente lo que se acaba de emitir.
+{
+  const { texto, errores } = generarReadme({ root: ROOT, outputs });
+  if (errores.length) throw new Error(`ai/README.md no se puede generar:\n- ${errores.join('\n- ')}`);
+  emit('ai/README.md', texto);
+}
 
 // ------------------------------------------------------------------ Escritura o comprobación
 

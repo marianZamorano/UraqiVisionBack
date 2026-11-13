@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al
-// agente si un JSON/GeoJSON quedó inválido o si es.json y en.json tienen claves distintas (RNF-03).
+// agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a
+// mano ai/README.md, que es generado.
 // Uso: node ai/hooks/post-edit.mjs --platform=<claude|codex|gemini>
 import fs from 'node:fs';
 import path from 'node:path';
@@ -69,6 +70,12 @@ try {
   for (const f of files) {
     if (String(clasificar(path.basename(f), ['*'])).startsWith('plantilla') || /^\.env(\.[\w-]+)?\.example$/.test(path.basename(f))) {
       msgs.push(`⏸ PAUSA: editaste ${path.basename(f)} (estructura del .env). Detente y dile a la persona que debe comunicar este cambio a su equipo antes de continuar. Luego ejecuta \`npm run env:sync\` para alinear su .env (no leas el .env) y \`npm run env:compartir\` si debe compartir valores nuevos.`);
+    }
+  }
+  // ai/README.md es generado: una edición a mano se pierde en el siguiente sync.
+  for (const f of files) {
+    if (path.relative(cwd, path.resolve(cwd, f)).replace(/\\/g, '/') === 'ai/README.md') {
+      msgs.push('ai/README.md lo genera ai/sync.mjs: esta edición se perderá. Edita ai/docs/README.plantilla.md (texto) o la fuente de la pieza (skill, subagente, MCP, hook, workflow o package.json → uraqi.scripts) y ejecuta `npm run ai:sync`.');
     }
   }
   if (msgs.length) {
