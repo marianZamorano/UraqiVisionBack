@@ -4,7 +4,8 @@
 // mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow,
 // script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el
 // cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes).
-// Si lo editado cita requisitos del módulo de otra persona (§19), avisa que es apoyo a su rol.
+// Si lo editado cita requisitos del módulo de otra persona (§19), avisa que es apoyo a su rol. Si cita requisitos
+// respaldados por referencias de §31, entrega sus enlaces para tenerlas en cuenta y citarlas.
 // Uso: node ai/hooks/post-edit.mjs --platform=<claude|codex|gemini>
 import fs from 'node:fs';
 import path from 'node:path';
@@ -13,6 +14,7 @@ import { clasificar } from './lib/entorno.mjs';
 import { esFuenteDeHerramienta } from './lib/herramientas.mjs';
 import { raiz, regenerarAyuda, coherenciaDeCambios } from './lib/herramientas-git.mjs';
 import { avisoDeApoyo } from './lib/equipo.mjs';
+import { avisoReferencias } from './lib/referencias.mjs';
 import { platform, readStdinJson, failOpen } from './lib/io.mjs';
 
 function flatKeys(obj, prefix = '', out = new Set()) {
@@ -101,6 +103,9 @@ try {
   const delProducto = files.some((f) => !esFuenteDeHerramienta(root ? path.relative(root, path.resolve(cwd, f)).replace(/\\/g, '/') : f) && !/(^|[\\/])docs[\\/]/.test(f));
   const apoyo = editado && delProducto ? avisoDeApoyo({ texto: editado, cwd, sesion: event.session_id }) : null;
   if (apoyo) msgs.push(`${apoyo} Díselo a la persona.`);
+  // Referencias de §31 que aplican a los requisitos de lo editado (una vez por referencia y sesión).
+  const refs = editado && delProducto ? avisoReferencias({ texto: editado, cwd, sesion: event.session_id }) : null;
+  if (refs) msgs.push(refs);
   if (msgs.length) {
     const reason = `[uraqi-guard:post-edit] Revisa antes de seguir:\n- ${msgs.join('\n- ')}`;
     const out = platform() === 'gemini'

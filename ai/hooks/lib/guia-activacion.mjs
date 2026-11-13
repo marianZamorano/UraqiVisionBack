@@ -83,6 +83,12 @@ export const PASOS = {
     'Busca el identificador correcto con la skill `documento-maestro` en `docs/UraqiVisionDocumentoMaestrov1.0.txt` y corrígelo en su archivo.',
     VERIFICAR,
   ],
+  referencias: (d) => [
+    `El catálogo de referencias no coincide con §31 del documento maestro (${d}).`,
+    'Corrige `ai/referencias/catalogo.json` (enlaces idénticos a §31, identificadores y secciones que existan) con la skill `referencias-documento`; si cambió el documento, regenera su copia en texto: `uv run --with pypdf python ai/scripts/extraer_documento.py`.',
+    'Revisa con `npm run referencias:revisar` y regenera las secciones de las skills con `npm run ai:sync`.',
+    VERIFICAR,
+  ],
   pruebas: () => [
     'Ejecuta las pruebas y lee qué falla: `npm run test:guardas`.',
     'Corrige la causa (skill `systematic-debugging`) en la rama de un issue.',
