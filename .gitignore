@@ -12,7 +12,6 @@ _netrc
 # Configuración personal de los asistentes de IA
 .claude/settings.local.json
 .gemini/.env
-.playwright-mcp/
 
 # Dependencias y artefactos
 node_modules/
