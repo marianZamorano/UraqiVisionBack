@@ -50,3 +50,16 @@ Criterios de Space Apps: impacto, creatividad, validez, relevancia y presentaci�
 - [ ] Ningún dato simulado presentado como resultado (RN-04); cifras con rango (RN-06).
 - [ ] Sin logos de la NASA en material generado con IA (RN-12).
 - [ ] Referencias revisadas (skill `rigor-y-fuentes`).
+
+## Referencias del documento maestro (§31)
+
+<!-- referencias:inicio (generado por ai/sync.mjs desde ai/referencias/catalogo.json; no editar a mano) -->
+
+Enlaces de §31 que aplican aquí. Cítalos (APA 7) donde implementes lo que respaldan y consulta la fuente antes de
+usar una afirmación concreta: el contenido de cada enlace no se resume aquí. Detalle: skill `referencias-documento`
+y `npm run referencias:revisar`.
+
+- **NASA Space Apps Challenge (2026). Dancing with the SARs** — <https://www.spaceappschallenge.org/2026/challenges/dancing-with-the-sars/>
+  Citada en: §3. Aplica a: RF-01, RF-24. Enlázalo en Acerca de y en la entrega; sin logos ni marcas de la NASA en contenido generado con IA (RN-12).
+
+<!-- referencias:fin -->
