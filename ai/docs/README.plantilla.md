@@ -112,6 +112,9 @@ npm run ai:sync                     # regenera configuraciones y esta ayuda tras
 npm run ai:check                    # falla si algo quedó desactualizado
 npm run ai:verificar                # ¿funcionan y están activas todas las herramientas?
 npm run ai:cambios                  # qué herramientas cambian frente a origin/dev y si son coherentes
+npm run codigo:revisar              # código roto, muerto o desconectado + CI/CD por rama, con plan
+npm run codigo:cicd                 # solo el estado del CI/CD de dev, qa y main
+uv run --with pypdf python ai/scripts/extraer_documento.py   # regenera la copia .txt del documento maestro
 npm run test:guardas                # pruebas de guardas, flujo y README
 node .agents/skills/microauditoria/scripts/evidencia.mjs --dias 7   # evidencia de los últimos cambios
 
@@ -258,6 +261,32 @@ de esta ayuda o `AGENTS.md`. Cuando una cambia:
 
 `npm run ai:cambios` muestra qué herramientas cambian en tu rama frente a `origin/dev` y si son coherentes, antes de
 abrir la PR.
+
+## Revisor de código vivo y CI/CD
+
+Evita que llegue a `qa` o a `main` código que da la idea de funcionar sin funcionar. Se activa solo cuando se pide
+una promoción (PR hacia `qa` o `main`, que solo se abre si la persona lo pide de forma explícita):
+
+- **Guarda de los asistentes** (`[uraqi-guard:codigo-no-vivo]`): `gh pr create --base qa|main` se detiene si hay
+  errores, y el asistente muestra los hallazgos con su plan de solución.
+- **Workflow Código vivo**: comenta en la PR los hallazgos con el plan, el estado del CI/CD por rama y el
+  resultado del build y el arranque; falla si hay errores.
+- **Subagente `revisor-codigo-vivo`** (skill `codigo-vivo`): añade la revisión de sentido que el análisis
+  estático no ve (controles sin acción, endpoints inexistentes, errores silenciados) y da el dictamen.
+
+| Hallazgo | Nivel |
+|---|---|
+| Import roto, paquete sin declarar, referencia a un archivo inexistente, código muerto, prueba con `.only` | error |
+| Código o exportación que solo usan las pruebas o nadie usa, trabajo sin terminar, datos simulados (RN-04), prueba desactivada, documentación que cita un comando inexistente | aviso |
+
+Cada hallazgo trae su acción: **conectar** (con su RF/RNF), **eliminar** en una rama con su issue, **declarar
+como pendiente** o, si es intencional, marcar el archivo con `uraqi: vivo — <motivo>`.
+
+**CI/CD por rama.** Cuando se implemente, cada rama (`dev`, `qa`, `main`) debe verificar cinco etapas:
+conflictos con la rama destino, código vivo, pruebas, build y que el proyecto vuelva a levantar
+(`npm run codigo:levantar` construye y arranca cada aplicación y espera a que responda). Mientras no haya web,
+pipeline ni despliegue (hospedaje pendiente, DP-06), lo que falta sale como pendiente; desde que existan, es
+error. La skill `codigo-vivo` trae los pasos listos para el pipeline.
 
 ## Añadir algo
 
