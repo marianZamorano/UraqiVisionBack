@@ -6,6 +6,8 @@
 #    las PR de promoción dev → qa y qa → main listan sus issues con "Refs #N";
 # 4. algún commit no cumple Conventional Commits (commitlint.config.mjs).
 # Es el control que no depende de que cada persona tenga activados los hooks locales (.githooks).
+# Lee el título y la descripción ACTUALES de la PR (no los del evento), así que tras corregir la descripción basta
+# con volver a ejecutar la corrida.
 name: Trazabilidad
 
 on:
@@ -15,6 +17,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   trazabilidad:
@@ -26,15 +29,23 @@ jobs:
 
       - name: Commits con issue e issues referenciados en la PR
         env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_BODY: ${{ github.event.pull_request.body }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE_EVENTO: ${{ github.event.pull_request.title }}
+          PR_BODY_EVENTO: ${{ github.event.pull_request.body }}
           HEAD_REF: ${{ github.head_ref }}
           BASE_REF: ${{ github.base_ref }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           fallos=0
-          pr_text="$(printf '%s\n%s\n' "$PR_TITLE" "$PR_BODY")"
+          # Texto actual de la PR; si la API no responde, el del evento.
+          if pr_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" 2>/dev/null)"; then
+            pr_text="$(printf '%s' "$pr_json" | jq -r '(.title // "") + "\n" + (.body // "")')"
+          else
+            echo "::warning::No se pudo leer la PR actual; se usa el texto del evento."
+            pr_text="$(printf '%s\n%s\n' "$PR_TITLE_EVENTO" "$PR_BODY_EVENTO")"
+          fi
 
           # Promociones permitidas: dev → qa y qa → main. Cualquier otra rama solo entra a dev.
           if [ "$BASE_REF" = "qa" ] && [ "$HEAD_REF" != "dev" ]; then
