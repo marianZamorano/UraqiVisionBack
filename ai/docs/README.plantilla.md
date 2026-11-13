@@ -115,6 +115,11 @@ npm run ai:cambios                  # qué herramientas cambian frente a origin/
 npm run codigo:revisar              # código roto, muerto o desconectado + CI/CD por rama, con plan
 npm run codigo:cicd                 # solo el estado del CI/CD de dev, qa y main
 
+# SDD: orden de prompts e historial
+npm run sdd:estado                  # avance por área, conflictos y tu siguiente prompt
+npm run sdd:siguiente -- --yo       # tu siguiente prompt, listo para copiar y pegar
+npm run sdd:historial               # decisiones y resultados de cada prompt
+
 # Equipo (§19): quién eres y qué te corresponde
 npm run equipo:modulos              # módulos, responsables, apoyo y revisores
 npm run equipo:soy -- Marian        # registra quién eres en este clon (vibecodear lo pregunta)
@@ -266,6 +271,26 @@ de esta ayuda o `AGENTS.md`. Cuando una cambia:
 
 `npm run ai:cambios` muestra qué herramientas cambian en tu rama frente a `origin/dev` y si son coherentes, antes de
 abrir la PR.
+
+## SDD por área: orden de prompts e historial
+
+El proyecto se implementa desde cero con Spec Kit siguiendo **`sdd/`**: un SDD por área de §19 (más proyecto e
+integración), todos con la misma estructura (`sdd/00-estructura.md`), y en `sdd/README.md` el **orden global de
+los prompts** según el plan del hackathon (§25), con el comando de Spec Kit, quién lo ejecuta y qué herramientas
+intervienen.
+
+- **Siguiente prompt**: `npm run sdd:siguiente -- --yo` lo imprime listo para copiar (`--asistente
+  codex|gemini|opencode` adapta los comandos).
+- **Al pegarlo** (empieza con `[SDD P-…]`), el hook del mensaje hace que el asistente **confirme contigo** antes de
+  ejecutarlo (opción múltiple: ejecutar, modificar o posponer) y avisa de dependencias, cambios, re-ejecuciones y
+  si es apoyo a otro rol. Skill `sdd-prompts`.
+- **Al terminar**, el hook de fin de turno (Stop en Claude y Codex, AfterAgent en Gemini) exige registrar el
+  resultado en el historial y **mostrar el siguiente prompt** listo para copiar.
+- **Historial** (`sdd/historial/`, un JSON por entrada para no generar conflictos de merge): `npm run
+  sdd:historial`; `npm run sdd:estado` marca prompts cambiados después de ejecutarse y dependencias re-ejecutadas.
+- **Estructura**: `npm run sdd:validar`; el pre-commit bloquea un SDD que la rompa (`[uraqi-guard:sdd-invalido]`) y
+  `npm run ai:sync` regenera la tabla de orden de `sdd/README.md`.
+- `vibecodear` toma el siguiente prompt de los módulos de la persona como objetivo del Sprint.
 
 ## Equipo: quién eres y qué te corresponde (§19)
 

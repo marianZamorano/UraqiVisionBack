@@ -22,15 +22,15 @@ consume lo que este repositorio publica: los archivos de cada estación (§17.3)
 
 | Pieza | Cantidad | Fuente |
 |---|---|---|
-| Skills propias | 34 | `.agents/skills/` |
+| Skills propias | 35 | `.agents/skills/` |
 | Skills de Spec Kit (SDD) | 10 | `.agents/skills/speckit-*` |
 | Subagentes | 13 | `ai/agents/` |
 | Servidores MCP | 3 | `ai/mcp/servers.json` |
-| Hooks de los asistentes | 4 | `ai/hooks/*.mjs` |
-| Reglas de las guardas | 33 | `ai/hooks/lib/` |
+| Hooks de los asistentes | 5 | `ai/hooks/*.mjs` |
+| Reglas de las guardas | 34 | `ai/hooks/lib/` |
 | Hooks de git | 6 | `.githooks/` |
 | Workflows de GitHub | 9 | `.github/workflows/` |
-| Scripts npm | 25 | `package.json` |
+| Scripts npm | 30 | `package.json` |
 
 ## Instalación (primera vez)
 
@@ -127,6 +127,11 @@ npm run ai:cambios                  # qué herramientas cambian frente a origin/
 npm run codigo:revisar              # código roto, muerto o desconectado + CI/CD por rama, con plan
 npm run codigo:cicd                 # solo el estado del CI/CD de dev, qa y main
 
+# SDD: orden de prompts e historial
+npm run sdd:estado                  # avance por área, conflictos y tu siguiente prompt
+npm run sdd:siguiente -- --yo       # tu siguiente prompt, listo para copiar y pegar
+npm run sdd:historial               # decisiones y resultados de cada prompt
+
 # Equipo (§19): quién eres y qué te corresponde
 npm run equipo:modulos              # módulos, responsables, apoyo y revisores
 npm run equipo:soy -- Marian        # registra quién eres en este clon (vibecodear lo pregunta)
@@ -186,6 +191,7 @@ persona las pide (`/nombre` en Claude Code, `$nombre` en Codex CLI). Fuente: `.a
 | `qa-test-reporting` | Genera informes de pruebas basados en evidencia - resultados de ejecución (JUnit, Jest/Vitest), rendimiento (k6), quality gates, métricas, defectos y pruebas no ejecutadas - separando hechos verificados, hipótesis y recomendaciones, sin afirmar éxitos no demostrados. | Usar cuando se pida un informe, resumen de resultados, estado de calidad, métricas de pruebas o evidencias para una release. | — |
 | `qa-test-strategy` | Define la estrategia de pruebas de un proyecto o funcionalidad - alcance, niveles (unitario, integración, sistema, aceptación, E2E), tipos funcionales y no funcionales, análisis de riesgos con matriz probabilidad×impacto, priorización, entornos, datos, criterios de entrada/salida y trazabilidad. | Usar cuando se pida una estrategia o plan de pruebas, priorizar qué probar o evaluar riesgos de calidad. | `templates/` |
 | `rigor-y-fuentes` | Reglas de rigor para los contenidos de UraqiVision (fichas del atlas, hipótesis, relato local, página de método, Acerca de, láminas y textos de Insight). Fuentes con fecha de consulta, citas APA 7, cita de datos NISAR y FIRMS, hechos frente a hipótesis, sin cifras ni referencias inventadas y sin marcas de la NASA en contenido generado con IA. | Usar al redactar o revisar cualquier texto con datos, cifras, fuentes o referencias. | — |
+| `sdd-prompts` | Ejecuta los prompts del SDD por área de UraqiVision (sdd/*.md) uno a uno, confirmando antes con la persona que va a ejecutarlo (opción múltiple: ejecutar tal cual, modificar o posponer), comprobando que le corresponde según §19, registrando cada decisión y resultado en el historial (sdd/historial/) y entregando al final el siguiente prompt listo para copiar y pegar. También detecta cambios y conflictos entre prompts. | Usar cuando un mensaje traiga «[SDD P-…]», cuando se pida «siguiente prompt», «qué sigue en el SDD», «estado del SDD», «historial de prompts», o al cambiar un prompt del SDD. | — |
 | `sdd-uraqivision` | Guía el Spec-Driven Development de UraqiVision con Spec Kit, del documento maestro a la constitución, las specs por módulo, el plan, las tareas, la implementación y la verificación, con una ruta rápida para el hackathon (14 y 15 de noviembre de 2026). | Usar con "fase N", "ruta rápida" o "estado" para saber qué sigue, o cuando se vaya a empezar una feature nueva. Solo la invoca la persona (`/sdd-uraqivision estado \| fase N (0-8) \| ruta rápida \| feature <nombre>`). | — |
 | `systematic-debugging` | — | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | `CREATION-LOG.md`, `LICENSE`, `PROVENANCE.md`, `condition-based-waiting-example.ts`, `condition-based-waiting.md`, `defense-in-depth.md`, `find-polluter.sh`, `root-cause-tracing.md`, `test-academic.md`, `test-pressure-1.md`, `test-pressure-2.md`, `test-pressure-3.md` |
 | `test-driven-development` | — | Use when implementing any feature or bugfix, before writing implementation code | `LICENSE`, `PROVENANCE.md`, `writing-good-tests.md` |
@@ -276,9 +282,10 @@ Se ejecutan en cada sesión, mensaje o herramienta del asistente. Una sola lógi
 
 | Script | Qué hace | Claude Code | Codex CLI | Gemini CLI | opencode |
 |---|---|---|---|---|---|
+| `ai/hooks/fin-turno.mjs` | Hook de fin de turno (Stop en Claude y Codex, AfterAgent en Gemini). Si un prompt del SDD se ejecutó en esta sesión y no quedó en el historial, pide al asistente que lo registre y que muestre a la persona el siguiente prompt listo para copiar y pegar. No insiste dos veces seguidas ni interrumpe si se espera una respuesta de la persona. | Stop | Stop | AfterAgent | — |
 | `ai/hooks/post-edit.mjs` | Hook posterior a cada edición (PostToolUse en Claude y Codex, AfterTool en Gemini). No bloquea: avisa al agente si un JSON/GeoJSON quedó inválido, si es.json y en.json tienen claves distintas (RNF-03) o si editó a mano ai/README.md, que es generado. Si editó una herramienta de IA (skill, subagente, MCP, hook, workflow, script o la plantilla de la ayuda), regenera sola la ayuda y la configuración (ai/sync.mjs) y revisa que el cambio sea coherente con el documento maestro (identificadores y secciones que existen, decisiones pendientes). Si lo editado cita requisitos del módulo de otra persona (§19), avisa que es apoyo a su rol. | PostToolUse (Write\|Edit\|MultiEdit) | PostToolUse (^apply_patch$) | AfterTool (write_file\|replace) | — |
 | `ai/hooks/pre-tool.mjs` | Hook previo a cada herramienta (PreToolUse en Claude y Codex, BeforeTool en Gemini). Bloquea secretos, rutas protegidas, comandos destructivos y push o merge directo a main. Al crear una PR hacia qa o main (promoción pedida de forma explícita) activa el revisor de código vivo: si hay código roto o muerto, o el CI/CD exigible está incompleto, bloquea y muestra el plan de solución. vibecodear no se carga sin saber qué colaborador es la persona en esta sesión (§19): bloquea y pide preguntarlo con opción múltiple; al registrarla (node ai/scripts/equipo.mjs soy <Nombre>) anota la sesión. | PreToolUse (Bash\|PowerShell\|Write\|Edit\|MultiEdit\|NotebookEdit\|Read\|Skill) | PreToolUse (^(Bash\|apply_patch)$) | BeforeTool (run_shell_command\|write_file\|replace\|read_file) | plugin: tool.execute.before |
-| `ai/hooks/prompt-guard.mjs` | Hook del mensaje del usuario (UserPromptSubmit en Claude y Codex, BeforeAgent en Gemini). 1) Si el mensaje contiene un secreto, no se envía al modelo. 2) Cada 10 minutos como máximo, revisa en GitHub si hay PR nuevas que esperan la aprobación de la persona y, si hay novedades, se las indica al asistente para que avise (sin red o sin gh, no hace nada). 3) Si el mensaje pide vibecodear y nadie se identificó en esta sesión, recuerda preguntar con opción múltiple qué colaborador es (§19) antes de empezar. | UserPromptSubmit | UserPromptSubmit | BeforeAgent | plugin: chat.message |
+| `ai/hooks/prompt-guard.mjs` | Hook del mensaje del usuario (UserPromptSubmit en Claude y Codex, BeforeAgent en Gemini). 1) Si el mensaje contiene un secreto, no se envía al modelo. 2) Cada 10 minutos como máximo, revisa en GitHub si hay PR nuevas que esperan la aprobación de la persona y, si hay novedades, se las indica al asistente para que avise (sin red o sin gh, no hace nada). 3) Si el mensaje pide vibecodear y nadie se identificó en esta sesión, recuerda preguntar con opción múltiple qué colaborador es (§19) antes de empezar. 4) Si el mensaje trae un prompt del SDD («[SDD P-…]»), pide confirmarlo con la persona (opción múltiple), avisa de dependencias, cambios, re-ejecuciones y de quién lo ejecuta, y recuerda registrar el resultado al terminar. | UserPromptSubmit | UserPromptSubmit | BeforeAgent | plugin: chat.message |
 | `ai/hooks/session-context.mjs` | Hook de inicio de sesión: recuerda al agente la fuente de verdad y las reglas clave, y avisa de las PR que esperan la aprobación de la persona (consulta GitHub con gh; si no hay red o sesión, lo omite). También avisa de las herramientas de IA que cambiaron desde la última sesión (con la ayuda regenerada si hacía falta y la coherencia con el documento maestro) y de cualquier herramienta que haya dejado de funcionar o de estar activa. Nunca bloquea. | SessionStart | SessionStart | SessionStart | — |
 
 ### Guardas
@@ -317,6 +324,7 @@ Reglas que bloquean (o avisan) antes de que el asistente actúe. Los mensajes ll
 | `remote-code-exec` | Descarga y ejecuta código remoto | `ai/hooks/lib/guard.mjs` |
 | `remove-item-root` | Borrado recursivo de la raíz o del home | `ai/hooks/lib/guard.mjs` |
 | `rm-root` | Borrado recursivo de la raíz, del home o con comodín | `ai/hooks/lib/guard.mjs` |
+| `sdd-invalido` | Commit bloqueado: los SDD de sdd/ no siguen la estructura común (sdd/00-estructura.md). | `ai/hooks/git-pre-commit.mjs` |
 | `secret-file-read` | Lee o copia un archivo con secretos (.env, .netrc, claves) | `ai/hooks/lib/guard.mjs` |
 | `secret-in-command` | El comando contiene un posible secreto (${secrets.join( | `ai/hooks/lib/guard.mjs` |
 | `secret-in-content` | El contenido a escribir en … contiene un posible secreto (${secrets.join( | `ai/hooks/lib/guard.mjs` |
@@ -333,7 +341,7 @@ Se activan con `npm run hooks:activar` y corren en tu máquina en cada commit, p
 | `commit-msg` | trazabilidad commit → issue. - BLOQUEA si el mensaje no cita su issue (#12, GH-12 o la URL del issue). Exentos: merges, reverts, fixup!/squash!/amend!. En ramas tipo/N-descripcion, prepare-commit-msg ya agregó "Refs #N". - AVISA si no cita un identificador del documento maestro (§1, §28) o si trae Co-Authored-By de IA. - AVISA si cita requisitos del módulo de otra persona según §19 (apoyo a su rol), con la identidad del clon. - Commits grandes (varios temas mezclados): muestra la división propuesta y termina con código 3 para que el wrapper .githooks/commit-msg PREGUNTE en la terminal. Sin terminal (agentes, IDE) bloquea y pide preguntar. Se acepta un solo commit con URAQI_UN_COMMIT=1 o con la línea "Commit-grande: aprobado" en el mensaje. | `ai/hooks/git-commit-msg.mjs` |
 | `post-checkout` | 1) Toda rama nueva se sube: si la rama actual no tiene upstream, hace `git push -u origin <rama>` (o solo enlaza el upstream si la rama ya existe en origin). No actúa en dev, qa, main ni con HEAD desacoplado. 2) Variables de entorno: si .env.example cambió entre los dos commits, agrega al .env local las claves nuevas vacías y avisa qué valores pedir al equipo (ver ai/scripts/entorno.mjs). 3) Herramientas de IA: si al cambiar de rama cambian skills, subagentes, MCP, hooks, workflows, scripts o la ayuda, avisa qué cambió, regenera la ayuda si hace falta y verifica que todo siga funcionando y activo. Nunca bloquea: si no hay red, avisa para subir la rama después. URAQI_SIN_PUSH=1 desactiva el push. | `ai/hooks/git-post-checkout.mjs` |
 | `post-merge` | Nunca bloquea ni muestra valores. 1) Si cambió .env.example, agrega al .env local las claves nuevas vacías y avisa qué valores pedir al equipo. 2) Si cambiaron herramientas de IA (skills, subagentes, MCP, hooks, workflows, scripts o la ayuda), avisa qué cambió, regenera la ayuda y la configuración si hace falta, revisa la coherencia con el documento maestro y verifica que todo siga funcionando y activo. | `ai/hooks/git-post-merge.mjs` |
-| `pre-commit` | impide versionar archivos con secretos o líneas con claves. También impide commitear directamente en dev, qa o main: el trabajo va en una rama tipo/N-descripcion y llega a esas ramas por PR. Variables de entorno: solo se versionan las plantillas permitidas (.env.example y las declaradas), sin valores sensibles; no puede haber archivos .env* no permitidos; .env y .env.example deben tener la misma estructura; y si el commit cambia la estructura de una plantilla, hay una PAUSA obligatoria para comunicarlo al equipo (el .env se copia a Descargas). Tras comunicarlo: URAQI_ENV_COMUNICADO=1 git commit … Ayuda al día: si el commit toca una fuente de las herramientas, ai/README.md y la configuración generada se regeneran solas; y las herramientas del commit deben ser coherentes con el documento maestro. | `ai/hooks/git-pre-commit.mjs` |
+| `pre-commit` | impide versionar archivos con secretos o líneas con claves. También impide commitear directamente en dev, qa o main: el trabajo va en una rama tipo/N-descripcion y llega a esas ramas por PR. Variables de entorno: solo se versionan las plantillas permitidas (.env.example y las declaradas), sin valores sensibles; no puede haber archivos .env* no permitidos; .env y .env.example deben tener la misma estructura; y si el commit cambia la estructura de una plantilla, hay una PAUSA obligatoria para comunicarlo al equipo (el .env se copia a Descargas). Tras comunicarlo: URAQI_ENV_COMUNICADO=1 git commit … Ayuda al día: si el commit toca una fuente de las herramientas, ai/README.md y la configuración generada se regeneran solas; y las herramientas del commit deben ser coherentes con el documento maestro. SDD: si el commit toca sdd/*.md, los SDD deben seguir la estructura común (sdd/00-estructura.md). | `ai/hooks/git-pre-commit.mjs` |
 | `pre-push` | nada llega a dev, qa ni main sin PR, todo commit que se sube cita su issue y no quedan archivos generados por ai/sync.mjs (incluida la ayuda ai/README.md) sin commitear. | `ai/hooks/git-pre-push.mjs` |
 | `prepare-commit-msg` | en ramas tipo/N-descripcion (feat/12-deslizador), agrega "Refs #N" al mensaje si todavía no cita ningún issue. Así cada commit queda enlazado a su issue sin escribirlo a mano. | `ai/hooks/git-prepare-commit-msg.mjs` |
 
@@ -377,7 +385,12 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | `npm run equipo:soy` | Registra qué colaborador eres en este clon (npm run equipo:soy -- <Nombre>); vibecodear lo pregunta con opción múltiple. | `node ai/scripts/equipo.mjs soy` |
 | `npm run equipo:quien` | Muestra quién está registrado en este clon y sus módulos aquí y en el otro repositorio. | `node ai/scripts/equipo.mjs quien` |
 | `npm run equipo:alcance` | ¿El trabajo es tuyo o apoyas el rol de otra persona? (npm run equipo:alcance -- RF-05 RF-06 o M-MAPA). | `node ai/scripts/equipo.mjs alcance` |
-| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs ai/hooks/test/equipo.test.mjs` |
+| `npm run sdd:estado` | Progreso de cada SDD de sdd/, conflictos del historial y tu siguiente prompt. | `node ai/scripts/sdd.mjs estado` |
+| `npm run sdd:siguiente` | Siguiente prompt del SDD listo para copiar (-- --yo, --despues <ID>, --asistente codex\|gemini\|opencode). | `node ai/scripts/sdd.mjs siguiente` |
+| `npm run sdd:ver` | Muestra un prompt del SDD con su contexto: npm run sdd:ver -- <ID>. | `node ai/scripts/sdd.mjs ver` |
+| `npm run sdd:historial` | Historial de los prompts del SDD: decisiones, resultados, cambios y conflictos (-- --id <ID>). | `node ai/scripts/sdd.mjs historial` |
+| `npm run sdd:validar` | Comprueba que todos los SDD de sdd/ sigan la estructura común (sdd/00-estructura.md). | `node ai/scripts/sdd.mjs validar` |
+| `npm run test:guardas` | Pruebas de las guardas, el flujo de git, el entorno, las herramientas de IA y el generador del README. | `node --test ai/hooks/test/guard.test.mjs ai/hooks/test/commit-groups.test.mjs ai/hooks/test/aprobaciones.test.mjs ai/hooks/test/estado-issues.test.mjs ai/hooks/test/buenas-practicas-pr.test.mjs ai/hooks/test/entorno.test.mjs ai/hooks/test/readme.test.mjs ai/hooks/test/herramientas.test.mjs ai/hooks/test/codigo-vivo.test.mjs ai/hooks/test/equipo.test.mjs ai/hooks/test/sdd.test.mjs` |
 | `npm run env:check` | Revisa los archivos .env y que .env y .env.example tengan la misma estructura (sin mostrar valores). | `node ai/scripts/entorno.mjs check` |
 | `npm run env:sync` | Crea o alinea tu .env con .env.example sin leer ni mostrar valores. | `node ai/scripts/entorno.mjs sync` |
 | `npm run env:compartir` | Copia tu .env a Descargas para compartirlo con el equipo por un canal seguro. | `node ai/scripts/entorno.mjs compartir` |
@@ -428,6 +441,26 @@ de esta ayuda o `AGENTS.md`. Cuando una cambia:
 
 `npm run ai:cambios` muestra qué herramientas cambian en tu rama frente a `origin/dev` y si son coherentes, antes de
 abrir la PR.
+
+## SDD por área: orden de prompts e historial
+
+El proyecto se implementa desde cero con Spec Kit siguiendo **`sdd/`**: un SDD por área de §19 (más proyecto e
+integración), todos con la misma estructura (`sdd/00-estructura.md`), y en `sdd/README.md` el **orden global de
+los prompts** según el plan del hackathon (§25), con el comando de Spec Kit, quién lo ejecuta y qué herramientas
+intervienen.
+
+- **Siguiente prompt**: `npm run sdd:siguiente -- --yo` lo imprime listo para copiar (`--asistente
+  codex|gemini|opencode` adapta los comandos).
+- **Al pegarlo** (empieza con `[SDD P-…]`), el hook del mensaje hace que el asistente **confirme contigo** antes de
+  ejecutarlo (opción múltiple: ejecutar, modificar o posponer) y avisa de dependencias, cambios, re-ejecuciones y
+  si es apoyo a otro rol. Skill `sdd-prompts`.
+- **Al terminar**, el hook de fin de turno (Stop en Claude y Codex, AfterAgent en Gemini) exige registrar el
+  resultado en el historial y **mostrar el siguiente prompt** listo para copiar.
+- **Historial** (`sdd/historial/`, un JSON por entrada para no generar conflictos de merge): `npm run
+  sdd:historial`; `npm run sdd:estado` marca prompts cambiados después de ejecutarse y dependencias re-ejecutadas.
+- **Estructura**: `npm run sdd:validar`; el pre-commit bloquea un SDD que la rompa (`[uraqi-guard:sdd-invalido]`) y
+  `npm run ai:sync` regenera la tabla de orden de `sdd/README.md`.
+- `vibecodear` toma el siguiente prompt de los módulos de la persona como objetivo del Sprint.
 
 ## Equipo: quién eres y qué te corresponde (§19)
 
