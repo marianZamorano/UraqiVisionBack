@@ -48,9 +48,6 @@ con dos puntos de control (plan y feedback) y documenta en `.vibecodear/sprints/
 |---|---|---|
 | QA | `qa-project-discovery`, `qa-test-strategy`, `qa-test-design`, `qa-automation`, `qa-regression-analysis`, `qa-quality-gates`, `qa-test-reporting`, `qa-defect-analysis`, `qa-security-testing` | Rutas cambiadas a `ai/qa/scripts/`; scripts y fixtures incluidos |
 | QA (MIT, obra/superpowers) | `test-driven-development`, `systematic-debugging`, `verification-before-completion` | Copia idéntica, con `LICENSE` y `PROVENANCE.md` (SHA-256 verificado) |
-| Frontend | `react-component-architecture`, `frontend-testing`, `vite-bundle-optimization` | Adaptadas: motores de mapa aislados, dobles de WebGL en Vitest, CesiumJS con Vite |
-| Frontend / Fullstack | `frontend-data-fetching`, `typed-api-integration`, `react-components-and-state` | Reescritas: UraqiVision no tiene backend NestJS, lee archivos publicados e Insight |
-| UI/UX | `design-system-tokens`, `responsive-visual-testing` | Reescritas sin Figma ni tokens `--cc-*`, con las reglas de §20.2 |
 | DevSecOps | `devops-secrets-management`, `devops-dependency-security`, `devops-git-workflow`, `devops-release-readiness`, `devops-free-tier-audit`, `devops-supervised-execution` | Rutas cambiadas a `ai/devops/scripts/` |
 
 No se trajeron, por no aplicar a UraqiVision: las skills de NestJS y PostgreSQL, `dynamic-json-forms`,
@@ -66,18 +63,13 @@ las de API, contratos, integración con base de datos y carga.
 | `sdd-uraqivision` | Flujo de Spec Kit adaptado al documento y al hackathon, con prompts listos | Todos |
 | `ciencia-radar-nisar` | MC-01–MC-09, CQ, VC, unidades lineal/dB, sin dato ≠ 0 | M-INGESTA, M-CIENCIA, M-VALIDACIÓN |
 | `publicacion-estacion` | Contrato de la carpeta publicada (§17.3), COG sin pérdida, peso | M-PUBLICACIÓN |
-| `globo-y-mapa` | CesiumJS sin ion, carga diferida, respaldo 2D, estado compartido, capas | M-GLOBO, M-MAPA |
 | `insight-lector-radar` | Contrato, adaptador, plantillas, límites y seguridad de la clave | M-INSIGHT |
-| `interfaz-bilingue-accesible` | es/en, WCAG 2.2 AA, estados de la vista, cifras y fechas | M-INTERFAZ, M-ATLAS |
 | `rigor-y-fuentes` | Citas, APA 7, hechos frente a hipótesis, nada inventado | M-ATLAS, contenidos |
 | `entrega-hackathon` | Estado frente al plan (§25), demo de 7 láminas, checklist de entrega | Todo el equipo |
 | `ingesta-nisar-asf` | Buscar GCOV con asf_search/earthaccess, recortar con GDAL ≥ 3.13, manifiesto y huellas (RF-26) | M-INGESTA |
 | `python-geoespacial` | COG float32 sin pérdida, NaN en lugar de 0, lineal → dB, pytest con rásters sintéticos | M-CIENCIA, M-PUBLICACIÓN |
 | `validacion-optica-firms` | dNBR de Sentinel-2, focos FIRMS, precisión, exhaustividad y Dice (VC-01 a VC-05) | M-VALIDACIÓN |
 | `notebook-reproducible` | Regenerar resultados desde el manifiesto, revisión visual y figuras de control (RNF-08) | M-CIENCIA |
-| `metodo-y-creditos` | Página de método, Fuente y calidad, Acerca de, licencias y citas (RF-15, RF-24, RF-37) | M-INTERFAZ |
-| `fichas-atlas` | Las 9 fichas, Tunari, relato local, hipótesis y preguntas sugeridas (RF-03, RF-12, RF-13, RF-17) | M-ATLAS |
-| `descargas-y-exportacion` | PNG y CSV con créditos, descarga de COG/GeoJSON/manifiesto, ficha imprimible (RF-21, RF-22, RF-31) | M-INTERFAZ, M-PUBLICACIÓN |
 | `verification-before-completion` | Evidencia antes de afirmar que algo funciona (MIT, de obra/superpowers) | Todos |
 
 ## Subagentes (`ai/agents/`)
@@ -96,9 +88,6 @@ defecto); `web: true` les da búsqueda web.
 | `devsecops-engineer` | Secretos, dependencias, controles de los agentes | Solo lectura |
 | `free-tier-architect` | Planes gratuitos (RNF-10), evidencia para DP-06 | Solo lectura, con web |
 | `release-readiness-reviewer` | Go/no-go antes de desplegar | Solo lectura |
-| `react-performance-auditor` | Rendimiento, CesiumJS diferido, fugas de visores | Escribe con aprobación |
-| `uiux-design-auditor` | Tokens, WCAG 2.2, responsive, §20.2 | Solo lectura |
-| `react-ui-reviewer` | Componentes, estado compartido, contratos tipados | Escribe con aprobación |
 
 ### Propios de UraqiVision (solo lectura)
 
@@ -107,7 +96,6 @@ defecto); `web: true` les da búsqueda web.
 | `guardian-alcance` | Antes de aprobar un plan, tareas o una rama: alcance, DP pendientes, trazabilidad |
 | `revisor-cientifico` | Al terminar una parte del pipeline o antes de publicar cifras |
 | `auditor-publicacion` | Antes de publicar o desplegar una estación |
-| `revisor-interfaz` | Al terminar un componente o pantalla (puede usar Playwright en localhost) |
 | `revisor-insight` | Al terminar o cambiar Insight, antes de desplegarlo |
 | `revisor-qa` | Antes de marcar una tarea como hecha o integrar una rama |
 
@@ -202,7 +190,6 @@ a la persona y solo entonces aplican con `--aplicar --si`. Un solo commit grande
 
 | Servidor | Uso | Efectos |
 |---|---|---|
-| `playwright` (`@playwright/mcp@0.0.83`) | PS-07, PS-08, PS-09: recorrer la app, teclado, idioma, movimiento reducido | Sí: solo contra `localhost` salvo aprobación |
 | `context7` (`@upstash/context7-mcp@4.4.4`) | Documentación vigente de CesiumJS, MapLibre, react-i18next, rasterio… | No |
 | `qa-evidence` (propio, `ai/qa/mcp-servers/`) | 9 herramientas: resultados JUnit, cobertura, esquemas JSON, quality gates, informe de evidencias | No |
 | `devops-readiness` (propio, `ai/devops/mcp-servers/`) | 11 herramientas: stack, secretos por nombre, `.env.example`, planes gratuitos, preparación del despliegue, política de aprobación | No |
