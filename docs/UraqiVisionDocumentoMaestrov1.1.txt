@@ -1,0 +1,2396 @@
+<!-- Texto extraido de docs/UraqiVisionDocumentoMaestrov1.1.pdf. Las tablas pierden su formato (una celda por linea). Ante cualquier diferencia, prevalece el PDF. -->
+
+UraqiVision
+El ritmo de la superficie boliviana, visto por el radar NISAR
+Documento maestro de producto, especificación de requisitos y arquitectura
+Proyecto
+UraqiVision
+Reto
+NASA Space Apps Challenge 2026, reto Dancing with the SARs
+Equipo
+Houston, tenemos chisme
+Versión
+1.0
+Fecha
+12 de noviembre de 2026
+Estado
+Aprobado para desarrollo. Las decisiones abiertas están en la sección 29
+Idioma del producto
+Español e inglés
+Control de versiones
+Versión
+Fecha
+Cambio
+1.0
+12 nov 2026
+Primera versión oficial: pregunta de quema o desmonte en San Ignacio
+de Velasco, explorador 3D de Bolivia, una estación con datos NISAR 2026
+verificados, arquitectura estática, Insight bilingüe, controles de calidad y
+plan del hackathon
+
+
+=== PAGE ===
+Contenido
+ .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 3
+1. Propósito de este documento
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 3
+2. Resumen ejecutivo
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 4
+3. El reto: Dancing with the SARs
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 4
+4. Problema y justificación
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 5
+5. Objetivos
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 6
+6. Propuesta de valor
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 7
+7. Usuarios y partes interesadas
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 7
+8. Alcance y exclusiones
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 8
+9. Fundamentos de radar
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 9
+10. Datos
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 11
+11. La estación San Ignacio de Velasco
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 11
+12. Métodos científicos
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 13
+13. Requisitos funcionales
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 17
+14. Requisitos no funcionales
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 18
+15. Casos de uso e historias de usuario
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 19
+16. Reglas del negocio y de los datos
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 19
+17. Arquitectura del software
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 22
+18. Tecnologías
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 23
+19. Módulos y responsabilidades
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 23
+20. Experiencia de usuario y visualización
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 24
+21. Insight
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 25
+22. Estrategia de almacenamiento
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 25
+23. Validación científica y pruebas
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 27
+24. Riesgos y mitigaciones
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 27
+25. Plan del hackathon
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 28
+26. Estrategia de demostración
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 29
+27. Evolución futura
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 29
+28. Reglas de trabajo para asistentes de IA
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 30
+29. Decisiones pendientes
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 31
+30. Glosario
+  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 31
+31. Referencias
+
+
+=== PAGE ===
+3
+1. Propósito de este documento
+Este documento es la fuente de verdad de UraqiVision. Lo usan las seis personas del equipo y cualquier
+asistente de IA que ayude a programar, redactar o diseñar. Si algo no está aquí, no está decidido.
+  Hechos verificados llevan su fuente y fecha de consulta.
+ Propuestas de diseño (por ejemplo, la estructura de un archivo JSON) son decisiones del equipo, no datos
+externos.
+ Hipótesis científicas se marcan como hipótesis.
+ Pendientes se listan en la sección 29 y no se implementan hasta resolverse.
+ Cada requisito tiene un identificador (RF-xx, RNF-xx) que se usa en las pruebas, los commits y las tareas.
+ Las prioridades MVP, Plus y Futuro ordenan la entrega. Un requisito Plus o Futuro sigue siendo parte del
+producto aunque no se construya durante el hackathon.
+2. Resumen ejecutivo
+En 2026 los incendios afectaron 1,25 millones de hectáreas en Bolivia hasta el 11 de octubre, según el
+Viceministerio de Defensa Civil, mucho menos que los más de 10 millones de 2024. Aun así, el 21 de julio San
+Ignacio de Velasco fue el municipio con más focos de calor del país, con 735 de 2.835, y es también el que
+encabezó la deforestación en 2021–2022. ¿Esos cambios son quema, desmonte o ambos? Los focos de calor
+no lo dicen.
+NISAR, la misión de radar de la NASA y la ISRO, observa toda la Tierra cada 12 días en banda L, atravesando
+humo y nubes, y su señal responde a la estructura del bosque. Desde julio de 2026 sus productos calibrados
+son públicos y gratuitos. Pero llegan en archivos HDF5 de polarimetría radar que casi nadie en Bolivia puede
+interpretar.
+UraqiVision traduce esos datos en mapas, cifras e historias comprensibles, en español e inglés. Se entra por
+un globo 3D de Bolivia, que muestra los nueve departamentos y dónde observó NISAR, y desde ahí se baja al
+análisis de la estación San Ignacio de Velasco, en la Chiquitanía, procesada con datos NISAR reales de 2026.
+La estación responde dos preguntas:
+  ¿Dónde y cuándo quemó el fuego? Cicatrices de la temporada 2026, aunque el humo las ocultara.
+ ¿Quema o desmonte? Si el radar puede distinguir un bosque quemado, que podría recuperarse, de uno
+desmontado, que se pierde.
+El usuario principal son los gestores de áreas protegidas y territorios indígenas. También sirve a la
+ciudadanía, a la educación y a las autoridades territoriales. Un asistente llamado Insight ayuda a leer las
+imágenes de radar. Todo el procesamiento usa herramientas gratuitas y de código abierto, y el producto se
+publica como software libre.
+
+
+=== PAGE ===
+4
+3. El reto: Dancing with the SARs
+El reto de NASA Space Apps Challenge 2026 pide construir una aplicación interactiva que use datos de radar
+de NISAR para seguir y visualizar uno o más tipos de cambio en la superficie terrestre. Sugiere elegir una zona
+de estudio cercana, descargar datos NISAR gratuitos, sumar datos ópticos o capas SIG de contexto, y plantear
+hipótesis sobre los factores físicos detrás de lo que se ve.
+3.1 Cómo responde UraqiVision a cada punto del reto
+Lo que pide el reto
+Respuesta de UraqiVision
+Usar datos de radar NISAR
+Series GCOV 2026 sobre la estación San Ignacio de Velasco, con
+escenas verificadas en el catálogo
+Seguir uno o más tipos de cambio
+Quema y desmonte de bosque; atlas con otros fenómenos por
+departamento
+Visualizaciones interactivas
+Globo 3D de Bolivia, mapa de cambios, deslizador antes/después,
+animación de la serie y gráfico de hectáreas por fecha
+Datos ópticos y capas de contexto
+Focos de calor (FIRMS, ABT, SENAMHI), Sentinel-2 y capas de áreas
+protegidas
+Hipótesis sobre los factores físicos
+Cada estación presenta hipótesis con su fuente, marcadas como
+hipótesis
+Comparar polarizaciones
+Vistas HH, HV y cociente HV/HH, con explicación de qué resalta
+cada una
+Contexto personal del lugar
+Relatos locales del equipo, que vive en Bolivia
+Solución abierta y fácil de usar
+Código abierto (MIT), web bilingüe y accesible, sin instalación
+Criterios de evaluación de Space Apps: impacto, creatividad, validez, relevancia y presentación. La sección 26
+explica cómo la demo los cubre.
+4. Problema y justificación
+4.1 El problema
+Los gestores de áreas protegidas, las comunidades y las autoridades de Bolivia necesitan saber dónde,
+cuándo y cuánto cambió su territorio. Hoy enfrentan tres obstáculos:
+  No se ve: la temporada de chaqueos coincide con humo denso, y la de lluvias con nubes persistentes. Los
+satélites ópticos pierden justo los momentos críticos.
+ No se entiende: los datos de radar que sí atraviesan humo y nubes llegan en formatos y conceptos
+técnicos (polarimetría, gamma-cero, decibelios) fuera del alcance de la mayoría.
+ No está a mano: la información existe dispersa en boletines, visores y estudios, sin un lugar que la reúna
+con datos satelitales recientes.
+
+
+=== PAGE ===
+5
+4.2 Por qué Bolivia y por qué ahora
+Hecho
+Fuente
+Los incendios de 2026 afectaron 1,25 millones de hectáreas hasta el 11 de
+octubre; en 2024 superaron los 10 millones
+Viceministerio de Defensa Civil,
+vía Correo del Sur (27 oct 2026)
+El 21 de julio de 2026, San Ignacio de Velasco fue el municipio con más
+focos de calor del país: 735 de 2.835
+SIMB, vía eju.tv (21 jul 2026)
+San Ignacio de Velasco fue el primer municipio del país en deforestación
+en 2021–2022, con 117.659 ha
+FAN (2023), con Landsat y
+MapBiomas Bolivia
+Cochabamba registró 37 incendios forestales y más de 1.200 ha afectadas
+en 2026 hasta julio
+Gobernación de Cochabamba,
+vía Correo del Sur (20 jul 2026)
+NISAR publica productos PROVISIONAL desde el 20 de julio de 2026
+(adquisiciones desde el 17 de junio) y VALIDATED desde el 6 de noviembre
+(adquisiciones desde el 21 de octubre)
+ASF, guía de datos NISAR
+Los nueve departamentos tienen entre 18 y 55 escenas NISAR
+PROVISIONAL entre junio y octubre de 2026
+Consulta propia al catálogo CMR
+de la NASA, 12 nov 2026
+4.3 Por qué radar y por qué banda L
+El radar emite su propia energía, así que funciona de día, de noche, con humo y con nubes. La banda L de
+NISAR (longitud de onda de unos 24 cm) penetra la copa de los árboles e interactúa con troncos y ramas. Por
+eso su polarización cruzada (HV) es sensible a la estructura del bosque: cuando el fuego o el desmonte la
+eliminan, la señal HV baja. Esa caída es lo que UraqiVision mide.
+5. Objetivos
+5.1 Objetivo general
+Hacer accesible para la población boliviana, en español e inglés, la información de cambio de superficie que
+observa el radar NISAR, con datos reales, validados y explicados.
+
+
+=== PAGE ===
+6
+5.2 Objetivos específicos
+ID
+Objetivo específico
+Cómo se verifica
+OE1
+Procesar las series NISAR 2026 de la estación San
+Ignacio de Velasco y obtener mapas de cambio y
+hectáreas por fecha
+Mapas y cifras publicados para las dos
+preguntas de la estación
+OE2
+Validar los resultados con fuentes independientes
+Métricas frente al dNBR de Sentinel-2; si no
+hay imagen limpia, focos de calor y revisión
+visual
+OE3
+Ofrecer un atlas de los nueve departamentos con
+fuentes bolivianas
+Nueve fichas publicadas con fenómeno,
+escenas NISAR y fuentes
+OE4
+Construir una web bilingüe, accesible y fácil de
+usar
+100 % de los textos en español e inglés;
+navegación por teclado
+OE5
+Ayudar a leer las imágenes de radar con Insight
+Insight responde sobre la estación abierta, en
+el idioma elegido, citando su fuente
+OE6
+Publicar todo como código abierto y reproducible
+Repositorio público con licencia MIT y
+manifiesto de los datos usados
+6. Propuesta de valor
+UraqiVision está pensada para quienes cuidan un territorio en Bolivia y necesitan saber qué cambió en él,
+aunque el humo o las nubes lo hayan ocultado. Es una aplicación web gratuita, en español e inglés, que
+convierte las observaciones del radar NISAR en mapas, cifras y explicaciones que se entienden sin formación
+en radar. Se diferencia de los visores técnicos de datos satelitales en tres cosas: se recorre por departamento
+y área protegida, pone las fuentes bolivianas al lado de los datos de la NASA y explica qué significa cada
+imagen.
+6.1 Qué hace distinta a UraqiVision
+  Organizada por el territorio, no por el satélite: el usuario entra por su departamento o su área protegida.
+ Fuego y desmonte en el mismo lugar: San Ignacio permite preguntar si el radar distingue una pérdida
+temporal de una permanente.
+ Ciencia honesta: las clases son candidatas, las cifras llevan su rango y un resultado negativo se informa
+como hallazgo.
+ Lector de radar bilingüe: Insight enseña a interpretar la imagen, no solo a mirarla.
+ Datos bolivianos al lado de los de la NASA: FAN, SENAMHI, ABT, SERNAP y MapBiomas Bolivia como
+contexto y validación.
+
+
+=== PAGE ===
+7
+7. Usuarios y partes interesadas
+Usuario
+Tipo
+Qué necesita
+Qué le da UraqiVision
+Gestores de áreas protegidas y
+territorios indígenas
+(guardaparques, reservas
+municipales, autoridades de
+TIOC)
+Principal
+Saber dónde y cuándo
+cambió su área, con cifras
+Mapa de cambio por fecha,
+hectáreas, descarga de PNG y
+CSV
+Ciudadanía
+Secundario
+Entender qué está
+pasando en su región
+Atlas por departamento,
+explicaciones simples, Insight
+Educación (docentes y
+estudiantes)
+Secundario
+Material para enseñar
+radar y cambio ambiental
+Deslizador, comparador de
+polarizaciones, glosario
+Autoridades territoriales
+(gobernaciones, municipios,
+SERNAP)
+Secundario
+Respaldo para decidir
+dónde actuar
+Cifras con fuente, descargas y
+metodología visible
+Partes interesadas del proyecto: el equipo, los jueces de Space Apps, la NASA y ASF como proveedores de
+datos, y las instituciones bolivianas cuyas fuentes se usan (FAN, SENAMHI, ABT, SERNAP, MapBiomas
+Bolivia).
+8. Alcance y exclusiones
+8.1 Dentro del MVP (hackathon)
+  Explorador 3D de Bolivia con CesiumJS: departamentos, estaciones, huellas de las escenas NISAR usadas y
+vuelo de cámara.
+ Atlas de los nueve departamentos con fichas bilingües.
+ Estación San Ignacio de Velasco (Chiquitanía) con datos NISAR procesados y dos preguntas: dónde quemó
+el fuego y si fue quema o desmonte.
+ Tunari como ficha del atlas, con sus fuentes y escenas disponibles.
+ Mapa de cambios, deslizador antes/después, animación, vistas por polarización y gráfico de hectáreas.
+ Validación con focos de calor y, si es posible, con Sentinel-2.
+ Insight acotado a la estación abierta, con plantillas de respaldo.
+ Descargas de PNG, CSV, GeoJSON y COG; página Acerca de; repositorio abierto con notebook
+reproducible.
+8.2 Fuera del MVP
+  Procesamiento a pedido de cualquier área que dibuje el usuario.
+ Alertas automáticas o en tiempo real.
+ Interferometría (InSAR) y medición de deformación del terreno.
+ Estación de Tunari: queda como ficha y pasa a evolución futura.
+ Inundaciones del Beni de la temporada 2026–2027: los datos de época de lluvias aún no están publicados.
+ Pronósticos, probabilidades de incendio o estimaciones de daño a personas o bienes.
+ Cuentas de usuario, bases de datos y colas de procesamiento.
+
+
+=== PAGE ===
+8
+9. Fundamentos de radar
+Concepto
+Qué es
+Por qué importa en UraqiVision
+SAR
+Radar de apertura sintética: emite
+pulsos de microondas y mide lo que
+vuelve
+Funciona con humo, nubes y de noche
+Banda L
+Microondas de unos 24 cm de longitud
+de onda (NISAR L-SAR)
+Penetra la copa y responde a troncos y ramas
+Banda S
+Unos 10 cm; instrumento de la ISRO en
+NISAR
+No se usa en el MVP; su disponibilidad sobre
+Bolivia es limitada
+Retrodispersión
+(γ0)
+Fracción de energía que vuelve al
+sensor, normalizada por el terreno
+Es la magnitud que se compara entre fechas
+HH
+Emite y recibe en horizontal
+Sensible a superficies y al doble rebote
+tronco-suelo o tronco-agua
+HV
+Emite en horizontal y recibe en vertical
+(polarización cruzada)
+Sensible a la dispersión en volumen de la
+vegetación: baja cuando se pierde el bosque
+Decibelios (dB)
+10·log10 de la potencia lineal
+Facilita ver cambios relativos; los promedios se
+calculan en lineal
+Speckle
+Ruido granular propio del radar
+Exige promediar en el espacio o en el tiempo
+antes de decidir
+9.1 Qué no puede decir el radar por sí solo
+  Una caída de HV indica pérdida de estructura vegetal, pero no dice por sí sola si fue fuego, desmonte o la
+caída natural de hojas del bosque seco en invierno.
+ La humedad del suelo y la lluvia también cambian la señal.
+ En laderas empinadas, la geometría del radar produce sombras e inversiones que pueden parecer
+cambios.
+ Por eso UraqiVision combina el radar con focos de calor, imágenes ópticas y zonas de control, y presenta
+las causas como hipótesis.
+
+
+=== PAGE ===
+9
+10. Datos
+10.1 Datos NISAR
+Atributo
+Valor
+Producto
+L2 GCOV (Geocoded Polarimetric Covariance), colecciones PROVISIONAL y
+VALIDATED
+Identificador de colección
+PROVISIONAL: C2854338529-ASF (NISAR_L2_GCOV_PROVISIONAL_V1).
+VALIDATED: C3622241360-ASF (NISAR_L2_GCOV_V1)
+Procesamiento
+Corrección radiométrica de terreno a gamma-cero y geocodificación en
+grilla UTM
+Polarizaciones
+Doble (HH y HV, modo DHDH) o solo HH (SHSH), según la órbita y la fecha
+Capas de apoyo del GCOV
+mask, numberOfLooks y rtcGammaToSigmaFactor
+Versión de procesamiento
+PROVISIONAL: CRID P05023. VALIDATED: CRID P05036
+Periodo disponible
+PROVISIONAL: del 17 de junio al 23 de octubre de 2026. VALIDATED: desde
+el 21 de octubre de 2026 (publicado el 6 de noviembre)
+Hueco de datos
+Hueco permanente del instrumento entre el 27 de julio y el 10 de agosto
+de 2026
+Madurez
+No se usan productos BETA. La serie principal usa una sola madurez y un
+solo CRID (PROVISIONAL); VALIDATED se muestra como tramo aparte
+(RN-02)
+Acceso
+Gratuito con cuenta Earthdata Login, vía ASF Vertex, asf_search o
+earthaccess
+10.2 Escenas verificadas por zona
+Consulta al catálogo CMR de la NASA el 12 de noviembre de 2026, colección PROVISIONAL, periodo del 17 de
+junio al 12 de noviembre de 2026. La letra indica órbita ascendente (A) o descendente (D). Las fichas del atlas
+usan los mismos conteos.
+Zona
+Escenas
+Órbitas (fechas)
+Rango de fechas
+Chiquitanía (San
+Ignacio–Concepción)
+54
+060A (10), 039D (9), 140D (8), 161A
+(8)
+18 jun – 16 oct 2026
+San Ignacio de Velasco (pueblo y
+alrededores)
+31
+060A (10), 039D (9), 140D (8)
+18 jun – 16 oct 2026
+Área protegida Bajo Paraguá
+36
+060A (10), 039D (9), 140D (8), 161A
+(8)
+18 jun – 16 oct 2026
+Parque Nacional Tunari (ficha)
+18
+017A (9), 169D (8)
+25 jun – 13 oct 2026
+Colección VALIDATED sobre San Ignacio de Velasco, misma consulta: 4 escenas de tres fechas. 140D (21 oct,
+solo HH), 161A (23 oct, HH y HV) y 039D (26 oct, solo HH). Solo la órbita 161A sirve para el análisis con HV; la
+producción todavía se está poniendo al día tras una pausa de fines de octubre. Como PROVISIONAL llega
+hasta el 23 de octubre y VALIDATED empieza el 21, conviene revisar si alguna adquisición está en las dos
+colecciones: permitiría compararlas directamente.
+
+
+=== PAGE ===
+10
+10.3 Fuentes complementarias
+Fuente
+Uso
+Acceso
+NASA FIRMS (MODIS y VIIRS)
+Focos de calor para fechar y clasificar los
+parches, y como contexto
+Gratuito
+ABT, boletines de focos de calor 2026
+Contexto oficial de incendios
+PDF público
+SENAMHI, pronóstico de focos de calor
+e hidrológico 2026
+Contexto nacional y por departamento
+PDF público
+FAN, SATRIFO y estudio de
+deforestación 1956–2022
+Focos, áreas quemadas históricas y
+deforestación por municipio
+Visor y PDF públicos
+MapBiomas Bolivia, capas territoriales
+Límites, áreas protegidas (SERNAP 2024),
+TIOC, sitios Ramsar
+Descarga pública
+Sentinel-2 (ESA)
+Referencia principal de validación (dNBR)
+Gratuito
+10.4 Atlas: los nueve departamentos
+Departamento
+Fenómeno en la ficha
+Escenas
+NISAR
+Fuente boliviana
+Rol
+Santa Cruz
+Chaqueos, desmonte y
+recuperación del bosque
+54–55
+FAN, ABT, SENAMHI
+Estación
+Cochabamba
+Incendios en el Parque Tunari
+18
+Gobernación (prensa),
+SENAMHI
+Ficha
+Beni
+Inundación y humedales de
+Moxos
+29
+SENAMHI; Ovando et al.
+(2016)
+Ficha
+Pando
+Deforestación amazónica
+26
+MAAP
+Ficha
+La Paz
+Glaciares de la Cordillera Real
+39
+Monitoreo del Zongo desde
+1991 (IRD e IHH-UMSA)
+Ficha
+Oruro
+Desecamiento del lago Poopó
+37
+SENAMHI; Satgé et al. (2017)
+Ficha
+Potosí
+Salar de Uyuni como
+superficie de referencia
+55
+Fricker et al. (2005)
+Ficha
+Tarija
+Incendios del valle central (jul
+2026)
+29
+SENAMHI (prensa)
+Ficha
+Chuquisaca
+Contexto general
+27
+Fuentes nacionales
+Ficha
+
+
+=== PAGE ===
+11
+11. La estación San Ignacio de Velasco
+Contexto: San Ignacio de Velasco (Santa Cruz) fue el primer municipio del país en deforestación 2021–2022,
+con 117.659 ha (FAN, 2023), y el 21 de julio de 2026 fue el municipio con más focos de calor del país. Incluye
+el área protegida Bajo Paraguá.
+Recorte: unos 50 × 50 km alrededor de San Ignacio, elegido con los focos FIRMS sobre eventos posteriores al
+10 de agosto. El dato de julio es contexto del problema; el análisis radar usa eventos posteriores al hueco de
+datos (27 de julio al 10 de agosto) para tener varias fechas antes y después de cada uno. Las dos preguntas
+usan el mismo recorte y las mismas escenas, así que las cifras no se duplican.
+11.1 Pregunta 1 · ¿Dónde y cuándo quemó el fuego?
+Hipótesis: las áreas quemadas muestran una caída sostenida de HV respecto de su estado previo, mayor que
+la variación estacional del bosque seco sin quemar. Fundamento: Belenguer-Plomer et al. (2019) en banda C;
+la extensión a banda L es una propuesta del equipo.
+Salidas: mapa de cicatrices con fecha de primera detección, hectáreas por fecha y comparación con
+Sentinel-2.
+11.2 Pregunta 2 · ¿Quema o desmonte?
+Hipótesis: en un desmonte, HV cae primero y los focos de calor llegan semanas después, cuando se quema lo
+tumbado; el parche tiene forma geométrica. En un incendio, la caída de HV y los focos llegan juntos y el
+parche es irregular. Es una hipótesis, no una regla: la caída previa de HV también puede venir de la humedad,
+la fenología, una detección tardía del fuego u otra intervención.
+Salidas: cada parche recibe una de cuatro clases, nunca una causa confirmada:
+  Compatible con quema.
+ Compatible con pérdida previa de estructura.
+ Evidencia ambigua.
+ Datos insuficientes.
+11.3 Tunari como ficha
+El Parque Nacional Tunari (Cochabamba) queda como ficha del atlas, con sus escenas y fuentes. La pregunta
+de si la banda L ve incendios andinos pequeños en laderas se mantiene para una etapa posterior.
+12. Métodos científicos
+Todos los métodos son reproducibles con herramientas gratuitas. Cada uno declara su fundamento,
+entradas, salidas y límites.
+ID
+Método
+Fundamento
+Entradas
+Salidas
+Límites
+MC-01
+Preparación
+de la serie
+Comparar solo escenas
+de la misma órbita y
+grilla evita cambios
+falsos por geometría;
+promediar reduce el
+speckle
+GCOV HHHH y
+HVHV de una
+órbita, recorte
+del área
+Pila en potencia
+lineal (float32),
+promediada a unos
+60 m, con máscara
+de datos válidos
+Escenas
+PROVISIONAL
+pueden tener
+artefactos en
+bordes
+
+
+=== PAGE ===
+12
+ID
+Método
+Fundamento
+Entradas
+Salidas
+Límites
+MC-02
+Línea base por
+píxel
+Estado previo al
+cambio, robusto ante
+valores atípicos
+Al menos 3
+fechas antes del
+evento
+Mediana de HV en
+potencia lineal por
+píxel
+Pocas fechas
+previas por el
+inicio en junio y
+el hueco de fines
+de julio
+MC-03
+Cociente de
+HV
+Método estándar de
+detección de cambios
+con radar: cociente
+entre la fecha y la línea
+base, en dB
+Pila y línea base
+Cambio de HV en
+dB por píxel y
+fecha, con dos
+umbrales
+calibrados con
+zonas de control y
+dNBR
+Los umbrales
+dependen de la
+zona y la fecha
+MC-04
+Parches y
+fechado
+Agrupar píxeles
+cambiados y usar los
+focos de calor para
+fechar y clasificar, no
+para crear los parches
+Píxeles sobre el
+umbral, puntos
+FIRMS
+Parches de al
+menos 1 ha con
+fecha de primera
+detección
+Parches menores
+a 1 ha se
+descartan
+MC-05
+Corrección por
+fenología
+El bosque chiquitano
+pierde hojas en
+invierno; se compara
+con zonas de control
+sin fuego ni desmonte
+Polígonos de
+control
+Cambio relativo al
+control
+Elegir controles
+representativos
+MC-06
+Clasificación
+de parches
+Orden temporal entre
+la caída de HV y los
+focos, y forma del
+parche (pregunta 2)
+Parches, focos,
+serie HV
+Una de cuatro
+clases: compatible
+con quema,
+compatible con
+pérdida previa de
+estructura,
+evidencia ambigua
+o datos
+insuficientes
+Serie corta; las
+clases no
+confirman causas
+MC-07
+Hectáreas
+Conteo de píxeles por
+área de píxel en la
+grilla UTM
+Máscara de
+cambio
+Hectáreas por
+fecha con rango de
+sensibilidad (dos
+umbrales)
+Depende del
+umbral elegido
+MC-08
+Detector RXD
+(Plus)
+Distancia de
+Mahalanobis entre el
+estado actual y la línea
+base
+(Belenguer-Plomer et
+al., 2019)
+Pila con más
+fechas previas
+Puntaje de
+anomalía por píxel
+Necesita más
+fechas previas
+que las
+disponibles; se
+prueba solo si
+sobra tiempo
+
+
+=== PAGE ===
+13
+ID
+Método
+Fundamento
+Entradas
+Salidas
+Límites
+MC-09
+Clasificador
+exploratorio
+(Plus)
+scikit-learn con el
+dNBR como etiqueta,
+solo para separar
+evidencia compatible
+con quema de sin
+evidencia óptica de
+quema
+Parches, serie
+HV, dNBR
+Probabilidad de
+quema por parche
+No clasifica
+desmonte: esa
+clase requiere
+polígonos
+independientes
+de pérdida de
+bosque o revisión
+óptica
+Orden del procesamiento:
+1. Leer HHHH y HVHV en potencia lineal.
+2. Aplicar la máscara y los controles de calidad (CQ-01 a CQ-06).
+3. Promediar en lineal hasta unos 60 m.
+4. Calcular la línea base como mediana de las primeras fechas compatibles.
+5. Convertir la línea base y la fecha objetivo a dB.
+6. Calcular HV de la fecha objetivo en dB menos HV de la línea base en dB.
+7. Aplicar dos umbrales y el área mínima de 1 ha.
+8. Asignar a cada parche una de las cuatro clases.
+El COG científico guarda la potencia lineal en float32. Los dB se calculan después, para el análisis y las vistas.
+13. Requisitos funcionales
+Prioridad: MVP (obligatorio en el hackathon), Plus (si sobra tiempo), Futuro (después del hackathon). La
+prioridad ordena el trabajo; no saca el requisito del producto.
+ID
+Requisito
+Comportamiento esperado
+Criterio de aceptación
+Obj.
+Prioridad
+RF-01
+Portada
+Explica el problema, qué es
+NISAR y cómo usar la web en
+menos de un minuto de lectura
+Un usuario nuevo llega al
+atlas en un clic
+OE4
+MVP
+RF-02
+Explorador 3D
+de Bolivia
+Globo con CesiumJS que inicia
+con Bolivia encuadrada,
+muestra los 9 departamentos
+con su resumen y marca las
+estaciones
+Departamentos y
+estaciones seleccionables
+en el globo
+OE3
+MVP
+RF-03
+Ficha de
+departamento
+Muestra fenómeno, escenas
+NISAR, fuentes y estado
+(estación o ficha)
+9 fichas con al menos una
+fuente; los departamentos
+sin estación dicen "sin
+estación disponible"
+OE3
+MVP
+RF-04
+Calendario de
+la superficie
+Muestra qué cambia en cada
+mes por región (quemas, lluvias)
+Calendario con fuentes
+OE3
+Plus
+RF-05
+Mapa de
+cambio de
+estación
+Muestra la máscara de cambio
+en el mapa 2D de análisis, con
+leyenda, unidades, opacidad y
+zonas sin dato
+Capa alineada; opacidad
+ajustable; zonas sin dato
+con trama explicada en la
+leyenda
+OE1
+MVP
+
+
+=== PAGE ===
+14
+ID
+Requisito
+Comportamiento esperado
+Criterio de aceptación
+Obj.
+Prioridad
+RF-06
+Deslizador
+antes/después
+Compara dos fechas de la
+misma órbita
+Funciona con mouse, tacto
+y teclado
+OE1
+MVP
+RF-07
+Línea de
+tiempo de la
+serie
+Recorre las fechas NISAR de una
+órbita y marca las fechas
+excluidas con su motivo
+Se puede pausar y elegir
+fecha; cada fecha excluida
+dice por qué
+OE1
+MVP
+RF-08
+Vista por
+polarización
+Alterna HH, HV y cociente
+HV/HH, con texto de qué resalta
+cada una. Si una fecha solo tiene
+HH, HV y el cociente se
+deshabilitan con una explicación
+Tres vistas por estación;
+ninguna vista muestra un
+canal inexistente
+OE1
+MVP
+RF-09
+Hectáreas por
+fecha
+Gráfico y tabla de hectáreas
+afectadas, con rango de
+sensibilidad
+Cifras coinciden con el
+archivo publicado
+OE1
+MVP
+RF-10
+Capa de focos
+de calor
+Superpone focos FIRMS del
+periodo
+Focos con fecha y fuente
+visibles
+OE2
+MVP
+RF-11
+Validación
+visible
+Muestra las métricas frente al
+dNBR de Sentinel-2; si no hubo
+imagen válida, muestra la
+alternativa usada
+Métricas y método
+explicados; sin imagen
+válida, la estación dice
+"validación limitada"
+OE2
+MVP
+RF-12
+Hipótesis de la
+estación
+Presenta hipótesis sobre los
+factores del cambio, con fuente
+Cada hipótesis cita al menos
+una fuente
+OE2
+MVP
+RF-13
+Relato local
+Texto breve del equipo sobre el
+lugar
+Disponible en la estación
+del MVP
+OE4
+MVP
+RF-14
+Capas de
+contexto
+Áreas protegidas y territorios
+indígenas
+Capa con fuente y año
+OE3
+Plus
+RF-15
+Página de
+método
+Pipeline, parámetros, versión de
+datos y límites
+Enlace desde cada estación
+OE6
+MVP
+RF-16
+Insight:
+pregunta libre
+Responde preguntas sobre la
+estación abierta en el idioma
+elegido
+Responde solo con el
+contenido de la estación y
+cita la sección
+OE5
+MVP
+RF-17
+Insight:
+preguntas
+sugeridas
+Ofrece 3 a 5 preguntas por
+estación
+Preguntas visibles en ambos
+idiomas
+OE5
+MVP
+RF-18
+Insight:
+respaldo
+Si el proveedor falla, muestra
+textos de plantilla
+Ninguna pantalla queda
+vacía o con error técnico
+OE5
+MVP
+RF-19
+Glosario
+Define términos de radar al
+pasar el cursor o tocar
+Todos los términos del sitio
+definidos
+OE4
+MVP
+RF-20
+Cambio de
+idioma
+Alterna español e inglés sin
+recargar
+100 % de los textos
+traducidos
+OE4
+MVP
+
+
+=== PAGE ===
+15
+ID
+Requisito
+Comportamiento esperado
+Criterio de aceptación
+Obj.
+Prioridad
+RF-21
+Descarga de
+PNG y CSV
+Descarga del mapa actual y de la
+serie de hectáreas
+Archivos con fecha, fuente y
+créditos
+OE6
+MVP
+RF-22
+Descarga de
+datos
+Descarga de change.tif (COG),
+scars.geojson y manifest.json de
+cada estación
+Archivos válidos,
+georreferenciados y con
+licencia
+OE6
+MVP
+RF-23
+Enlace directo
+URL que abre un departamento
+o una estación, con fecha y vista
+El enlace reproduce la vista
+OE4
+Plus
+RF-24
+Página Acerca
+de
+Equipo y roles, licencias, fuentes
+y citas de datos (NISAR, FIRMS,
+fuentes bolivianas) según sus
+guías
+Página completa y enlazada
+desde todo el sitio
+OE6
+MVP
+RF-25
+Vuelo de
+cámara
+Al elegir un departamento o una
+estación, la cámara del globo
+vuela hacia el área
+Con movimiento reducido
+activo el cambio es
+instantáneo
+OE4
+MVP
+RF-26
+Huellas de
+escenas NISAR
+Dibuja en el globo la cobertura
+de las escenas usadas en cada
+estación; al seleccionarla
+muestra órbita, dirección,
+fechas y polarizaciones
+Las huellas coinciden con
+los polígonos del catálogo
+CMR
+OE4
+MVP
+RF-27
+Cambio sobre
+el globo
+Superpone en el globo la
+máscara de cambio de cada
+estación, con leyenda y
+opacidad
+Capa en su extensión
+correcta, con zonas sin dato
+transparentes
+OE1
+MVP
+RF-28
+Controles del
+globo
+Botón para volver a la vista de
+Bolivia y botón de pantalla
+completa
+Ambos funcionan con
+mouse, tacto y teclado
+OE4
+MVP
+RF-29
+Del globo al
+análisis
+Desde una estación, "Analizar"
+abre su mapa 2D; al volver, el
+globo conserva la selección
+Se mantienen
+departamento, estación,
+fecha, capa activa y posición
+de cámara
+OE4
+MVP
+RF-30
+Respaldo del
+globo
+Si CesiumJS no inicia, el atlas se
+abre en el mapa 2D con
+departamentos y estaciones
+Ninguna función esencial se
+pierde
+OE4
+MVP
+RF-31
+Ficha
+imprimible
+Página de la estación preparada
+para imprimir o guardar como
+PDF desde el navegador
+Incluye mapa, cifras,
+fuentes y límites
+OE6
+Plus
+RF-32
+Selección y
+ruta territorial
+La región elegida queda
+resaltada en el globo y en el
+mapa, con su ruta:
+departamento, estación y
+periodo
+El resaltado y la ruta se ven
+siempre que hay una
+selección
+OE4
+MVP
+
+
+=== PAGE ===
+16
+ID
+Requisito
+Comportamiento esperado
+Criterio de aceptación
+Obj.
+Prioridad
+RF-33
+Panel de la
+estación
+Reúne periodo, órbita,
+polarización, hectáreas con
+rango, porcentaje de datos
+válidos, validación,
+advertencias, hipótesis y enlace
+al método
+Toda la información en un
+solo panel, en ambos
+idiomas
+OE4
+MVP
+RF-34
+Estados de la
+vista
+Cargando, resultado disponible,
+datos limitados, sin datos, fecha
+incompatible y error con
+reintento
+Ninguna pantalla vacía; "sin
+datos" nunca se muestra
+como cero
+OE4
+MVP
+RF-35
+Control de
+capas
+Activa y desactiva cambio,
+imagen de la fecha, línea base,
+focos FIRMS, datos válidos,
+zonas sin dato, límites y áreas
+protegidas
+Cada capa con leyenda,
+fecha, fuente, unidades y
+opacidad
+OE1
+MVP
+RF-36
+Línea de
+tiempo
+sincronizada
+Al elegir una fecha cambian la
+imagen, las polarizaciones
+disponibles, las hectáreas y los
+focos del periodo, en el globo y
+en el mapa
+Todos los elementos
+muestran la misma fecha
+OE1
+MVP
+RF-37
+Fuente y
+calidad
+Sección con escenas usadas,
+fechas, órbita, producto y
+madurez, CRID, fuente de
+validación y fecha de generación
+Coincide con manifest.json
+y quality.json
+OE6
+MVP
+RF-38
+Radar frente a
+óptica
+Comparar en el deslizador la
+vista radar con la imagen
+Sentinel-2 cuando exista
+Misma extensión, zoom y
+fecha
+OE2
+Plus
+RF-39
+Área dibujada
+por el usuario
+Procesar un área nueva a
+pedido
+—
+OE1
+Futuro
+RF-40
+Alertas
+periódicas
+Avisar cambios nuevos por área
+protegida
+—
+OE1
+Futuro
+
+
+=== PAGE ===
+17
+14. Requisitos no funcionales
+ID
+Categoría
+Requisito
+Cómo se mide
+RNF-01
+Rendimiento
+La portada carga en menos de 3 s en una conexión
+de 10 Mbps; CesiumJS se carga solo al entrar al
+explorador
+Lighthouse o herramientas
+del navegador
+RNF-02
+Peso
+Los archivos de vista de una estación pesan menos
+de 40 MB en total
+Suma de archivos publicados
+RNF-03
+Idioma
+100 % de los textos de interfaz y contenidos en
+español e inglés
+Revisión de archivos es.json y
+en.json
+RNF-04
+Accesibilidad
+Navegación completa por teclado con foco visible,
+contraste WCAG 2.2 AA, textos alternativos y una
+lista textual de departamentos y estaciones como
+alternativa al globo
+Revisión manual y axe
+RNF-05
+Compatibilida
+d
+Funciona en las dos últimas versiones de Chrome,
+Firefox, Edge y Safari; en el celular, el globo, el
+mapa y los paneles son usables
+Prueba manual en escritorio
+y celular
+RNF-06
+Seguridad
+La clave del proveedor de IA nunca llega al
+navegador ni al repositorio
+Búsqueda en el bundle y en
+el historial de git
+RNF-07
+Abuso
+Insight limita preguntas por usuario y longitud del
+texto
+Prueba de límites
+RNF-08
+Reproducibili
+dad
+Cada resultado se puede regenerar desde el
+manifiesto y el notebook
+Repetir el pipeline y
+comparar
+RNF-09
+Integridad de
+datos
+Los rásteres de análisis conservan exactamente sus
+valores (compresión sin pérdida)
+Comparar valores antes y
+después
+RNF-10
+Costo
+Todo el stack funciona en planes gratuitos, salvo el
+consumo del proveedor de IA
+Revisión de servicios usados
+RNF-11
+Licencia
+Código MIT; textos y datos derivados CC BY 4.0
+Archivos LICENSE en el
+repositorio
+RNF-12
+Movimiento
+reducido
+El vuelo de cámara y las animaciones respetan la
+preferencia del sistema de reducir movimiento
+Prueba con la preferencia
+activada
+
+
+=== PAGE ===
+18
+15. Casos de uso e historias de usuario
+15.1 Casos de uso
+ID
+Actor
+Caso de uso
+Flujo principal
+Requisitos
+CU-01
+Gestor de área
+protegida
+Revisar qué
+cambió en su área
+Abre el explorador 3D → elige Santa Cruz →
+vuela a San Ignacio → pulsa Analizar → ve el
+mapa de cambio y las hectáreas → descarga
+PNG y CSV
+RF-02, 05, 09,
+21, 25, 29
+CU-02
+Ciudadano
+Entender qué pasa
+en su
+departamento
+Abre la portada → elige su departamento →
+lee la ficha → pregunta a Insight
+RF-01, 03, 16
+CU-03
+Docente
+Enseñar cómo ve
+el radar
+Abre el globo → muestra la huella de las
+escenas NISAR → entra a la Chiquitanía → usa
+el deslizador → alterna HH y HV → consulta el
+glosario
+RF-06, 08, 19,
+26
+CU-04
+Autoridad
+territorial
+Respaldar una
+decisión con datos
+Abre una estación → revisa validación y
+método → descarga cifras con su fuente
+RF-09, 11, 15,
+21
+CU-05
+Cualquier
+usuario
+Consultar en inglés
+Cambia el idioma → toda la web y las
+respuestas de Insight pasan a inglés
+RF-20, 16
+CU-06
+Equipo
+Procesar una
+estación
+Descarga y recorte → pipeline → validación →
+publicación de archivos
+MC-01 a
+MC-08
+15.2 Historias de usuario
+ID
+Historia
+Criterio de aceptación
+HU-01
+Como guardaparque, quiero ver qué parte de mi área se
+quemó y cuándo, para planificar recorridos.
+El mapa muestra la cicatriz con su fecha
+de primera detección.
+HU-02
+Como guardaparque, quiero las hectáreas en una tabla
+descargable, para mis informes.
+El CSV trae fecha, hectáreas, rango y
+fuente.
+HU-03
+Como ciudadana, quiero entender la imagen de radar sin
+saber de radar.
+Insight explica la vista abierta en
+lenguaje simple.
+HU-04
+Como docente, quiero comparar dos fechas con un
+deslizador, para mostrar el cambio en clase.
+El deslizador funciona con tacto y
+teclado.
+HU-05
+Como funcionario, quiero saber de dónde salen las cifras,
+para usarlas con respaldo.
+Cada cifra enlaza a la página de método
+y a su fuente.
+HU-06
+Como visitante extranjero, quiero leer todo en inglés.
+No queda ningún texto sin traducir.
+HU-07
+Como persona de La Paz, quiero saber qué observa el
+radar en mi departamento aunque no haya estación.
+La ficha de La Paz muestra fenómeno,
+escenas y fuentes.
+
+
+=== PAGE ===
+19
+16. Reglas del negocio y de los datos
+ID
+Regla
+RN-01
+Solo se comparan escenas de la misma órbita y la misma grilla.
+RN-02
+No se usan productos BETA. La serie principal usa una sola madurez y un solo CRID; PROVISIONAL y
+VALIDATED se muestran como tramos separados. Solo se integran después de documentar una
+armonización radiométrica, demostrar estabilidad sobre zonas de control y comparar los
+resultados con y sin mezcla.
+RN-03
+Cada cifra muestra su fuente, su fecha y su método.
+RN-04
+No se muestran datos simulados ni ejemplos como si fueran resultados.
+RN-05
+Las causas del cambio se presentan como hipótesis con fuente, nunca como certeza.
+RN-06
+Las hectáreas se informan con su rango de sensibilidad.
+RN-07
+Las fechas son las de adquisición del satélite, en UTC, y se muestran en hora de Bolivia.
+RN-08
+Se muestra la madurez del producto (PROVISIONAL) en la página de método.
+RN-09
+Insight responde solo con el contenido publicado de la estación, el método y el glosario.
+RN-10
+Insight no estima daños a personas, no pronostica y no recomienda acciones de emergencia.
+RN-11
+Los datos NISAR se citan según la guía de uso y citación de datos de la NASA.
+RN-12
+Ningún contenido generado con IA usa logos ni marcas de la NASA; las imágenes generadas con IA
+llevan marca de agua.
+RN-13
+La ausencia de dato nunca se muestra como cero. Una métrica que no se pudo calcular aparece
+como "no reportada", con el motivo.
+RN-14
+Si se le pide a Insight confirmar una causa sin fuente, responde que no puede y explica por qué.
+17. Arquitectura del software
+UraqiVision usa una arquitectura estática primero: todo el procesamiento pesado ocurre antes, en Python, y
+la web solo muestra archivos ya publicados. La web tiene dos superficies que leen los mismos archivos: un
+globo 3D con CesiumJS para explorar Bolivia y un mapa 2D con MapLibre para analizar cada estación. La
+única parte que corre en un servidor es la función de Insight.
+
+
+=== PAGE ===
+20
+Fuentes
+de datos
+Pipeline
+en Python
+Aplicación
+web
+Datos NISAR
+GCOV, banda L (ASF)
+Datos de validación
+FIRMS, ABT, SENAMHI
+Capas de contexto
+MapBiomas, SERNAP
+Ingesta
+recorte de HH y HV
+Procesamiento
+cambio y hectáreas
+Publicación
+COG, vistas y JSON
+Proveedor de IA
+Claude, configurable
+Función Insight
+adaptador en servidor
+Sitio web estático
+Cesium y MapLibre
+Figura 1. Arquitectura de UraqiVision. Los datos se procesan en Python antes de publicarse; el sitio web
+(globo 3D y mapa 2D, en React) solo lee los archivos publicados, y la función Insight es la única pieza que se
+ejecuta en un servidor.
+17.1 Por qué esta arquitectura
+  Cabe en 48 horas y no requiere bases de datos ni colas.
+ La demo no depende de servicios que puedan caerse durante la presentación.
+ Es gratuita y cumple el pedido del reto de una solución abierta.
+ Si después del hackathon se necesita procesamiento a pedido, se agrega un servicio en Python (por
+ejemplo, FastAPI) sin cambiar la web.
+
+
+=== PAGE ===
+21
+17.2 Flujo de datos
+Paso
+Origen
+Transformación
+Destino
+Responsable
+1
+Catálogo CMR /
+ASF
+Búsqueda por área, fecha y
+órbita
+Lista de gránulos en el
+manifiesto y huellas de las
+escenas
+Alex
+2
+Archivos GCOV en
+la nube
+Recorte del área y extracción de
+HHHH y HVHV (openSEPPO o
+GDAL)
+COG por fecha en potencia
+lineal (float32, sin pérdida)
+Alex
+3
+COG por fecha
+MC-01 a MC-07
+Máscaras de cambio, clases
+y tablas de hectáreas
+Tabata
+4
+FIRMS y Sentinel-2
+Validación
+Métricas de acuerdo
+Tabata
+5
+Resultados
+Controles de calidad; vistas
+PNG/WebP, GeoJSON y textos
+es/en
+Carpeta de publicación de la
+estación
+Mimi
+6
+Carpeta publicada
+Lectura en el navegador
+Globo, mapa, gráficos e
+Insight
+Joaco, Angie,
+Marian
+17.3 Estructura propuesta de una estación publicada
+Propuesta de diseño del equipo. Puede ajustarse, pero cualquier cambio se registra aquí.
+Archivo
+Contenido
+station.json
+Identificador, nombre es/en, área, órbita usada, fechas, hipótesis, relato
+local, preguntas sugeridas
+manifest.json
+Gránulos usados (nombre, fecha, órbita, CRID, suma de verificación) y
+versión del pipeline
+change.tif
+Máscara o puntaje de cambio en COG sin pérdida
+views/AAAAMMDD_hv.webp,
+_hh, _ratio
+Vistas para el mapa y el deslizador, con sus límites geográficos
+scars.geojson
+Polígonos de cicatrices con fecha y clase
+hectares.csv
+Fecha, hectáreas, rango inferior y superior
+validation.json
+Métricas frente a Sentinel-2 y contexto de focos de calor
+quality.json
+Resultado de los controles de calidad (sección 23)
+footprints.geojson
+Huellas de las escenas usadas, con órbita, dirección, fechas y
+polarizaciones
+atlas/departments.geojson
+Límites departamentales con fuente, fecha y versión (común a todo el
+sitio)
+
+
+=== PAGE ===
+22
+18. Tecnologías
+Capa
+Tecnología
+Por qué
+Búsqueda y
+descarga
+asf_search, earthaccess
+Oficiales, gratuitas, en Python
+Conversión y
+recorte
+openSEPPO, GDAL 3.13 o superior
+Leen el GCOV desde la nube, recortan y exportan
+a COG
+Lectura HDF5
+h5py
+Acceso directo a las variables del GCOV
+Análisis
+NumPy, xarray, rioxarray, SciPy
+Series multidimensionales con georreferencia;
+estadística y morfología
+Vectores
+GeoPandas
+Focos de calor, áreas protegidas y cicatrices
+Ráster
+rasterio
+Lectura y escritura de COG
+Tablas
+pandas
+Hectáreas por fecha y métricas
+Figuras de control
+Matplotlib
+Revisión visual del equipo
+Web
+React, TypeScript, Vite
+Conocidos por el equipo; tipado estricto
+Globo 3D
+CesiumJS
+Libre (Apache 2.0). Se usa con un mapa base
+Cesium ion está permitido con token público de navegador de alcance assets:read, restringido a Cesium World
+Terrain (asset 1), Bing Maps Aerial (asset 2) y las URLs autorizadas. El valor se carga solo desde el entorno local
+o del hospedaje y nunca se documenta ni versiona. Se mantienen el respaldo sin ion, el respaldo 2D de RF-30 y
+las atribuciones.
+Mapa de análisis
+MapLibre GL JS
+Gratuito, sin token, rápido con imágenes y
+GeoJSON
+Gráficos
+Recharts
+Simple de integrar en React
+Pruebas
+pytest, Vitest, Playwright
+Ciencia en Python, lógica de la web y un recorrido
+completo en el navegador
+Idiomas
+react-i18next
+Archivos es.json y en.json
+Hospedaje
+GitHub Pages o Vercel
+Gratuitos para sitios estáticos
+Insight
+Función serverless (Vercel) con
+adaptador de proveedor
+Guarda la clave en el servidor; permite cambiar
+de proveedor
+El MVP no usa aprendizaje automático: el tiempo no alcanza para entrenar y validar un modelo, y los
+métodos estadísticos elegidos están publicados. scikit-learn se usa solo en el clasificador exploratorio MC-09,
+si sobra tiempo.
+
+
+=== PAGE ===
+23
+19. Módulos y responsabilidades
+Las áreas del equipo no cambian. Cada módulo tiene un responsable y un revisor propuesto; una tarea sin
+responsable se considera sin asignar.
+Módulo
+Responsabilidad
+Requisitos
+Responsable
+Revisor
+M-INGESTA
+Buscar, recortar y descargar
+escenas; manifiesto y huellas
+de las escenas
+MC-01, RF-26
+Alex
+Tabata
+M-CIENCIA
+Speckle, línea base, cociente de
+HV, parches, fenología, clases y
+hectáreas
+MC-02 a MC-09
+Tabata
+Alex
+M-VALIDACIÓN
+Comparar con Sentinel-2 y
+focos de calor; controles de
+calidad
+RF-10, RF-11,
+CQ-01 a CQ-06
+Tabata, con apoyo
+de Alex
+Mimi
+M-PUBLICACIÓN
+Generar vistas, GeoJSON, CSV y
+textos de cada estación
+RF-05 a RF-09,
+RF-22, RF-27
+Mimi
+Tabata
+M-INSIGHT
+Función serverless, adaptador,
+límites y plantillas
+RF-16 a RF-18
+Mimi
+Marian
+M-GLOBO
+Globo 3D, departamentos,
+estaciones, huellas, vuelo,
+controles, selección y respaldo
+2D
+RF-02, RF-25 a
+RF-30, RF-32
+Joaco, con apoyo
+de Angie y Marian
+Angie
+M-MAPA
+Mapa de análisis 2D, capas,
+deslizador y línea de tiempo
+sincronizada
+RF-05 a RF-08,
+RF-10, RF-35,
+RF-36, RF-38
+Joaco
+Marian
+M-ATLAS
+Portada, fichas de
+departamento y calendario
+RF-01, RF-03,
+RF-04
+Angie y Marian
+Joaco
+M-INTERFAZ
+Idiomas, glosario, descargas,
+accesibilidad, Acerca de, panel,
+estados, fuente y calidad
+RF-19 a RF-24,
+RF-31, RF-33,
+RF-34, RF-37
+Angie y Marian
+Mimi
+20. Experiencia de usuario y visualización
+20.1 Recorrido principal
+  Portada: una frase del problema, una imagen radar frente a una óptica con humo, y el botón "Explorar
+Bolivia".
+ Explorador 3D: globo con Bolivia encuadrada, los nueve departamentos y las estaciones. Al elegir un
+departamento la cámara vuela hacia él y se abre su ficha; en una estación se ven la huella de las escenas
+NISAR y el resumen del cambio.
+ Análisis de la estación: mapa 2D grande con deslizador y línea de tiempo, panel lateral con hectáreas,
+hipótesis, validación y relato local; Insight siempre a mano.
+ Método y Acerca de: páginas aparte, enlazadas desde cada cifra y desde el pie del sitio.
+
+
+=== PAGE ===
+24
+20.2 Reglas de visualización
+  El globo sirve para explorar y ubicar; las mediciones y comparaciones se hacen en el mapa 2D, donde las
+áreas se leen sin la distorsión de la perspectiva.
+ Cada capa muestra leyenda, unidades, fuente, fecha y control de opacidad.
+ Paleta de cambio de un solo tono (más oscuro = más cambio), con leyenda y unidades.
+ Las zonas sin dato válido se muestran con trama gris y se explican en la leyenda.
+ Cada vista indica fecha, órbita y polarización.
+ Las cifras siempre con su rango de sensibilidad.
+ Contraste suficiente para lectura en celular al aire libre.
+ El vuelo de cámara y las animaciones se reemplazan por cambios instantáneos si el usuario pidió reducir
+el movimiento.
+21. Insight
+Insight es un lector de radar: ayuda a interpretar lo que el usuario tiene en pantalla. No calcula resultados ni
+consulta internet.
+Aspecto
+Definición
+Fuentes de respuesta
+station.json de la estación abierta, la página de método y el glosario
+Idioma
+El que el usuario tenga seleccionado (español o inglés)
+Citas
+Cada respuesta indica de qué sección sale
+Respaldo
+Si el proveedor falla o se agota el saldo, responde con textos de plantilla
+Límites
+Máximo de preguntas por sesión y de caracteres por pregunta (valores a fijar en
+las pruebas)
+Lo que no hace
+No estima daños a personas, no pronostica, no inventa cifras, no responde sobre
+otras estaciones
+Proveedor
+Claude, a través de un adaptador. Proveedor y modelo se configuran con
+variables de entorno
+21.1 Contrato propuesto de la función
+Propuesta de diseño del equipo. Solicitud: POST /api/insight con station_id, question y lang. Respuesta:
+answer, citations (lista de secciones) y source ("ia" o "plantilla").
+21.2 Adaptador de proveedor
+La web solo conoce la función explicar(estación, pregunta, idioma). Detrás, un adaptador traduce esa
+llamada al proveedor configurado. Cambiar de proveedor implica escribir un adaptador nuevo y cambiar la
+configuración, sin tocar la web.
+
+
+=== PAGE ===
+25
+22. Estrategia de almacenamiento
+Regla: reducir el tamaño sin alterar ni un valor de los datos que se analizan.
+Medida
+Cómo
+Efecto en los datos
+Descargar solo lo
+necesario
+Recorte del área y extracción de HHHH y HVHV
+desde la nube (openSEPPO o GDAL)
+Ninguno: mismos valores, menos
+superficie
+Compresión sin
+pérdida
+COG con DEFLATE o ZSTD y predictor, en float32
+Ninguno: valores idénticos
+Separar análisis y vista
+PNG/WebP de 8 bits solo para el mapa
+Las vistas no se usan para
+calcular
+No guardar originales
+Manifiesto con nombre de gránulo, fecha, órbita,
+CRID y suma de verificación
+Se puede volver a descargar el
+mismo dato
+No remuestrear el
+análisis
+Misma órbita y misma grilla; remuestreo solo en
+las vistas
+Ninguno
+23. Validación científica y pruebas
+23.1 Validación científica
+ID
+Prueba
+Métrica
+Referencia
+VC-01
+Comparación con
+Sentinel-2 (referencia
+principal)
+Precisión, exhaustividad y coeficiente Dice
+frente al dNBR
+Belenguer-Plomer et al.
+(2019) obtuvieron Dice
+0,59 en banda C
+VC-02
+Focos de calor FIRMS
+(contexto)
+% de parches con al menos un foco; no es
+prueba, porque los focos también fechan y
+clasifican
+FIRMS, mismo periodo
+VC-03
+Zonas de control
+Cambio de HV en bosque sin fuego ni
+desmonte
+Debe ser menor que el de
+las cicatrices
+VC-04
+Sensibilidad del umbral
+Hectáreas con dos umbrales
+Se publica el rango
+VC-05
+Revisión visual
+Muestra de parches revisados contra
+imagen óptica; junto con VC-02, es la
+alternativa si no hay imagen Sentinel-2
+válida, y en ese caso el resultado se marca
+como validación limitada
+Registro en el notebook
+23.2 Controles de calidad antes de publicar
+Ninguna estación se publica sin pasar estos controles. El resultado queda en quality.json y se resume en la
+página de método.
+ID
+Control
+Qué se revisa
+Si falla
+CQ-01
+Geometría
+Mismo sistema de coordenadas, grilla,
+resolución y extensión en toda la serie
+Se corrige el recorte o se
+excluye la fecha
+
+
+=== PAGE ===
+26
+ID
+Control
+Qué se revisa
+Si falla
+CQ-02
+Órbita
+Mismo track, misma dirección y separación
+entre fechas registrada
+La fecha se excluye con su
+motivo
+CQ-03
+Radiometría
+Mismo producto, gamma-cero y unidades;
+valores dentro de un rango físico
+Advertencia visible o exclusión
+CQ-04
+Polarizaciones
+HH y HV presentes en cada fecha usada
+La vista HV se deshabilita para
+esa fecha
+CQ-05
+Datos válidos
+Porcentaje útil del área después de las máscaras
+de validez y relieve
+Si es bajo, la cifra se marca
+como limitada
+CQ-06
+Procedencia
+Gránulos, CRID, sumas de verificación y versión
+del pipeline en el manifiesto
+No se publica hasta
+completarlo
+23.3 Pruebas de software
+ID
+Tipo
+Qué verifica
+Requisitos
+PS-01
+Unitarias (pytest)
+Cálculo de dB, promedio de speckle, mediana,
+cociente de HV y hectáreas con datos sintéticos
+MC-01 a MC-07
+PS-02
+Integridad
+Los COG publicados conservan los valores del análisis
+RNF-09
+PS-03
+Contenido
+Cada estación tiene todos sus archivos y textos en
+ambos idiomas
+RNF-03
+PS-04
+Interfaz (Vitest)
+Formatos de cifras, estados de la vista, sincronización
+de la línea de tiempo y cambio de idioma
+RF-06, 07, 20, 34, 36;
+RN-13
+PS-05
+Insight
+Responde en el idioma elegido, cita la sección y usa
+plantillas si falla
+RF-16 a 18
+PS-06
+Seguridad
+La clave no aparece en el bundle ni en el repositorio
+RNF-06
+PS-07
+Accesibilidad
+Teclado, foco visible, contraste, textos alternativos y
+movimiento reducido
+RNF-04, RNF-12
+PS-08
+Globo
+Bolivia encuadrada, huellas, vuelo, volver a Bolivia,
+pantalla completa y respaldo 2D
+RF-02, 25 a 30
+PS-09
+Recorrido
+completo
+(Playwright)
+Portada → globo → estación → análisis → descarga,
+en escritorio y celular
+CU-01
+
+
+=== PAGE ===
+27
+24. Riesgos y mitigaciones
+Riesgo
+Probabilidad
+Impacto
+Mitigación
+La caída de hojas del bosque
+seco se confunde con quema o
+desmonte
+Alta
+Alto
+Zonas de control (MC-05) y focos de calor
+como evidencia independiente
+Productos PROVISIONAL con
+artefactos en bordes
+Media
+Medio
+Usar la máscara de datos válidos y recortar
+lejos de los bordes
+Descargas lentas o pesadas
+Media
+Alto
+Recorte desde la nube; empezar la descarga
+apenas abra el hackathon
+Una sola persona procesa los
+datos
+Alta
+Alto
+Una sola estación con un solo recorte; Tunari
+queda como ficha; RXD y el clasificador
+quedan como Plus
+Hueco permanente de datos
+NISAR (27 jul – 10 ago)
+Cierta
+Medio
+Elegir eventos de agosto en adelante y
+mostrar el hueco en la línea de tiempo
+Escenas VALIDATED con solo HH
+en algunas órbitas
+Alta
+Medio
+Usar para HV solo las órbitas con HH y HV
+(CQ-04)
+Humo o nubes impiden una
+imagen Sentinel-2 limpia
+Media
+Medio
+Validar con focos de calor y revisión visual
+(VC-02 y VC-05), y decirlo en la página de
+método
+Costo o abuso de Insight
+Baja
+Medio
+Límites por sesión y plantillas de respaldo
+El globo 3D es lento en celulares
+de gama media
+Media
+Medio
+Carga diferida, menos detalle en el celular y
+respaldo en el mapa 2D
+Dos motores de mapa duplican
+el trabajo de la web
+Media
+Alto
+El globo solo explora y el mapa 2D solo
+analiza; ambos leen los mismos archivos
+Reglas de Space Apps 2026
+distintas a lo previsto
+Media
+Medio
+Revisar las guías del 13 de noviembre
+(sección 29)
+25. Plan del hackathon
+El hackathon va del sábado 14 de noviembre a las 9:00 al domingo 15 de noviembre a las 23:59, hora local.
+Antes del sábado solo se prepara el entorno, sujeto a lo que digan las reglas 2026. La primera meta es tener,
+el sábado a las 13:00, un antes/después real de San Ignacio en el mapa 2D, aunque todavía no esté pulido. El
+globo se construye después.
+Momento
+Alex
+Tabata
+Mimi
+Joaco
+Angie y Marian
+Antes (si las
+reglas lo
+permiten)
+Cuentas
+Earthdata;
+probar un
+recorte
+Entorno Python
+Repositorio y
+licencias
+Proyecto web
+base (MapLibre
+primero)
+Textos de fichas
+
+
+=== PAGE ===
+28
+Momento
+Alex
+Tabata
+Mimi
+Joaco
+Angie y Marian
+Sáb 9:00–13:00
+Descarga y
+recorte de San
+Ignacio
+MC-01 y MC-02
+Estructura de
+publicación
+Mapa 2D y
+deslizador con
+el primer par
+real
+Portada y panel
+de la estación
+Sáb
+14:00–20:00
+Focos FIRMS;
+huellas de
+escenas
+MC-03 a MC-05
+Función Insight y
+plantillas
+Globo:
+departamentos
+y vuelo de
+cámara
+Fichas bilingües;
+estados de la
+vista y control
+de capas
+Sáb
+20:00–24:00
+Escenas
+VALIDATED;
+apoyo a
+validación
+Primeros mapas
+y hectáreas;
+CQ-01 a CQ-06
+Publicar
+pregunta 1
+(cicatrices)
+Línea de tiempo
+sincronizada
+Glosario e
+idioma
+Dom
+9:00–14:00
+Sentinel-2 y
+dNBR
+MC-06 y VC-01 a
+VC-04
+Publicar
+pregunta 2
+(quema o
+desmonte)
+Huellas y
+cambio sobre el
+globo
+Método, Acerca
+de, fuente y
+calidad,
+descargas
+Dom
+14:00–19:00
+Apoyo a Tabata
+Revisión de
+umbrales y
+sensibilidad
+Pruebas de
+Insight
+Respaldo 2D y
+pruebas en
+celular
+Recorrido en
+Playwright y
+láminas
+Dom
+19:00–23:00
+Revisión de
+referencias
+Revisión
+científica
+Despliegue final
+Correcciones
+Formulario de
+entrega en
+inglés
+Hora límite de entrega: domingo 15 de noviembre a las 23:59 (hora del evento local). Conviene enviar a las
+23:00 como máximo.
+26. Estrategia de demostración
+La demo será una presentación de 7 láminas en inglés, contando la portada. Las seis láminas de contenido
+siguen esta historia:
+  La pregunta (impacto y creatividad): el 21 de julio de 2026, San Ignacio de Velasco fue el municipio con
+más focos de calor del país. ¿Quema, desmonte o ambos?
+ Por qué radar (validez): NISAR ve a través del humo y la banda L siente la estructura del bosque.
+ El antes/después real: el globo vuela a San Ignacio y el deslizador muestra datos NISAR de 2026.
+ Quema o desmonte: qué parches son compatibles con quema, cuáles con una pérdida previa de
+estructura y cuáles son ambiguos.
+ La validación: el acuerdo con Sentinel-2 y el rango de las hectáreas.
+ Para quién (relevancia): el guardaparque y la ciudadanía, en su idioma, con el enlace al sitio.
+Los jueces deben entender en los primeros segundos qué problema resolvemos, por qué el radar es la
+herramienta adecuada y qué obtiene un usuario.
+
+
+=== PAGE ===
+29
+27. Evolución futura
+  Estación del Beni con la temporada de lluvias 2026–2027, usando el doble rebote en bosque inundado
+(antecedente: Oakes et al., 2024).
+ Fichas convertidas en estaciones: Tunari, glaciares de La Paz, Poopó y Uyuni.
+ Procesamiento a pedido de áreas dibujadas por el usuario, con un servicio en Python.
+ Alertas periódicas para áreas protegidas.
+ Interferometría para deformación del terreno, cuando haya series más largas.
+ Trabajo conjunto con SERNAP, gobernaciones y organizaciones como FAN.
+28. Reglas de trabajo para asistentes de IA
+Cualquier asistente de IA que participe en UraqiVision (para programar, redactar, diseñar o analizar) debe
+seguir estas reglas:
+  Usar este documento como fuente de verdad. Si algo contradice este documento, prevalece el
+documento.
+ Respetar el alcance aprobado (sección 8). No agregar funciones fuera del MVP sin consultar.
+ Consultar al equipo antes de cambiar la arquitectura, las tecnologías, los formatos de archivo o el
+contrato de Insight.
+ No reabrir decisiones ya tomadas por el equipo (por ejemplo, el globo 3D con CesiumJS) salvo que el
+equipo lo pida.
+ No inventar datos, cifras, fechas, fuentes, autores, DOI, endpoints ni resultados. Si falta información,
+decirlo explícitamente.
+ No asumir capacidades de NISAR u otros satélites sin respaldo en la documentación oficial.
+ Distinguir siempre entre hechos verificados, propuestas de diseño, hipótesis y pendientes.
+ Referenciar los identificadores (RF, RNF, MC, RN) en el código, los commits y las tareas.
+ Escribir textos de interfaz en español e inglés.
+ No incluir claves privadas, tokens con permisos de escritura ni credenciales en el código ni en el repositorio.
+El token público de Cesium ion se carga desde el entorno, con alcance assets:read y restringido a los assets 1 y 2
+y a las URLs autorizadas; su valor nunca se escribe en el documento, código, commits, prompts ni registros.
+ Declarar en el campo de uso de IA de la entrega dónde y cómo se usó IA.
+
+
+=== PAGE ===
+30
+29. Decisiones pendientes
+ID
+Pendiente
+Responsable
+Cuándo
+DP-01
+Confirmar en las guías 2026 que la demo admite 7
+láminas contando la portada
+Angie y Marian
+13 de noviembre
+DP-02
+Revisar las guías 2026 de entrega y evaluación: trabajo
+previo al evento, declaración de uso de IA y campo de
+referencias
+Marian
+13 de noviembre
+DP-03
+Confirmar qué valores codifica la capa mask del GCOV
+(validez, sombra, inversión)
+Tabata
+Sábado por la
+mañana
+DP-04
+Fijar los límites de uso de Insight (preguntas por sesión,
+caracteres)
+Mimi
+Sábado
+DP-05
+Elegir los polígonos de control para la corrección por
+fenología
+Tabata
+Sábado
+DP-06
+Elegir hospedaje final: GitHub Pages o Vercel
+Mimi
+Sábado
+DP-07
+DECISIÓN CERRADA (14 de noviembre de 2026): usar Cesium ion con Cesium World Terrain (asset 1) y Bing Maps
+Aerial (asset 2). El token público tendrá únicamente assets:read, estará restringido a esos activos y a las URLs
+autorizadas, y su valor vivirá solo en el entorno local o del hospedaje. Son obligatorios el respaldo sin ion, el
+respaldo 2D de RF-30 y las atribuciones.
+Joaco
+Cerrada
+DP-08
+Fijar el recorte de 50 × 50 km con los focos FIRMS de
+agosto en adelante
+Alex y Tabata
+Sábado a las 9:00
+
+
+=== PAGE ===
+31
+30. Glosario
+Término
+Definición
+Banda L
+Microondas de unos 24 cm de longitud de onda; penetran la vegetación
+COG
+GeoTIFF optimizado para la nube: se puede leer por partes
+CRID
+Identificador de la versión de procesamiento de un producto NISAR
+dB
+Decibelios: escala logarítmica de la potencia de la señal
+dNBR
+Índice óptico de severidad de quema, diferencia del NBR antes y después del
+fuego
+Earthdata Login
+Cuenta gratuita de la NASA para descargar datos
+FIRMS
+Sistema de la NASA que publica focos de calor de MODIS y VIIRS
+GCOV
+Producto NISAR de covarianza polarimétrica geocodificada
+Gránulo
+Un archivo individual de un producto satelital
+HH / HV
+Polarizaciones: horizontal-horizontal y horizontal-vertical
+Huella de escena
+Polígono que marca el área de la Tierra cubierta por una escena satelital
+Línea base
+Estado de referencia antes del cambio
+Órbita (track)
+Trayectoria del satélite; solo se comparan escenas de la misma
+PROVISIONAL
+Productos calibrados y parcialmente validados
+VALIDATED
+Productos NISAR con validación completa; disponibles desde las adquisiciones del
+21 de octubre de 2026
+Retrodispersión (γ0)
+Energía que vuelve al sensor, normalizada por el terreno
+RXD
+Detector de anomalías Reed-Xiaoli, basado en la distancia de Mahalanobis (Plus)
+Cociente de HV
+Relación entre la señal HV de una fecha y la de la línea base, expresada en dB
+Speckle
+Ruido granular propio de las imágenes de radar
+TIOC
+Territorio Indígena Originario Campesino
+WebGL
+Tecnología del navegador para dibujar gráficos 3D; la necesitan el globo y el mapa
+31. Referencias
+Formato APA 7. Fechas de consulta de los recursos web: 12 de noviembre de 2026.
+ Alaska Satellite Facility. (2026). NISAR data user guide. https://nisar-docs.asf.alaska.edu/
+ Alaska Satellite Facility. (2026). Open source software packages.
+ https://nisar-docs.asf.alaska.edu/using-open-source/
+Alaska Satellite Facility. (2026). Using NISAR data with GDAL.
+ https://hyp3-docs.asf.alaska.edu/nisar-docs/gdal
+Autoridad de Bosques y Tierra. (2026). Boletín oficial 222 de focos de calor. https://www.abt.gob.bo/images/
+ 2026/Focos%20de%20Calor/2026%2008%2010%20Boletin%20oficial%20222%20MM.pdf
+
+
+=== PAGE ===
+32
+Belenguer-Plomer, M. A., Tanase, M. A., Fernandez-Carrillo, A., & Chuvieco, E. (2019). Burned area detection
+ and mapping using Sentinel-1 backscatter coefficient and thermal anomalies. Remote Sensing of
+Environment, 233, Artículo 111345. https://doi.org/10.1016/j.rse.2019.111345
+Bonafilia, D., Tellman, B., Anderson, T., & Issenberg, E. (2020). Sen1Floods11: A georeferenced dataset to
+ train and test deep learning flood algorithms for Sentinel-1. En Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition Workshops (pp. 835–845).
+https://doi.org/10.1109/CVPRW50498.2020.00113
+Cesium GS. (2026). CesiumJS [Software]. https://github.com/CesiumGS/cesium
+ Correo del Sur. (2026, 20 de julio). Cochabamba registra 37 incendios forestales y más de 1.200 hectáreas
+ afectadas en 2026. https://correodelsur.com/sociedad/20260720/cochabamba-registra-37-incendios-fo
+restales-y-mas-de-1-200-hectareas-afectadas-en-2026.html
+Correo del Sur. (2026, 27 de octubre). Bolivia reporta menos del 1% de afectación por incendios forestales
+ respecto a años críticos. https://correodelsur.com/sociedad/20261027/bolivia-reporta-menos-del-1-de-
+afectacion-por-incendios-forestales-respecto-a-anos-criticos.html
+eju.tv. (2026, 21 de julio). Bolivia cierra este martes con 2.835 focos de calor; Santa Cruz el más afectado.
+ https://eju.tv/?p=5043100
+Fricker, H. A., Borsa, A., Minster, B., Carabajal, C., Quinn, K., & Bills, B. (2005). Assessment of ICESat
+ performance at the Salar de Uyuni, Bolivia. Geophysical Research Letters, 32(21), Artículo L21S06.
+https://doi.org/10.1029/2005GL023423
+Fundación Amigos de la Naturaleza. (2023). Deforestación en Bolivia 1956–2022.
+ https://fan-bo.org/wp-content/uploads/2024/08/Deforestacionen-Bolivia-1956-2022.pdf
+Fundación Amigos de la Naturaleza. (s. f.). SATRIFO: Sistema de alerta temprana de riesgo de incendios
+ forestales. https://incendios.fan-bo.org/Satrifo/mapa-interactivo/
+GDAL/OGR contributors. (2026). COG: Cloud Optimized GeoTIFF generator.
+ https://gdal.org/drivers/raster/cog.html
+Los Tiempos. (2026, 10 de julio). Cuatro incendios afectaron al Parque Tunari en lo que va del año. https://w
+ ww.lostiempos.com/actualidad/cochabamba/20260710/cuatro-incendios-afectaron-al-parque-tunari-qu
+e-va-del-ano
+Maillard, O. (2023). Post-fire natural regeneration trends in Bolivia: 2001–2021. Fire, 6(1), Artículo 18.
+ https://doi.org/10.3390/fire6010018
+Maillard, O., Flores-Valencia, M., Michme, G., Coronado, R., Bachfischer, M., Azurduy, H., Vides-Almonacid,
+ R., Flores, R., Angulo, S., & Mielich, N. (2022). Phenology patterns and postfire vegetation regeneration in
+the Chiquitania region of Bolivia using Sentinel-2. Fire, 5(3), Artículo 70.
+https://doi.org/10.3390/fire5030070
+MapBiomas Bolivia. (s. f.). Capas. https://bolivia.mapbiomas.org/en/capas/
+ NASA Space Apps Challenge. (2026). Dancing with the SARs.
+ https://www.spaceappschallenge.org/2026/challenges/dancing-with-the-sars/
+NISAR. (2025). NASA-ISRO SAR (NISAR) mission science users' handbook (2.ª ed.). NASA Jet Propulsion
+ Laboratory. https://doi.org/10.48577/jpl.UD4HV3
+Oakes, G., Hardy, A., Bunting, P., & Rosenqvist, A. (2024). RadWet-L: A novel approach for mapping of
+ inundation dynamics of forested wetlands using ALOS-2 PALSAR-2 L-band radar imagery. Remote
+
+
+=== PAGE ===
+33
+Sensing, 16(12), Artículo 2078. https://doi.org/10.3390/rs16122078
+Ovando, A., Tomasella, J., Rodriguez, D. A., Martinez, J. M., Siqueira-Junior, J. L., Pinto, G. L. N., Passy, P.,
+ Vauchel, P., Noriega, L., & von Randow, C. (2016). Extreme flood events in the Bolivian Amazon wetlands.
+Journal of Hydrology: Regional Studies, 5, 293–308.
+https://doaj.org/article/1c212c78528541e28a5421fbd6b2ef09
+Rabatel, A., Francou, B., Soruco, A., Gomez, J., Cáceres, B., Ceballos, J. L., Basantes, R., Vuille, M., Sicart, J.-E.,
+ Huggel, C., Scheel, M., Lejeune, Y., Arnaud, Y., Collet, M., Condom, T., Consoli, G., Favier, V., Jomelli, V.,
+Galarraga, R., . . . Wagnon, P. (2013). Current state of glaciers in the tropical Andes: A multi-century
+perspective on glacier evolution and climate change. The Cryosphere, 7(1), 81–102.
+https://doi.org/10.5194/tc-7-81-2013
+Satgé, F., Espinoza, R., Pillco Zolá, R., Roig, H., Timouk, F., Molina, J., Garnier, J., Calmant, S., Seyler, F., &
+ Bonnet, M.-P. (2017). Role of climate variability and human activity on Poopó Lake droughts between
+1990 and 2015 assessed using remote sensing data. Remote Sensing, 9(3), Artículo 218.
+https://doi.org/10.3390/rs9030218
+Servicio Nacional de Meteorología e Hidrología. (2026). Pronóstico de focos de calor en Bolivia.
+ https://senamhi.gob.bo/focoscalor/2026/FC_7_JULIO_2026/Pron_Focos_Bolivia_20260713.pdf
+Servicio Nacional de Meteorología e Hidrología. (2026). Pronóstico hidrológico. https://senamhi.gob.bo/met
+ eorologia/boletines/pronostico_hidrologico/2026/JULIO/RESUMEN%20EN%20PLANILLA%20PRON%C3%
+93STICO%20HIDROL%C3%93GICO%20SENAMHI%20LUNES%2027-07-2026.pdf
