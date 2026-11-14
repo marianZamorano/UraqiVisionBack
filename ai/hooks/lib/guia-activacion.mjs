@@ -86,7 +86,7 @@ export const PASOS = {
   ],
   'coherencia-documento': (d) => [
     `Una herramienta cita identificadores o secciones que no existen en el documento maestro (${d}).`,
-    'Busca el identificador correcto con la skill `documento-maestro` en `docs/UraqiVisionDocumentoMaestrov1.0.txt` y corrígelo en su archivo.',
+    'Busca el identificador correcto con la skill `documento-maestro` en `docs/UraqiVisionDocumentoMaestrov1.1.txt` y corrígelo en su archivo.',
     VERIFICAR,
   ],
   referencias: (d) => [

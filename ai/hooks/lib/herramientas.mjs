@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseFrontmatter } from './frontmatter.mjs';
 
-export const DOCUMENTO = 'docs/UraqiVisionDocumentoMaestrov1.0.txt';
+export const DOCUMENTO = 'docs/UraqiVisionDocumentoMaestrov1.1.txt';
 
 /** Lo que genera ai/sync.mjs: no es una pieza propia, se regenera desde las fuentes. */
 export const GENERADO = /^(ai\/README\.md$|\.claude\/|\.gemini\/|\.codex\/|\.opencode\/|\.mcp\.json$|opencode\.json$)/;

@@ -106,7 +106,7 @@ const preface = (a, invoke) => [
     ? '> Es de **solo lectura**: no modifiques archivos, no hagas commits ni despliegues.'
     : '> Puede escribir **solo** lo que su rol permite y tras aprobación explícita; no hace commits, push ni despliegues.',
   a.skills.length ? `> Carga primero estas skills (están en \`.agents/skills/\`): ${a.skills.map(invoke).join(', ')}.` : '',
-  '> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.0.pdf (copia en .txt).',
+  '> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.1.pdf (copia en .txt).',
 ].filter(Boolean).join('\n');
 
 for (const a of agents) {

@@ -11,7 +11,7 @@ permission:
 > Subagente `security-qa-engineer` de UraqiVision (fuente: `ai/agents/security-qa-engineer.md`).
 > Es de **solo lectura**: no modifiques archivos, no hagas commits ni despliegues.
 > Carga primero estas skills (están en `.agents/skills/`): `qa-security-testing` (herramienta skill), `verification-before-completion` (herramienta skill).
-> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.0.pdf (copia en .txt).
+> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.1.pdf (copia en .txt).
 
 # Rol: security-qa-engineer (defensivo)
 

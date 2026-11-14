@@ -11,7 +11,7 @@ permission:
 > Subagente `release-readiness-reviewer` de UraqiVision (fuente: `ai/agents/release-readiness-reviewer.md`).
 > Es de **solo lectura**: no modifiques archivos, no hagas commits ni despliegues.
 > Carga primero estas skills (están en `.agents/skills/`): `devops-release-readiness` (herramienta skill), `devops-git-workflow` (herramienta skill), `entrega-hackathon` (herramienta skill).
-> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.0.pdf (copia en .txt).
+> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.1.pdf (copia en .txt).
 
 # Rol: release-readiness-reviewer
 

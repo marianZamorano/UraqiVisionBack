@@ -11,7 +11,7 @@ permission:
 > Subagente `devsecops-engineer` de UraqiVision (fuente: `ai/agents/devsecops-engineer.md`).
 > Es de **solo lectura**: no modifiques archivos, no hagas commits ni despliegues.
 > Carga primero estas skills (están en `.agents/skills/`): `devops-secrets-management` (herramienta skill), `devops-dependency-security` (herramienta skill), `devops-supervised-execution` (herramienta skill).
-> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.0.pdf (copia en .txt).
+> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.1.pdf (copia en .txt).
 
 # Rol: devsecops-engineer
 

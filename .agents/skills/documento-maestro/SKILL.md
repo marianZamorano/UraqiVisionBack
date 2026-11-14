@@ -5,8 +5,8 @@ description: Navega el documento maestro de UraqiVision (fuente de verdad) para 
 
 # Documento maestro de UraqiVision
 
-La fuente de verdad es `docs/UraqiVisionDocumentoMaestrov1.0.pdf` (v1.0, 12 nov 2026). Para buscar usa
-`docs/UraqiVisionDocumentoMaestrov1.0.txt`: es texto extraído y **las tablas salen con una celda por
+La fuente de verdad es `docs/UraqiVisionDocumentoMaestrov1.1.pdf` (v1.1, 14 nov 2026). Para buscar usa
+`docs/UraqiVisionDocumentoMaestrov1.1.txt`: es texto extraído y **las tablas salen con una celda por
 línea**, así que lee varias líneas después de cada coincidencia. Si el texto y el PDF difieren, manda el PDF.
 
 ## Mapa del documento
@@ -39,9 +39,9 @@ línea**, así que lee varias líneas después de cada coincidencia. Si el texto
 
 ```bash
 # Un identificador y su contexto (la tabla continúa en las líneas siguientes)
-grep -n -A 12 "RF-16" docs/UraqiVisionDocumentoMaestrov1.0.txt
+grep -n -A 12 "RF-16" docs/UraqiVisionDocumentoMaestrov1.1.txt
 # Todas las apariciones de un tema
-grep -n -i "polarizaci" docs/UraqiVisionDocumentoMaestrov1.0.txt
+grep -n -i "polarizaci" docs/UraqiVisionDocumentoMaestrov1.1.txt
 ```
 
 ## ¿Está en el alcance?

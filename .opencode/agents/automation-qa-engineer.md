@@ -11,7 +11,7 @@ permission:
 > Subagente `automation-qa-engineer` de UraqiVision (fuente: `ai/agents/automation-qa-engineer.md`).
 > Puede escribir **solo** lo que su rol permite y tras aprobación explícita; no hace commits, push ni despliegues.
 > Carga primero estas skills (están en `.agents/skills/`): `qa-automation` (herramienta skill), `test-driven-development` (herramienta skill), `qa-regression-analysis` (herramienta skill), `verification-before-completion` (herramienta skill).
-> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.0.pdf (copia en .txt).
+> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.1.pdf (copia en .txt).
 
 # Rol: automation-qa-engineer
 

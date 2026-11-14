@@ -14,7 +14,7 @@ import {
 } from '../lib/equipo.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
-const DOC = fs.readFileSync(path.join(ROOT, 'docs/UraqiVisionDocumentoMaestrov1.0.txt'), 'utf8');
+const DOC = fs.readFileSync(path.join(ROOT, 'docs/UraqiVisionDocumentoMaestrov1.1.txt'), 'utf8');
 const MODULOS = parsearEquipo(DOC);
 const FRONT = ['M-GLOBO', 'M-MAPA', 'M-ATLAS', 'M-INTERFAZ'];
 const BACK = ['M-INGESTA', 'M-CIENCIA', 'M-VALIDACIÓN', 'M-PUBLICACIÓN', 'M-INSIGHT'];
@@ -99,7 +99,7 @@ test('de punta a punta: la guarda bloquea vibecodear sin identidad, registra la 
   try {
     execFileSync('git', ['init', '-q'], { cwd: dir });
     fs.mkdirSync(path.join(dir, 'docs'));
-    fs.copyFileSync(path.join(ROOT, 'docs/UraqiVisionDocumentoMaestrov1.0.txt'), path.join(dir, 'docs/UraqiVisionDocumentoMaestrov1.0.txt'));
+    fs.copyFileSync(path.join(ROOT, 'docs/UraqiVisionDocumentoMaestrov1.1.txt'), path.join(dir, 'docs/UraqiVisionDocumentoMaestrov1.1.txt'));
     fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ uraqi: { modulos: FRONT } }));
 
     const skill = { tool: 'Skill', input: { skill: 'vibecodear' }, cwd: dir };

@@ -1,7 +1,7 @@
 # SDD de UraqiVision · backend
 
 Guía para implementar el pipeline y la función Insight de UraqiVision **desde cero**, tal como los define el
-documento maestro (`docs/UraqiVisionDocumentoMaestrov1.0.pdf`), con **Spec-Driven Development** (Spec Kit):
+documento maestro (`docs/UraqiVisionDocumentoMaestrov1.1.pdf`), con **Spec-Driven Development** (Spec Kit):
 primero la especificación, después el código. Este repositorio es el backend; la web tiene su propio SDD en
 [`UraqiVision`](https://github.com/marianZamorano/UraqiVision).
 

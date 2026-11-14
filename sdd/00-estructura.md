@@ -2,7 +2,7 @@
 
 Todo SDD de `sdd/` (uno por área de §19, más el de proyecto y el de integración) sigue **esta estructura**. La
 valida `npm run sdd:validar`, y el hook pre-commit bloquea un commit que la rompa (`[uraqi-guard:sdd-invalido]`).
-La fuente de verdad es el documento maestro (`docs/UraqiVisionDocumentoMaestrov1.0.pdf`, copia `.txt`): un SDD
+La fuente de verdad es el documento maestro (`docs/UraqiVisionDocumentoMaestrov1.1.pdf`, copia `.txt`): un SDD
 **descompone** el documento en prompts ejecutables, no lo reescribe. Si un SDD contradice el documento, se corrige
 el SDD.
 

@@ -44,7 +44,7 @@ test('clasifica cada tipo de herramienta y separa lo generado', () => {
     assert.equal(esFuenteDeHerramienta(g), false);
   }
   assert.equal(clasificarHerramienta('src/App.tsx'), null);
-  assert.equal(clasificarHerramienta('docs/UraqiVisionDocumentoMaestrov1.0.pdf'), null);
+  assert.equal(clasificarHerramienta('docs/UraqiVisionDocumentoMaestrov1.1.pdf'), null);
 });
 
 test('resume las piezas: estado del archivo principal, generados y otros aparte', () => {

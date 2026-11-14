@@ -1,4 +1,4 @@
-"""Regenera docs/UraqiVisionDocumentoMaestrov1.0.txt a partir del PDF del documento maestro.
+"""Regenera docs/UraqiVisionDocumentoMaestrov1.1.txt a partir del PDF del documento maestro.
 
 Uso (desde la raiz del repositorio):
     uv run --with pypdf python ai/scripts/extraer_documento.py
@@ -12,10 +12,10 @@ import sys
 import pypdf
 
 RAIZ = pathlib.Path(__file__).resolve().parents[2]
-PDF = RAIZ / "docs" / "UraqiVisionDocumentoMaestrov1.0.pdf"
+PDF = RAIZ / "docs" / "UraqiVisionDocumentoMaestrov1.1.pdf"
 TXT = PDF.with_suffix(".txt")
 CABECERA = (
-    "<!-- Texto extraido automaticamente de docs/UraqiVisionDocumentoMaestrov1.0.pdf con "
+    "<!-- Texto extraido automaticamente de docs/UraqiVisionDocumentoMaestrov1.1.pdf con "
     "ai/scripts/extraer_documento.py. Las tablas pierden su formato (una celda por linea). "
     "Ante cualquier diferencia, prevalece el PDF. No editar a mano: regenerar. -->\n\n"
 )

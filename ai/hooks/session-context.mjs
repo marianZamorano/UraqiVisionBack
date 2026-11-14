@@ -35,7 +35,7 @@ function avisosLocales() {
 }
 
 export const CONTEXT = `[UraqiVision] Contexto del proyecto
-- Fuente de verdad: docs/UraqiVisionDocumentoMaestrov1.0.pdf (busca en la copia .txt por identificador: RF-xx, RNF-xx, MC-xx, RN-xx, CQ-xx, VC-xx, PS-xx, DP-xx). Lo que no está en el documento no está decidido.
+- Fuente de verdad: docs/UraqiVisionDocumentoMaestrov1.1.pdf (busca en la copia .txt por identificador: RF-xx, RNF-xx, MC-xx, RN-xx, CQ-xx, VC-xx, PS-xx, DP-xx). Lo que no está en el documento no está decidido.
 - Respeta el alcance MVP (§8); las decisiones pendientes DP-01 a DP-08 (§29) no se implementan hasta resolverse.
 - No inventes datos, cifras, fuentes, DOI ni endpoints. Separa hechos, propuestas, hipótesis y pendientes.
 - Ciencia: promedios en lineal y dB después; misma órbita y grilla (RN-01); sin dato nunca es cero (RN-13); causas como hipótesis (RN-05); hectáreas con rango (RN-06).

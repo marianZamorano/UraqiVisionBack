@@ -21,7 +21,7 @@ Closes #
 
 ## Identificadores del documento maestro
 
-<!-- RF, RNF, MC, RN, CQ, VC o PS que resuelve o toca este PR (docs/UraqiVisionDocumentoMaestrov1.0.pdf). -->
+<!-- RF, RNF, MC, RN, CQ, VC o PS que resuelve o toca este PR (docs/UraqiVisionDocumentoMaestrov1.1.pdf). -->
 
 -
 
