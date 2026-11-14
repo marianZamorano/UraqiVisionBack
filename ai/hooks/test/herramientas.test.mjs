@@ -2,14 +2,17 @@
 // Ejecutar: node --test ai/hooks/test/herramientas.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
   clasificarHerramienta, esFuenteDeHerramienta, resumirCambios, textoResumen, analizarDocumento, coherencia,
   revisable, lineasAgregadas, textoAviso, MARCA_AVISO, cargarDocumento,
 } from '../lib/herramientas.mjs';
 import { parseNameStatus } from '../lib/herramientas-git.mjs';
-import { hooksDeAsistentes, guardasResponden, coherenciaTotal, servidoresMcp, hooksDeGitCompletos } from '../lib/verificacion.mjs';
+import { hooksDeAsistentes, guardasResponden, coherenciaTotal, servidoresMcp, hooksDeGitCompletos, hooksDeGitEjecutables } from '../lib/verificacion.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 
@@ -138,6 +141,31 @@ test('el aviso menciona a los colaboradores (excepto el autor) y dice qué hacer
 test('verificación real: hooks configurados, guardas que responden, MCP que arrancan y coherencia total', async () => {
   for (const r of [hooksDeAsistentes(ROOT), guardasResponden(ROOT), coherenciaTotal(ROOT), await servidoresMcp(ROOT), hooksDeGitCompletos(ROOT)[0]]) {
     assert.ok(r.ok, `${r.id}: ${r.detalle}`);
+  }
+});
+
+test('los hooks de git se ejecutan: un hook 100644 falla y con --chmod=+x pasa', () => {
+  const propio = hooksDeGitEjecutables(ROOT);
+  assert.equal(propio.id, 'hooks-git-ejecutables');
+  assert.ok(propio.ok, propio.detalle);
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'uraqi-hooks-'));
+  try {
+    execFileSync('git', ['init', '-q'], { cwd: dir });
+    fs.mkdirSync(path.join(dir, '.githooks'));
+    fs.writeFileSync(path.join(dir, '.githooks', 'pre-push'), '#!/bin/sh\n');
+    if (process.platform !== 'win32') fs.chmodSync(path.join(dir, '.githooks', 'pre-push'), 0o644);
+    execFileSync('git', ['add', '.githooks/pre-push'], { cwd: dir });
+    const antes = hooksDeGitEjecutables(dir);
+    assert.equal(antes.ok, false, 'un hook 100644 debe fallar');
+    assert.match(antes.detalle, /pre-push/);
+
+    execFileSync('git', ['update-index', '--chmod=+x', '.githooks/pre-push'], { cwd: dir });
+    if (process.platform !== 'win32') fs.chmodSync(path.join(dir, '.githooks', 'pre-push'), 0o755);
+    const despues = hooksDeGitEjecutables(dir);
+    assert.ok(despues.ok, despues.detalle);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 

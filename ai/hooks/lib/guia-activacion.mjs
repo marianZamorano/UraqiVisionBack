@@ -11,6 +11,12 @@ export const PASOS = {
     'Comprueba: `git config --get core.hooksPath` debe responder `.githooks`.',
     VERIFICAR,
   ],
+  'hooks-git-ejecutables': () => [
+    'Git ignora en silencio los hooks sin permiso de ejecución: no basta con `core.hooksPath`.',
+    'Da permiso a los que falten (los nombra el detalle) y actualiza el índice: `chmod +x .githooks/<hook>` y `git update-index --chmod=+x .githooks/<hook>`.',
+    'Comprueba con `git ls-files -s .githooks`: los seis deben empezar por `100755`.',
+    VERIFICAR,
+  ],
   'hooks-git-scripts': (d) => [
     `Un hook de \`.githooks/\` llama a un script que no existe (${d}). Actualiza tu rama desde dev: \`git switch dev && git pull\`.`,
     'Si sigue fallando en dev, avisa al equipo con un issue: es un defecto del repositorio.',
