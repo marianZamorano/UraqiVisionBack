@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INSIGHT-05",
+  "resultado": "en-espera",
+  "colaborador": "Mimi",
+  "nota": "analisis.md escrito (12 discrepancias, 4 abiertas que afectan la conformidad real). En espera de la aprobación de Mimi («apruebo») antes de cerrar P-INSIGHT-06 (#46).",
+  "hash": "3327a145cc",
+  "rama": "docs/46-analisis-de-insight",
+  "fecha": "2026-11-14T18:25:29.096Z"
+}
