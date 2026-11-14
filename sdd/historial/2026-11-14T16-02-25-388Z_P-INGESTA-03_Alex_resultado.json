@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INGESTA-03",
+  "resultado": "hecho",
+  "colaborador": "Alex",
+  "nota": "plan.md, research.md, data-model.md, quickstart.md y contracts/salidas-ingesta.md escritos. Hechos verificados hoy: GDAL >= 3.13 para leer NISAR (guía de ASF) y suma MD5 del gránulo en CMR. Hipótesis: estructura, versión de Python y esquema del manifiesto, porque specs/001-base-pipeline no existe; GDAL 3.13 instalable (la prueba resolvió 3.12.3). context7 no estaba disponible en la sesión. Pendiente con Tabata: promedio a 60 m",
+  "hash": "a025f2e34f",
+  "rama": "docs/29-aclarar-planificar-tareas-y-analizar-la-ingesta",
+  "fecha": "2026-11-14T16:02:25.388Z"
+}

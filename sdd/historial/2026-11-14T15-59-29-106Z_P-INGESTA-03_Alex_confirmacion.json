@@ -1,0 +1,10 @@
+{
+  "tipo": "confirmacion",
+  "id": "P-INGESTA-03",
+  "decision": "ejecutar",
+  "colaborador": "Alex",
+  "nota": "Tal cual; lo que dependa de specs/001-base-pipeline (aún sin escribir) se marca como hipótesis",
+  "hash": "a025f2e34f",
+  "rama": "docs/29-aclarar-planificar-tareas-y-analizar-la-ingesta",
+  "fecha": "2026-11-14T15:59:29.106Z"
+}
