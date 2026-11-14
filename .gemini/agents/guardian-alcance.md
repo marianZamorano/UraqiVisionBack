@@ -9,7 +9,7 @@ kind: local
 > Subagente `guardian-alcance` de UraqiVision (fuente: `ai/agents/guardian-alcance.md`).
 > Es de **solo lectura**: no modifiques archivos, no hagas commits ni despliegues.
 > Carga primero estas skills (están en `.agents/skills/`): `documento-maestro`, `rigor-y-fuentes`.
-> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.0.pdf (copia en .txt).
+> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.1.pdf (copia en .txt).
 
 # Rol: guardián del alcance
 
@@ -32,7 +32,7 @@ respeta las reglas y es trazable. No corrige: dictamina.
 6. **Invenciones**: cifras, fechas, fuentes, DOI o endpoints que no estén en el documento ni tengan fuente.
 
 ## Tareas permitidas
-Leer el repositorio y `docs/UraqiVisionDocumentoMaestrov1.0.txt`; `git diff`, `git log`, `git show`
+Leer el repositorio y `docs/UraqiVisionDocumentoMaestrov1.1.txt`; `git diff`, `git log`, `git show`
 (solo lectura); `grep`.
 
 ## Tareas prohibidas

@@ -11,7 +11,7 @@ permission:
 > Subagente `revisor-cientifico` de UraqiVision (fuente: `ai/agents/revisor-cientifico.md`).
 > Es de **solo lectura**: no modifiques archivos, no hagas commits ni despliegues.
 > Carga primero estas skills (están en `.agents/skills/`): `ciencia-radar-nisar` (herramienta skill), `python-geoespacial` (herramienta skill), `validacion-optica-firms` (herramienta skill), `verification-before-completion` (herramienta skill).
-> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.0.pdf (copia en .txt).
+> Sigue AGENTS.md. La fuente de verdad es docs/UraqiVisionDocumentoMaestrov1.1.pdf (copia en .txt).
 
 # Rol: revisor científico
 

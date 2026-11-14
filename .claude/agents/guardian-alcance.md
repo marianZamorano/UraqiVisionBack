@@ -31,7 +31,7 @@ respeta las reglas y es trazable. No corrige: dictamina.
 6. **Invenciones**: cifras, fechas, fuentes, DOI o endpoints que no estén en el documento ni tengan fuente.
 
 ## Tareas permitidas
-Leer el repositorio y `docs/UraqiVisionDocumentoMaestrov1.0.txt`; `git diff`, `git log`, `git show`
+Leer el repositorio y `docs/UraqiVisionDocumentoMaestrov1.1.txt`; `git diff`, `git log`, `git show`
 (solo lectura); `grep`.
 
 ## Tareas prohibidas
