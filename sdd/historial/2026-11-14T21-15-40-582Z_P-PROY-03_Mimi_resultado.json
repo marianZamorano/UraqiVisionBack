@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-PROY-03",
+  "resultado": "parcial",
+  "colaborador": "Mimi",
+  "nota": "plan.md, data-model.md y research.md escritos; versiones observadas en PyPI el 14 nov 2026 para 12 paquetes; openSEPPO y GDAL pendientes (#63).",
+  "hash": "a21beb0582",
+  "rama": "docs/62-base-pipeline",
+  "fecha": "2026-11-14T21:15:40.582Z"
+}
