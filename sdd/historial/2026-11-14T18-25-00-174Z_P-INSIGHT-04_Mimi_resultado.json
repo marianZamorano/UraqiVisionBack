@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INSIGHT-04",
+  "resultado": "hecho",
+  "colaborador": "Mimi",
+  "nota": "tasks.md con tareas hechas (T001 a T009) y pendientes (T010 a T019), sin marcar como hechas las pendientes (#45).",
+  "hash": "a120377fdc",
+  "rama": "docs/45-tareas-de-insight",
+  "fecha": "2026-11-14T18:25:00.174Z"
+}
