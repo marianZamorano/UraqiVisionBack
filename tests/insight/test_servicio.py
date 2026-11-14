@@ -2,8 +2,8 @@ import logging
 
 import pytest
 
-from insight.limites import Limites
-from insight.servicio import Insight
+from insight.dominio.limites import Limites
+from insight.aplicacion.servicio import Insight
 
 
 def servicio(contenido, proveedor, max_preguntas=5, max_caracteres=200):

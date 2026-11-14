@@ -1,6 +1,6 @@
 import pytest
 
-from insight.contrato import SolicitudInvalida, validar_solicitud
+from insight.aplicacion.contrato import SolicitudInvalida, validar_solicitud
 
 
 def test_acepta_solicitud_valida():

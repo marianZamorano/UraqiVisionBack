@@ -1,6 +1,6 @@
 import pytest
 
-from insight.contenido import Contenido
+from insight.dominio.contenido import Contenido
 
 
 @pytest.fixture

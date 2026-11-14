@@ -1,6 +1,6 @@
 import pytest
 
-from insight.limites import Limites, LimiteAlcanzado, LimitesNoConfigurados, PreguntaLarga
+from insight.dominio.limites import Limites, LimiteAlcanzado, LimitesNoConfigurados, PreguntaLarga
 
 
 def test_sin_configurar_no_hay_limites_por_defecto():
