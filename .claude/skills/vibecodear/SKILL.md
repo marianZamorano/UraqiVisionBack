@@ -17,7 +17,7 @@ Los scripts hacen solo trabajo determinista (inspeccionar, verificar, ejecutar, 
 
 ## Marco de UraqiVision (obligatorio)
 
-- Fuente de verdad: `docs/UraqiVisionDocumentoMaestrov1.0.pdf` (copia `.txt`); skill `documento-maestro`.
+- Fuente de verdad: `docs/UraqiVisionDocumentoMaestrov1.1.pdf` (copia `.txt`); skill `documento-maestro`.
 - El objetivo de cada Sprint sale del **alcance MVP (§8, §13)** y del **plan del hackathon (§25)**, nunca de
   ideas nuevas. Lo Plus o Futuro solo si el equipo lo pide; las DP de §29 no se implementan.
 - Si hay specs de Spec Kit, el Sprint toma sus tareas de `specs/NNN-*/tasks.md` (skill `sdd-uraqivision`);
