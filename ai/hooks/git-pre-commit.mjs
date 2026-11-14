@@ -101,7 +101,7 @@ if (enIndice.some((e) => FUENTES.test(e.path))) {
   const { errores, avisos } = coherenciaDeCambios(enIndice, { root, fuente: 'indice', diff: git('diff', '--cached', '-U0', '--no-color') });
   for (const a of avisos) process.stderr.write(`[uraqi] Aviso: ${a}\n`);
   if (errores.length) {
-    process.stderr.write(`[uraqi-guard:incoherente-con-documento] Commit bloqueado: las herramientas de IA del commit no son coherentes con el documento maestro.\n- ${errores.join('\n- ')}\nBusca el identificador o la sección correctos en docs/UraqiVisionDocumentoMaestrov1.0.txt (skill documento-maestro).\n`);
+    process.stderr.write(`[uraqi-guard:incoherente-con-documento] Commit bloqueado: las herramientas de IA del commit no son coherentes con el documento maestro.\n- ${errores.join('\n- ')}\nBusca el identificador o la sección correctos en docs/UraqiVisionDocumentoMaestrov1.1.txt (skill documento-maestro).\n`);
     process.exit(1);
   }
 

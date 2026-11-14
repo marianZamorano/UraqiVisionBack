@@ -124,7 +124,7 @@ test('de punta a punta: confirmar, ejecutar, fin de turno exige registrar y el r
     execFileSync('git', ['init', '-q'], { cwd: dir });
     fs.mkdirSync(path.join(dir, 'sdd'));
     fs.mkdirSync(path.join(dir, 'docs'));
-    fs.copyFileSync(path.join(ROOT, 'docs/UraqiVisionDocumentoMaestrov1.0.txt'), path.join(dir, 'docs/UraqiVisionDocumentoMaestrov1.0.txt'));
+    fs.copyFileSync(path.join(ROOT, 'docs/UraqiVisionDocumentoMaestrov1.1.txt'), path.join(dir, 'docs/UraqiVisionDocumentoMaestrov1.1.txt'));
     fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ uraqi: { modulos: ['M-MAPA'] } }));
     fs.writeFileSync(path.join(dir, 'sdd/m-mapa.md'), sdd({ prompts: prompt('P-MAPA-01', { orden: 1 }) + prompt('P-MAPA-02', { orden: 2, deps: 'P-MAPA-01' }) }));
 

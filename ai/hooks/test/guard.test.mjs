@@ -64,7 +64,7 @@ test('comandos normales pasan', () => {
 
 test('escrituras: rutas protegidas y contenido con secretos', () => {
   assert.ok(denied(evaluateTool('Write', { file_path: '.env', content: 'A=1' })));
-  assert.ok(denied(evaluateTool('write_file', { file_path: 'docs/UraqiVisionDocumentoMaestrov1.0.pdf', content: '' })));
+  assert.ok(denied(evaluateTool('write_file', { file_path: 'docs/UraqiVisionDocumentoMaestrov1.1.pdf', content: '' })));
   assert.ok(denied(evaluateTool('edit', { filePath: 'src/insight.ts', newString: `const k = "${FAKE_ANTHROPIC}"` })));
   assert.ok(denied(evaluateTool('replace', { file_path: '.git/config', old_string: 'a', new_string: 'b' })));
   assert.equal(evaluateTool('Write', { file_path: '.env.example', content: 'X_API_KEY=' }).decision, null);
