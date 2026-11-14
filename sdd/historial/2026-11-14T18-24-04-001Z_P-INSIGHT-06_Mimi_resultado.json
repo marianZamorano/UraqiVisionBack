@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INSIGHT-06",
+  "resultado": "parcial",
+  "colaborador": "Mimi",
+  "nota": "Desviación declarada (#43): el código de Insight (PR #40 y #42) se implementó antes de P-INSIGHT-03, 04 y 05, y antes de P-PROY-07. El plan se completa a posteriori en #44, #45 y #46. Pendiente: prueba real del proveedor, DP-04, DP-06 y revisión del equipo de docs/arquitectura.md. No se cierra hasta la aprobación de la persona (P-INSIGHT-05).",
+  "hash": "70c0a79956",
+  "rama": "chore/43-registrar-insight-06-parcial",
+  "fecha": "2026-11-14T18:24:04.001Z"
+}

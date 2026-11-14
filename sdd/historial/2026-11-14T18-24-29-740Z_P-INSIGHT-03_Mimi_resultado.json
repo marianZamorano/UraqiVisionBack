@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INSIGHT-03",
+  "resultado": "parcial",
+  "colaborador": "Mimi",
+  "nota": "plan.md y contracts/ escritos a posteriori (desviación declarada en #43). Pendientes: DP-04, DP-06, encabezado de sesión y 429/503 con la web, revisión del equipo de la arquitectura.",
+  "hash": "5478902dae",
+  "rama": "docs/44-plan-y-contrato-de-insight",
+  "fecha": "2026-11-14T18:24:29.740Z"
+}
