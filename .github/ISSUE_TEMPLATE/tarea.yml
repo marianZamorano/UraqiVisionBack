@@ -7,7 +7,7 @@ body:
     id: identificadores
     attributes:
       label: Identificadores del documento maestro
-      description: RF, RNF, MC, RN, CQ, VC o PS que resuelve (docs/UraqiVisionDocumentoMaestrov1.0.pdf).
+      description: RF, RNF, MC, RN, CQ, VC o PS que resuelve (docs/UraqiVisionDocumentoMaestrov1.1.pdf).
       placeholder: RF-06, PS-04
     validations:
       required: true
