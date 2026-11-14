@@ -1,0 +1,10 @@
+{
+  "tipo": "confirmacion",
+  "id": "P-INGESTA-01",
+  "decision": "ejecutar",
+  "colaborador": "Alex",
+  "nota": "Alex pidió auditar antes la constitución de Mimi (rama docs/25, sin fusionar) y ejecutar el prompt tal cual sobre esa base",
+  "hash": "325659c9f5",
+  "rama": "dev",
+  "fecha": "2026-11-14T15:36:34.862Z"
+}

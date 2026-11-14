@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INGESTA-01",
+  "resultado": "hecho",
+  "colaborador": "Alex",
+  "nota": "specs/002-ingesta/spec.md y su checklist escritos sobre la propuesta de constitución de docs/25 (sin fusionar). Quedan 3 [NEEDS CLARIFICATION] para P-INGESTA-02: archivo por frame o grilla única (FR-008), quién promedia a 60 m (FR-011, §19 frente a §25) y qué suma de verificación va al manifiesto (FR-013). Sin commit: falta el issue y su rama",
+  "hash": "325659c9f5",
+  "rama": "dev",
+  "fecha": "2026-11-14T15:38:29.467Z"
+}
