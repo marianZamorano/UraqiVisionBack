@@ -23,5 +23,5 @@ def test_la_clave_va_solo_en_la_cabecera_y_no_en_el_cuerpo():
 
 
 def test_el_codigo_no_contiene_claves_del_proveedor():
-    for ruta in list((RAIZ / "src").rglob("*.py")) + list((RAIZ / "tests").rglob("*.py")):
+    for ruta in list((RAIZ / "insight").rglob("*.py")) + list((RAIZ / "tests").rglob("*.py")):
         assert not PATRON_CLAVE.search(ruta.read_text(encoding="utf-8")), ruta
