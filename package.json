@@ -38,7 +38,9 @@
     "env:compartir": "node ai/scripts/entorno.mjs compartir",
     "hooks:activar": "git config core.hooksPath .githooks",
     "ayuda": "node ai/docs/ayuda.mjs",
-    "insight:local": "python3 scripts/insight_local.py"
+    "insight:local": "python3 scripts/insight_local.py",
+    "nisar:inventario": "python3 scripts/nisar_inventario.py",
+    "nisar:recorte": "uv run scripts/nisar_recorte.py"
   },
   "uraqi": {
     "$comentario": "envPermitidos: entornos extra (.env.<nombre>) solo si son imprescindibles para que algo funcione; cada uno necesita su .env.<nombre>.example. Por defecto solo existen .env y .env.example. scripts: descripción de cada script npm para ai/README.md (ai/sync.mjs falla si falta una). modulos: módulos de §19 que viven en este repositorio (decisión del equipo del 12 nov 2026, ver «Stack y módulos» en AGENTS.md); el resto de §19 se lee del documento maestro.",
@@ -85,7 +87,9 @@
       "env:compartir": "Copia tu .env a Descargas para compartirlo con el equipo por un canal seguro.",
       "hooks:activar": "Activa los hooks de git de .githooks/ en tu clon.",
       "ayuda": "Muestra esta ayuda en la terminal: índice, o las secciones de un tema (npm run ayuda -- <tema>).",
-      "insight:local": "Ejecuta Insight en local: lee una solicitud JSON por stdin con la estación (npm run insight:local -- <estacion.json>); usa INSIGHT_PROVIDER_API_KEY y los límites del entorno."
+      "insight:local": "Ejecuta Insight en local: lee una solicitud JSON por stdin con la estación (npm run insight:local -- <estacion.json>); usa INSIGHT_PROVIDER_API_KEY y los límites del entorno.",
+      "nisar:inventario": "Exploratorio (#60): inventario de escenas NISAR L2 GCOV PROVISIONAL y VALIDATED sobre un recuadro desde CMR, sin cuenta (-- --bbox oeste,sur,este,norte); escribe datos/exploracion/inventario_nisar.csv.",
+      "nisar:recorte": "Exploratorio (#60): recorte de HH y HV de un gránulo GCOV desde la nube, sin descargarlo, con Earthdata Login del .netrc local (-- --granulo <nombre> --madurez VALIDATED|PROVISIONAL); requiere uv."
     }
   },
   "devDependencies": {
