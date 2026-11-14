@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INGESTA-04",
+  "resultado": "hecho",
+  "colaborador": "Alex",
+  "nota": "tasks.md con 42 tareas en 9 fases, en el orden de §25, prueba antes que implementación. Incluye la tabla de qué cubre ya la prueba de descarga de Alex y qué falta. La fase 5 (promedio a 60 m, MC-01) queda bloqueada hasta la confirmación de Tabata; la fase 1 depende de specs/001-base-pipeline",
+  "hash": "cb3f67ba66",
+  "rama": "docs/29-aclarar-planificar-tareas-y-analizar-la-ingesta",
+  "fecha": "2026-11-14T16:12:43.101Z"
+}
