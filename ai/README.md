@@ -30,7 +30,7 @@ consume lo que este repositorio publica: los archivos de cada estación (§17.3)
 | Reglas de las guardas | 34 | `ai/hooks/lib/` |
 | Hooks de git | 6 | `.githooks/` |
 | Workflows de GitHub | 9 | `.github/workflows/` |
-| Scripts npm | 35 | `package.json` |
+| Scripts npm | 37 | `package.json` |
 
 ## Instalación (primera vez)
 
@@ -405,6 +405,8 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | `npm run hooks:activar` | Activa los hooks de git de .githooks/ en tu clon. | `git config core.hooksPath .githooks` |
 | `npm run ayuda` | Muestra esta ayuda en la terminal: índice, o las secciones de un tema (npm run ayuda -- <tema>). | `node ai/docs/ayuda.mjs` |
 | `npm run insight:local` | Ejecuta Insight en local: lee una solicitud JSON por stdin con la estación (npm run insight:local -- <estacion.json>); usa INSIGHT_PROVIDER_API_KEY y los límites del entorno. | `python3 scripts/insight_local.py` |
+| `npm run nisar:inventario` | Exploratorio (#60): inventario de escenas NISAR L2 GCOV PROVISIONAL y VALIDATED sobre un recuadro desde CMR, sin cuenta (-- --bbox oeste,sur,este,norte); escribe datos/exploracion/inventario_nisar.csv. | `python3 scripts/nisar_inventario.py` |
+| `npm run nisar:recorte` | Exploratorio (#60): recorte de HH y HV de un gránulo GCOV desde la nube, sin descargarlo, con Earthdata Login del .netrc local (-- --granulo <nombre> --madurez VALIDATED\|PROVISIONAL); requiere uv. | `uv run scripts/nisar_recorte.py` |
 
 ## Cómo se mantiene al día esta ayuda
 
