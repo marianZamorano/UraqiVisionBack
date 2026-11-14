@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-PUBLICACION-03",
+  "resultado": "parcial",
+  "colaborador": "Mimi",
+  "nota": "plan.md y contracts/archivos-publicados.md (propuesta, sin código). Pendientes: esquemas sin comparar con la web (no existe specs/001-base-web en la copia local), dependencias de Tabata, prompt con referencia a specs/001-base-pipeline inexistente (#47).",
+  "hash": "c850354015",
+  "rama": "docs/47-plan-de-publicacion",
+  "fecha": "2026-11-14T18:37:40.097Z"
+}
