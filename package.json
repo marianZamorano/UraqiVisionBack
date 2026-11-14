@@ -37,7 +37,8 @@
     "env:sync": "node ai/scripts/entorno.mjs sync",
     "env:compartir": "node ai/scripts/entorno.mjs compartir",
     "hooks:activar": "git config core.hooksPath .githooks",
-    "ayuda": "node ai/docs/ayuda.mjs"
+    "ayuda": "node ai/docs/ayuda.mjs",
+    "insight:local": "python3 scripts/insight_local.py"
   },
   "uraqi": {
     "$comentario": "envPermitidos: entornos extra (.env.<nombre>) solo si son imprescindibles para que algo funcione; cada uno necesita su .env.<nombre>.example. Por defecto solo existen .env y .env.example. scripts: descripción de cada script npm para ai/README.md (ai/sync.mjs falla si falta una). modulos: módulos de §19 que viven en este repositorio (decisión del equipo del 12 nov 2026, ver «Stack y módulos» en AGENTS.md); el resto de §19 se lee del documento maestro.",
@@ -83,7 +84,8 @@
       "env:sync": "Crea o alinea tu .env con .env.example sin leer ni mostrar valores.",
       "env:compartir": "Copia tu .env a Descargas para compartirlo con el equipo por un canal seguro.",
       "hooks:activar": "Activa los hooks de git de .githooks/ en tu clon.",
-      "ayuda": "Muestra esta ayuda en la terminal: índice, o las secciones de un tema (npm run ayuda -- <tema>)."
+      "ayuda": "Muestra esta ayuda en la terminal: índice, o las secciones de un tema (npm run ayuda -- <tema>).",
+      "insight:local": "Ejecuta Insight en local: lee una solicitud JSON por stdin con la estación (npm run insight:local -- <estacion.json>); usa INSIGHT_PROVIDER_API_KEY y los límites del entorno."
     }
   },
   "devDependencies": {
