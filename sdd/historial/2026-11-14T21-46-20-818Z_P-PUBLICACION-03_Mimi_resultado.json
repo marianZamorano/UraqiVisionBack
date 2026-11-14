@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-PUBLICACION-03",
+  "resultado": "conflicto",
+  "colaborador": "Mimi",
+  "nota": "Contrato comparado con specs/001-base-web/contracts/published-data.ts (UraqiVision @ dev). Nueve conflictos C1 a C9 registrados en specs/005-publicacion/contracts/archivos-publicados.md para acordar con la web (#70).",
+  "hash": "c850354015",
+  "rama": "docs/70-contrato-publicacion-web",
+  "fecha": "2026-11-14T21:46:20.818Z"
+}
