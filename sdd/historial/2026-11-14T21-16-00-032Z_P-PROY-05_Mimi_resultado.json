@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-PROY-05",
+  "resultado": "en-espera",
+  "colaborador": "Mimi",
+  "nota": "analisis.md escrito (7 puntos, 5 abiertos). En espera de «apruebo» antes de P-PROY-06 (#65).",
+  "hash": "2e1690a090",
+  "rama": "docs/62-base-pipeline",
+  "fecha": "2026-11-14T21:16:00.032Z"
+}
