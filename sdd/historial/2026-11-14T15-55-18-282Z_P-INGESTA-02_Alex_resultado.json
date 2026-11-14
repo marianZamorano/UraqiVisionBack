@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INGESTA-02",
+  "resultado": "hecho",
+  "colaborador": "Alex",
+  "nota": "5 aclaraciones escritas en specs/002-ingesta/spec.md: órbita 060A, la ingesta entrega recortes y pila a 60 m (pendiente de confirmar con Tabata antes de P-INGESTA-04), un archivo por frame sin unir, suma del gránulo y del recorte, reintentos por escena. Sin marcadores NEEDS CLARIFICATION. DP-08 y DP-03 siguen pendientes",
+  "hash": "32a0080e03",
+  "rama": "docs/27-especificar-la-ingesta-nisar",
+  "fecha": "2026-11-14T15:55:18.282Z"
+}

@@ -1,0 +1,10 @@
+{
+  "tipo": "confirmacion",
+  "id": "P-INGESTA-02",
+  "decision": "ejecutar",
+  "colaborador": "Alex",
+  "nota": "Alex pegó el prompt y pidió seguir las instrucciones tal cual",
+  "hash": "32a0080e03",
+  "rama": "docs/27-especificar-la-ingesta-nisar",
+  "fecha": "2026-11-14T15:46:43.453Z"
+}
