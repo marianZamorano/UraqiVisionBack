@@ -30,7 +30,7 @@ consume lo que este repositorio publica: los archivos de cada estación (§17.3)
 | Reglas de las guardas | 34 | `ai/hooks/lib/` |
 | Hooks de git | 6 | `.githooks/` |
 | Workflows de GitHub | 9 | `.github/workflows/` |
-| Scripts npm | 34 | `package.json` |
+| Scripts npm | 35 | `package.json` |
 
 ## Instalación (primera vez)
 
@@ -404,6 +404,7 @@ desde la rama por defecto (`main`): hasta que los workflows lleguen a `main` por
 | `npm run env:compartir` | Copia tu .env a Descargas para compartirlo con el equipo por un canal seguro. | `node ai/scripts/entorno.mjs compartir` |
 | `npm run hooks:activar` | Activa los hooks de git de .githooks/ en tu clon. | `git config core.hooksPath .githooks` |
 | `npm run ayuda` | Muestra esta ayuda en la terminal: índice, o las secciones de un tema (npm run ayuda -- <tema>). | `node ai/docs/ayuda.mjs` |
+| `npm run insight:local` | Ejecuta Insight en local: lee una solicitud JSON por stdin con la estación (npm run insight:local -- <estacion.json>); usa INSIGHT_PROVIDER_API_KEY y los límites del entorno. | `python3 scripts/insight_local.py` |
 
 ## Cómo se mantiene al día esta ayuda
 
