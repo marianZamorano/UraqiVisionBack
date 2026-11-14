@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-PROY-02",
+  "resultado": "parcial",
+  "colaborador": "Mimi",
+  "nota": "specs/001-base-pipeline/spec.md escrito (Mimi, borrador) con dos NEEDS CLARIFICATION; revisión de Alex y Tabata pendiente (#62).",
+  "hash": "af03a78d4e",
+  "rama": "docs/62-base-pipeline",
+  "fecha": "2026-11-14T21:15:09.054Z"
+}
