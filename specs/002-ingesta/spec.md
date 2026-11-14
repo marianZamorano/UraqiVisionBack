@@ -252,3 +252,20 @@ PROVISIONAL.
 - El código de la prueba de recorte de Alex existe fuera del repositorio; se incorpora en la fase de
   implementación (P-INGESTA-06), no antes.
 - Fuera de alcance: procesamiento a pedido de un área dibujada por el usuario (§8.2).
+
+## Referencias (§31)
+
+Referencias del documento maestro que respaldan esta spec (APA 7; consultadas por el equipo el 12 de noviembre
+de 2026, según §31). Se citan también en el plan y en el código que implemente cada requisito.
+
+- Alaska Satellite Facility. (2026). *NISAR data user guide*. <https://nisar-docs.asf.alaska.edu/>
+  (MC-01, RF-26, RN-02, CQ-02, CQ-06).
+- Alaska Satellite Facility. (2026). *Open source software packages*.
+  <https://nisar-docs.asf.alaska.edu/using-open-source/> (MC-01, RNF-08).
+- Alaska Satellite Facility. (2026). *Using NISAR data with GDAL*.
+  <https://hyp3-docs.asf.alaska.edu/nisar-docs/gdal> (MC-01, RNF-09).
+- GDAL/OGR contributors. (2026). *COG: Cloud Optimized GeoTIFF generator*.
+  <https://gdal.org/drivers/raster/cog.html> (RNF-09, PS-02).
+
+RF-26 también toca la referencia de CesiumJS, pero dibujar las huellas es trabajo de la web (`UraqiVision`);
+aquí solo se producen, así que esa referencia se cita allí.
