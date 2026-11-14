@@ -20,3 +20,8 @@ __pycache__/
 *.pyc
 .venv/
 .pytest_cache/
+
+# Exploración NISAR (#60): archivos que crea earthaccess y salidas de datos locales (RNF-06)
+.dodsrc
+.urs_cookies
+datos/
