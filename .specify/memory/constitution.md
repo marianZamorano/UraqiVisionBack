@@ -5,7 +5,7 @@ publicación de estaciones) y la función Insight. La web —globo, mapa, atlas 
 [`UraqiVision`](https://github.com/marianZamorano/UraqiVision) y consume lo que este repositorio publica: los
 archivos de cada estación (§17.3) y el contrato `POST /api/insight` (§21.1).
 
-**El documento maestro manda.** `docs/UraqiVisionDocumentoMaestrov1.0.pdf` y su copia en texto son la fuente de
+**El documento maestro manda.** `docs/UraqiVisionDocumentoMaestrov1.1.pdf` y su copia en texto son la fuente de
 verdad (§1, §28). Esta constitución deriva de él y **nunca lo supera**: si una regla de aquí contradice el
 documento, prevalece el documento, se corrige esta constitución y no al revés.
 

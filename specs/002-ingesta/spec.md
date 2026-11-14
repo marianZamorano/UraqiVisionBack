@@ -8,7 +8,7 @@
 **Issue**: #27 · **Prompt SDD**: P-INGESTA-01
 **Input**: prompt P-INGESTA-01 de `sdd/m-ingesta.md`, ejecutado tal cual.
 
-> Fuente de verdad: `docs/UraqiVisionDocumentoMaestrov1.0.pdf`. Cada requisito conserva su identificador
+> Fuente de verdad: `docs/UraqiVisionDocumentoMaestrov1.1.pdf`. Cada requisito conserva su identificador
 > del documento. Lo que el documento no fija se marca como **propuesta**, y lo que depende de §29 como
 > **pendiente (DP-xx)**.
 >
