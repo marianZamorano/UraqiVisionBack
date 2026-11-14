@@ -100,6 +100,7 @@ pipeline/
 │   └── san_ignacio.yaml          # área (DP-08), periodo, hueco, órbita, colecciones
 ├── src/uraqi/ingesta/
 │   ├── config.py                 # lee y valida la configuración
+│   ├── descarga.py               # reintentos, tiempo límite y escritura atómica
 │   ├── catalogo.py               # búsqueda en CMR y metadatos de cada escena
 │   ├── serie.py                  # reglas RN-01, RN-02, CQ-02, CQ-04 y fechas excluidas
 │   ├── recorte.py                # ventana sobre la grilla y lectura desde la nube
@@ -110,12 +111,15 @@ pipeline/
 │   ├── firms.py                  # focos del periodo
 │   └── cli.py                    # comandos: listar, recortar, promediar, huellas, focos
 └── tests/ingesta/
+    ├── test_config.py            # PS-01
+    ├── test_descarga.py          # PS-01: reintentos y escritura atómica
     ├── test_serie.py             # PS-01
     ├── test_recorte.py           # PS-01: ventana sin remuestreo
     ├── test_cog.py               # PS-02: valores idénticos
     ├── test_promedio.py          # PS-01: lineal, NaN, datos válidos
     ├── test_procedencia.py       # CQ-06: ningún campo vacío
-    └── test_huellas.py           # RF-26
+    ├── test_huellas.py           # RF-26
+    └── test_firms.py             # PS-01
 ```
 
 **Structure Decision**: un solo paquete de ingesta dentro del pipeline, con un módulo por responsabilidad y
