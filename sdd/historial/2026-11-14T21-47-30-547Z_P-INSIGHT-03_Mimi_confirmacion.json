@@ -1,0 +1,10 @@
+{
+  "tipo": "confirmacion",
+  "id": "P-INSIGHT-03",
+  "decision": "ejecutar",
+  "colaborador": "Mimi",
+  "nota": "Aprobado por Mimi: comparar el contrato de Insight con la web, sin decidir DP-04 ni DP-06 (#71)",
+  "hash": "5478902dae",
+  "rama": "docs/71-contrato-insight-web",
+  "fecha": "2026-11-14T21:47:30.547Z"
+}
