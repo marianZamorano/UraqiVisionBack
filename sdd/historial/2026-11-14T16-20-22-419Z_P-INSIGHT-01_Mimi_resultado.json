@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INSIGHT-01",
+  "resultado": "hecho",
+  "colaborador": "Mimi",
+  "nota": "specs/006-insight/spec.md: RF-16..18, RN-09/10/14, RNF-06/07, PS-05; DP-04 y DP-06 pendientes.",
+  "hash": "988562327c",
+  "rama": "docs/33-especificar-insight",
+  "fecha": "2026-11-14T16:20:22.419Z"
+}
