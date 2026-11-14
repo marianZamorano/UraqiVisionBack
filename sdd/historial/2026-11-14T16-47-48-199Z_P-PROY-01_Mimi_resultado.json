@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-PROY-01",
+  "resultado": "parcial",
+  "colaborador": "Mimi",
+  "nota": "Constitución escrita en PR #26 como propuesta; pendiente de ratificación del equipo. Registro reescrito en esta rama porque el original quedó en backup/mimi-ingesta-01-local (#35).",
+  "hash": "edbfdd38c8",
+  "rama": "chore/35-estado-proy-01-parcial",
+  "fecha": "2026-11-14T16:47:48.199Z"
+}
