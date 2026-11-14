@@ -24,6 +24,35 @@ export function hooksDeGitActivos(root) {
     valor ? `core.hooksPath=${valor}` : 'core.hooksPath sin configurar → npm run hooks:activar');
 }
 
+/**
+ * Todo archivo de .githooks debe ser ejecutable: git ignora en silencio los que no lo son, así que
+ * core.hooksPath=.githooks no basta. El modo del índice viaja en el clon; en POSIX se comprueba también el disco.
+ */
+export function hooksDeGitEjecutables(root) {
+  const dir = path.join(root, '.githooks');
+  if (!fs.existsSync(dir)) return resultado('hooks-git-ejecutables', false, '.githooks no existe → npm run hooks:activar');
+  const archivos = fs.readdirSync(dir).filter((f) => fs.statSync(path.join(dir, f)).isFile() && !/^readme/i.test(f));
+  const modos = new Map();
+  try {
+    for (const linea of execFileSync('git', ['ls-files', '-s', '--', '.githooks'], { cwd: root, encoding: 'utf8' }).split('\n')) {
+      const m = /^(\d+)\s+\S+\s+\d+\t(.+)$/.exec(linea);
+      if (m) modos.set(m[2].replace(/^\.githooks\//, ''), m[1]);
+    }
+  } catch {
+    // Sin git se comprueba solo el permiso del disco.
+  }
+  const fallos = [];
+  for (const f of archivos) {
+    const modo = modos.get(f);
+    const ruta = `.githooks/${f}`;
+    const arreglo = `chmod +x ${ruta} y git update-index --chmod=+x ${ruta}`;
+    if (modo && modo !== '100755') fallos.push(`${ruta} (índice ${modo}; ${arreglo})`);
+    else if (process.platform !== 'win32' && (fs.statSync(path.join(dir, f)).mode & 0o111) === 0) fallos.push(`${ruta} (sin permiso en el disco; ${arreglo})`);
+  }
+  return resultado('hooks-git-ejecutables', !fallos.length,
+    fallos.length ? `git no ejecuta: ${fallos.join(' | ')}` : `${archivos.length} hooks de git ejecutables`);
+}
+
 /** Cada hook de .githooks llama a scripts que existen; commitlint instalado (aviso). */
 export function hooksDeGitCompletos(root) {
   const faltan = [];
@@ -232,7 +261,7 @@ export function sesionGh(root) {
  */
 export async function verificar(root, { rapido = false, ci = false, conPruebas = false } = {}) {
   const r = [];
-  if (!ci) r.push(hooksDeGitActivos(root), nodeVersion());
+  if (!ci) r.push(hooksDeGitActivos(root), hooksDeGitEjecutables(root), nodeVersion());
   r.push(...hooksDeGitCompletos(root).filter((x) => !(ci && x.id === 'commitlint')));
   r.push(hooksDeAsistentes(root), skillsActivas(root), specKitActivo(root), subagentesActivos(root));
   if (!ci) r.push(mcpAprobadosClaude(root));
