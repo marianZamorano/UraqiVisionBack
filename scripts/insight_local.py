@@ -10,8 +10,8 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
-from insight.api import responder  # noqa: E402
-from insight.contenido import Contenido  # noqa: E402
+from insight.interfaz.api import responder
+from insight.dominio.contenido import Contenido
 
 
 def main(argv):

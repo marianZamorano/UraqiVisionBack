@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from insight.adaptadores import AdaptadorClaude, ProveedorNoConfigurado
+from insight.infraestructura.adaptadores import AdaptadorClaude, ProveedorNoConfigurado
 
 RAIZ = Path(__file__).resolve().parents[2]
 PATRON_CLAVE = re.compile(r"sk-ant-[A-Za-z0-9_-]{8,}|sk-[A-Za-z0-9]{20,}")

@@ -1,6 +1,6 @@
 import pytest
 
-from insight.plantillas import INTENCIONES, plantilla
+from insight.dominio.plantillas import INTENCIONES, plantilla
 
 
 @pytest.mark.parametrize("lang", ["es", "en"])

@@ -3,9 +3,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-from insight.api import responder
-from insight.limites import Limites
-from insight.adaptadores import ProveedorNoConfigurado
+from insight.interfaz.api import responder
+from insight.dominio.limites import Limites
+from insight.infraestructura.adaptadores import ProveedorNoConfigurado
 
 RAIZ = Path(__file__).resolve().parents[2]
 ENV_COMPLETO = {"INSIGHT_MAX_PREGUNTAS_SESION": "5", "INSIGHT_MAX_CARACTERES": "200"}

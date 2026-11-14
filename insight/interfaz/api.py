@@ -1,7 +1,7 @@
 """Punto de entrada de POST /api/insight: arma el servicio con la configuración del entorno (§21.1, §21.2)."""
-from .adaptadores import AdaptadorClaude, ProveedorNoConfigurado
-from .limites import Limites, LimitesNoConfigurados
-from .servicio import Insight
+from insight.infraestructura.adaptadores import AdaptadorClaude, ProveedorNoConfigurado
+from insight.dominio.limites import Limites, LimitesNoConfigurados
+from insight.aplicacion.servicio import Insight
 
 
 class SinProveedor:

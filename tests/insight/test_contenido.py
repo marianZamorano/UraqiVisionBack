@@ -1,6 +1,6 @@
 import pytest
 
-from insight.contenido import Contenido, ContenidoInvalido
+from insight.dominio.contenido import Contenido, ContenidoInvalido
 
 
 def test_preguntas_sugeridas_entre_3_y_5_en_ambos_idiomas(contenido):

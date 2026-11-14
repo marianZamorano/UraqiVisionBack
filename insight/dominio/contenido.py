@@ -1,10 +1,7 @@
-"""Contenido publicado de la estación abierta: secciones citables y preguntas sugeridas (RN-09, RF-17).
-
-Formato propuesto del contenido (dict o JSON); el esquema definitivo de station.json lo fija M-PUBLICACIÓN.
-"""
+"""Contenido publicado de la estación abierta: secciones citables y preguntas sugeridas (RN-09, RF-17)."""
 from dataclasses import dataclass, field
 
-from .contrato import IDIOMAS
+IDIOMAS = ("es", "en")
 
 MIN_SUGERIDAS, MAX_SUGERIDAS = 3, 5
 
