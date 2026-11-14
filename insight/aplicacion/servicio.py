@@ -2,10 +2,10 @@
 import logging
 import time
 
-from .contenido import Contenido
-from .contrato import SolicitudInvalida, validar_solicitud
-from .limites import LimiteAlcanzado, LimitesNoConfigurados, PreguntaLarga
-from .plantillas import plantilla
+from insight.dominio.contenido import Contenido
+from insight.aplicacion.contrato import SolicitudInvalida, validar_solicitud
+from insight.dominio.limites import LimiteAlcanzado, LimitesNoConfigurados, PreguntaLarga
+from insight.dominio.plantillas import plantilla
 
 log = logging.getLogger("insight")
 

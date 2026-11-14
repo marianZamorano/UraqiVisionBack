@@ -1,7 +1,7 @@
 """Contrato POST /api/insight (§21.1): validación de la solicitud."""
 from dataclasses import dataclass
 
-IDIOMAS = ("es", "en")
+from insight.dominio.contenido import IDIOMAS
 
 
 class SolicitudInvalida(ValueError):
