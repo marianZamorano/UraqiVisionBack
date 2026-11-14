@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-PUBLICACION-01",
+  "resultado": "hecho",
+  "colaborador": "Mimi",
+  "nota": "specs/005-publicacion/spec.md: RF-05..09, RF-22, RF-27, §17.3 como propuesta, RNF-02/03/09, CQ-06; máximo 3 NEEDS CLARIFICATION.",
+  "hash": "ea99265b8a",
+  "rama": "docs/31-especificar-la-publicacion-de-la-estacion",
+  "fecha": "2026-11-14T16:12:00.806Z"
+}
