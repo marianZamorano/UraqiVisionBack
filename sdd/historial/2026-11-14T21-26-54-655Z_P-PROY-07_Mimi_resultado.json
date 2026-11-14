@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-PROY-07",
+  "resultado": "parcial",
+  "colaborador": "Mimi",
+  "nota": "Verificación de la base ejecutada el 14 nov 2026: 68 pruebas de Python en verde; test:guardas 103/103; codigo:revisar exit 0; sdd:validar y ai:check sin cambios; CLI rechaza BETA. Pendiente: instalación desde cero (T001, T002) y revisión de Tabata (#67).",
+  "hash": "5a28ab24fa",
+  "rama": "feat/67-esqueleto-pipeline",
+  "fecha": "2026-11-14T21:26:54.655Z"
+}
