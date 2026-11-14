@@ -11,6 +11,10 @@ RF-18; RN-09, RN-10, RN-14; RNF-06, RNF-07; PS-05).
 
 **Módulo (§19)**: M-INSIGHT · función Insight, adaptador, límites y plantillas de respaldo.
 
+> **Estado de la base.** P-PROY-01 se registró como ejecutada (constitución en `.specify/memory/constitution.md`), pero
+> la constitución es **propuesta pendiente de ratificación** por el equipo. Esta spec no se apoya en ella: la fuente
+> de los requisitos es solo el documento maestro.
+
 ## Contexto y límites
 
 Insight es un **lector de radar**: ayuda a interpretar lo que el usuario tiene en pantalla. No calcula resultados,
@@ -156,9 +160,14 @@ contiene la clave.
 | DP-04 | Límites de uso: preguntas por sesión y caracteres por pregunta | Mimi (sábado) | Valores de FR-009 y de SC-005 |
 | DP-06 | Hospedaje final: GitHub Pages o Vercel | Mimi (sábado) | Dónde se despliega la función serverless |
 
+**Nota sobre DP-06.** §18 nombra Vercel como alojamiento de la función serverless de Insight. Eso no es una decisión
+tomada: DP-06 sigue abierta. Que GitHub Pages no pueda alojar una función serverless es una **hipótesis técnica a
+verificar** antes de decidir, no un hecho. Esta spec no asume ninguna de las dos opciones.
+
 ## Aclaraciones pendientes (para P-INSIGHT-02)
 
-- Cómo se identifica a un usuario para los límites sin cuentas (§8.2 excluye cuentas).
+- Cómo se aplican los límites por usuario sin cuentas. Restricción: el mecanismo **no** puede exigir cuentas, base de
+  datos ni colas (§8.2). Si la respuesta exige estado persistente, se lleva al equipo como conflicto con §8.2.
 - Qué secciones se pueden citar.
 - Qué hace la función si la pregunta es sobre otra estación.
 - Cómo se eligen las plantillas de respaldo.
