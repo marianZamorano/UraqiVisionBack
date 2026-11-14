@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-PUBLICACION-05",
+  "resultado": "hecho",
+  "colaborador": "Mimi",
+  "nota": "Análisis aprobado por Mimi con la instrucción «ya termina el plan y empieza con el código» (14 nov 2026). Bloqueos abiertos: D2 (web), D3 (acuerdo con la web), D6 (M-INGESTA). (#55)",
+  "hash": "d34fed5060",
+  "rama": "feat/67-esqueleto-pipeline",
+  "fecha": "2026-11-14T21:24:05.023Z"
+}
