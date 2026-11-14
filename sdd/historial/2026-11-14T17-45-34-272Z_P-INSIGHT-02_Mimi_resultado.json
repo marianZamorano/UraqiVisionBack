@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INSIGHT-02",
+  "resultado": "hecho",
+  "colaborador": "Mimi",
+  "nota": "Aclaradas las cinco preguntas: sesión del navegador, secciones citables, declinar otra estación, plantillas por idioma e intención, logs solo metadatos.",
+  "hash": "1832d4dff4",
+  "rama": "feat/39-insight-nucleo",
+  "fecha": "2026-11-14T17:45:34.272Z"
+}
