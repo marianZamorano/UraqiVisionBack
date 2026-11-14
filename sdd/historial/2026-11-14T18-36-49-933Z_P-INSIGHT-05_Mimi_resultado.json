@@ -1,0 +1,10 @@
+{
+  "tipo": "resultado",
+  "id": "P-INSIGHT-05",
+  "resultado": "hecho",
+  "colaborador": "Mimi",
+  "nota": "Análisis aprobado por Mimi («apruebo», 14 nov 2026). Las discrepancias D3, D5, D6 y D7 siguen abiertas: P-INSIGHT-06 se mantiene como parcial hasta resolverlas (#46).",
+  "hash": "3327a145cc",
+  "rama": "chore/46-aprobar-insight-05",
+  "fecha": "2026-11-14T18:36:49.933Z"
+}
