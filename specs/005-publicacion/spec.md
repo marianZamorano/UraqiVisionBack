@@ -145,14 +145,31 @@ tiene cada texto en `es` y `en`.
 - **SC-005**: Ninguna cifra de hectáreas se publica sin rango; ninguna métrica ausente aparece como cero (RN-06,
   RN-13).
 
-## Aclaraciones pendientes (máximo 3)
+## Clarifications (P-PUBLICACION-02)
+
+Preguntas de aclaración, con su estado. Solo se registran opciones y recomendación; no se cambia el contrato de
+§17.3 sin acordarlo con la web (§28).
+
+| # | Pregunta | Estado | Base y recomendación |
+|---|---|---|---|
+| C1 | ¿Cómo se escalan las vistas a 8 bits sin que se usen para calcular? | **Resuelta por el documento** | §22: las vistas son PNG/WebP de 8 bits solo para el mapa; los cálculos usan los COG en float32. |
+| C2 | ¿Cómo se declara una fecha sin HV? | **Resuelta por el documento** | RF-08 y CQ-04: HV y el cociente se deshabilitan con explicación. Recomendación a validar: registrar el motivo en `quality.json`. |
+| C3 | ¿Cómo se expresan los límites geográficos de cada vista? | **Pendiente de acordar con la web** | §17.3 pide los límites, no su formato. Opciones: bbox en `station.json` o en cada vista. Recomendación: bbox en EPSG:4326 por vista, a acordar con M-MAPA. |
+| C4 | ¿Dónde van los focos de calor del periodo? | **Pendiente de acordar con la web** | §17.3 no tiene archivo de focos; añadirlo cambia el formato. Recomendación: no añadir archivo; los focos van en `validation.json` (contexto), a acordar con M-VALIDACIÓN. |
+| C5 | ¿Cómo se versiona la carpeta publicada? | **Pendiente de acordar con la web** | El documento no lo define. Recomendación: campo de versión en `manifest.json` y `station.json`, a acordar con M-ATLAS y M-INTERFAZ. |
+
+Ninguna pregunta C3 a C5 se implementa hasta acordarla con la web.
+
+## Aclaraciones pendientes del equipo (máximo 3)
 
 - [NEEDS CLARIFICATION: fuente, fecha y versión de los límites departamentales de `atlas/departments.geojson`.
   El documento no las fija. Decide el equipo (responsable de M-ATLAS, en la web).]
-- [NEEDS CLARIFICATION: cómo se representa una zona sin dato en las vistas WebP (trama en la imagen o
-  transparencia). RF-05 pide trama explicada en la leyenda; el formato lo decide el equipo con la web.]
-- [NEEDS CLARIFICATION: quién redacta el relato local y las preguntas sugeridas de `station.json` en ambos idiomas
-  (§25 no lo asigna). Cualquier texto con cifras necesita fuente y fecha de consulta.]
+- [NEEDS CLARIFICATION: quién redacta el relato local y las preguntas sugeridas de `station.json` en ambos idiomas.
+  §25 no lo asigna; RF-13 solo dice «texto breve del equipo». Cualquier texto con cifras necesita fuente y fecha de
+  consulta.]
+
+**Cerrada**: la representación de zonas sin dato. §20.2 fija trama gris con explicación en la leyenda para las
+visualizaciones 2D, y RF-27 pide zonas sin dato transparentes solo en el globo. La vista WebP sigue §20.2 (trama).
 
 ## Assumptions
 
