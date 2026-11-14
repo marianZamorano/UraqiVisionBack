@@ -190,3 +190,23 @@ verificar** antes de decidir, no un hecho. Esta spec no asume ninguna de las dos
   RF-19): fundamentos del radar para las explicaciones de Insight y el glosario.
 
 Las fuentes se citan en APA 7 donde se implementen; esta spec no añade otras.
+
+## Clarifications (P-INSIGHT-02)
+
+Respuestas a las cinco preguntas de aclaración, con la opción recomendada:
+
+1. **Límites sin cuentas ni base de datos (§8.2).** Por sesión del navegador: el navegador envía un identificador
+   anónimo de sesión y el servidor cuenta en memoria. Sin estado persistente. El valor del límite sigue siendo
+   DP-04.
+2. **Secciones citables.** Solo las secciones de `station.json`, del método y del glosario que existan en el
+   contenido publicado (RN-09). Una cita que no existe se descarta.
+3. **Otra estación.** Insight declina y explica que solo responde sobre la estación abierta (RN-10). No busca la
+   otra estación.
+4. **Plantillas de respaldo.** Por idioma e intención (general, fuera de alcance, causa, otra estación). Ningún texto
+   generado; RF-18 exige que nunca se vea un error técnico.
+5. **Logs.** Solo metadatos: estación, idioma, longitud, fuente (`ia` o `plantilla`), código de estado y latencia.
+   Nunca el texto de la pregunta ni la clave (RNF-06).
+
+Consecuencias para la implementación: las preguntas sobre causas se declinan sin llamar al proveedor (RN-14); los
+daños y los pronósticos también (RN-10). Los límites no tienen valores por defecto: sin configurar, la función
+responde 503 y no llama al proveedor.

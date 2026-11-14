@@ -1,0 +1,10 @@
+{
+  "tipo": "confirmacion",
+  "id": "P-INSIGHT-02",
+  "decision": "ejecutar",
+  "colaborador": "Mimi",
+  "nota": "",
+  "hash": "1832d4dff4",
+  "rama": "feat/39-insight-nucleo",
+  "fecha": "2026-11-14T17:45:34.146Z"
+}
