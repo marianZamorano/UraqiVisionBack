@@ -16,6 +16,31 @@
 > `docs/25-constitucion-del-backend` (P-PROY-01, Mimi), todavía sin fusionar en `dev` ni ratificar. Si la
 > constitución cambia al aprobarse, esta spec se revisa.
 
+## Clarifications
+
+### Session 2026-11-14
+
+- Q: ¿Qué órbita y dirección usa la serie de San Ignacio? → A: La órbita 060 ascendente. Según el listado
+  del catálogo de la prueba de Alex (14 nov 2026, por reproducir en el pipeline), es la única con cobertura
+  amplia del área (92–100 %) y fechas suficientes con HH y HV (9); la 161 ascendente cubre cerca del 10 % y
+  las 039 y 140 descendentes tienen 3 o 4 fechas con HV. La línea base se acuerda con Tabata (MC-02), porque
+  tres de las cuatro fechas anteriores al hueco llegan anómalas o vacías. Si DP-08 mueve el área, se revisa.
+- Q: ¿Quién hace el promedio a unos 60 m de MC-01? → A: La ingesta entrega las dos cosas: los recortes en
+  resolución original y la pila promediada a unos 60 m en potencia lineal, con su máscara de datos válidos
+  (§19, §12). M-CIENCIA empieza en MC-02. **Pendiente de la confirmación de Tabata**, porque §25 se lo agenda
+  a ella; debe cerrarse antes de P-INGESTA-04.
+- Q: Si el área cae en dos frames de la misma pasada, en zonas UTM distintas, ¿qué se entrega por fecha? →
+  A: Un archivo por frame, cada uno en su grilla original y sin unir. La serie de análisis usa el frame que
+  cubre la mayor parte del área; el otro se entrega aparte, identificado. No se remuestrea (§22, RN-01).
+- Q: ¿Qué suma de verificación va al manifiesto? → A: Las dos: la del gránulo original tal como la publica el
+  catálogo, que identifica el archivo usado sin descargarlo entero (§22, CQ-06), y la de cada recorte
+  guardado, que permite comprobar que repetir la ingesta da lo mismo (RNF-08). Si el catálogo no publica la
+  suma de un gránulo, figura como «no reportada», con su motivo (RN-13).
+- Q: ¿Qué hace la ingesta ante una descarga lenta o colgada (§24)? → A: Cada escena tiene un tiempo límite y
+  un número fijo de reintentos con esperas crecientes. Si aun así falla, queda registrada como no obtenida,
+  con su motivo, y la ingesta sigue con las demás; al relanzarla solo se obtiene lo que falta. El tiempo
+  límite y el número de reintentos se fijan en el plan.
+
 ## Contexto verificado
 
 Hechos del documento maestro (consulta al catálogo CMR del 12 de noviembre de 2026, §10.1 y §10.2):
@@ -156,6 +181,8 @@ PROVISIONAL.
   polarizaciones, madurez y CRID.
 - **FR-002 (RN-02)**: El sistema MUST NOT usar productos BETA. La serie principal MUST tener una sola madurez
   y un solo CRID; PROVISIONAL y VALIDATED MUST quedar como tramos separados y nunca mezclarse.
+- **FR-002a (RN-01, §10.2)**: La serie de San Ignacio MUST usar la órbita 060 ascendente. La órbita MUST poder
+  cambiarse sin modificar el código, por si DP-08 mueve el área.
 - **FR-003 (RN-01, CQ-02)**: Una serie MUST contener solo escenas de la misma órbita y dirección, y MUST
   registrar la separación entre sus fechas.
 - **FR-004 (CQ-04)**: El sistema MUST registrar qué polarizaciones tiene cada fecha. Una fecha sin HV MUST NOT
@@ -169,28 +196,31 @@ PROVISIONAL.
 - **FR-007 (§12, §22, RNF-09)**: Cada fecha MUST guardarse en potencia lineal, en coma flotante de 32 bits y
   con compresión sin pérdida, con valores idénticos a los del original. La conversión a dB no es parte de la
   ingesta.
-- **FR-008 (§22, RN-01)**: El recorte MUST conservar la grilla del producto, sin remuestreo.
-  [NEEDS CLARIFICATION: si el área cae en dos frames de la misma pasada y cada uno viene en una zona UTM
-  distinta, ¿la ingesta entrega un archivo por frame o una sola grilla por fecha? Unirlos exige remuestrear
-  uno de los dos.]
+- **FR-008 (§22, RN-01)**: El recorte MUST conservar la grilla del producto, sin remuestreo. Si el área cae en
+  más de un frame de la misma pasada, el sistema MUST entregar un archivo por frame, cada uno en su grilla
+  original y sin unirlos. La serie de análisis MUST usar el frame que cubre la mayor parte del área; los
+  demás se entregan aparte, identificados con su frame.
 - **FR-009 (RN-13)**: La ausencia de dato MUST distinguirse de un valor medido y MUST NOT guardarse como cero.
 - **FR-010 (MC-01, DP-03)**: El sistema MUST entregar junto a cada fecha la máscara del producto, sin
   interpretarla. Qué significa cada valor de la máscara está **pendiente (DP-03)**.
-- **FR-011 (MC-01)**: La serie para el análisis se promedia en potencia lineal hasta unos 60 m.
-  [NEEDS CLARIFICATION: §19 asigna MC-01 a M-INGESTA y §25 agenda «MC-01 y MC-02» para Tabata. ¿El promedio a
-  unos 60 m lo entrega la ingesta o lo hace M-CIENCIA a partir de los recortes en resolución original?]
+- **FR-011 (MC-01, §12, §19)**: Además de los recortes en resolución original, el sistema MUST entregar la
+  pila de la serie promediada en potencia lineal hasta unos 60 m, con su máscara de datos válidos. El promedio
+  MUST calcularse en potencia lineal, nunca en dB. **Pendiente de la confirmación de Tabata** (§25 le agenda
+  MC-01); se cierra antes de las tareas.
 - **FR-012 (DP-08)**: El área de recorte MUST poder cambiarse sin modificar el código. Su valor (unos
   50 × 50 km, a fijar con los focos FIRMS de agosto en adelante) está **pendiente (DP-08)**.
 
 **Procedencia**
 
 - **FR-013 (CQ-06, §17.3, §22)**: El sistema MUST registrar, para cada gránulo usado, su nombre, fecha,
-  órbita, CRID y suma de verificación, además de la versión del pipeline.
-  [NEEDS CLARIFICATION: ¿la suma de verificación es la del gránulo original según el catálogo, la del recorte
-  guardado, o ambas? §22 la pide para poder volver a descargar el mismo dato y los originales no se guardan.]
+  órbita, CRID y suma de verificación, además de la versión del pipeline. La suma del gránulo MUST ser la que
+  publica el catálogo; si el catálogo no la publica, MUST figurar como «no reportada», con su motivo (RN-13).
+- **FR-013a (RNF-08)**: El sistema MUST registrar también la suma de verificación de cada recorte guardado.
 - **FR-014 (RNF-08)**: Repetir la ingesta a partir del manifiesto MUST producir los mismos archivos.
-- **FR-015 (propuesta)**: Una ingesta interrumpida MUST poder reanudarse sin repetir lo ya obtenido y sin
-  dejar archivos incompletos dados por válidos.
+- **FR-015 (§24)**: Cada escena MUST tener un tiempo límite y un número fijo de reintentos con esperas
+  crecientes. Una escena que aun así falla MUST quedar registrada como no obtenida, con su motivo, sin detener
+  las demás. Una ingesta relanzada MUST obtener solo lo que falta y MUST NOT dar por válido un archivo
+  incompleto.
 
 **Huellas, focos y tramo VALIDATED**
 
@@ -247,8 +277,8 @@ PROVISIONAL.
   Tabata; no forman parte de esta spec.
 - Excluir una fecha por radiometría o por datos válidos es una decisión de los controles de calidad (CQ-03,
   CQ-05) de M-VALIDACIÓN; la ingesta entrega y anota.
-- La elección de la órbita de la serie depende de qué fechas resulten utilizables antes y después del hueco;
-  se acuerda con Tabata en las aclaraciones, porque condiciona la línea base (MC-02).
+- Qué fechas de la órbita 060 ascendente forman la línea base se acuerda con Tabata (MC-02): la ingesta
+  entrega todas las fechas y anota las observaciones de cada una.
 - El código de la prueba de recorte de Alex existe fuera del repositorio; se incorpora en la fase de
   implementación (P-INGESTA-06), no antes.
 - Fuera de alcance: procesamiento a pedido de un área dibujada por el usuario (§8.2).

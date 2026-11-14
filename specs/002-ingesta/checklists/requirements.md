@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain
+- [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic (no implementation details)
@@ -31,11 +31,9 @@
 
 ## Notes
 
-- Quedan 3 marcadores [NEEDS CLARIFICATION], que se resuelven en P-INGESTA-02 (`speckit-clarify`):
-  - FR-008: un archivo por frame o una sola grilla por fecha cuando el área cae en dos frames.
-  - FR-011: quién hace el promedio a unos 60 m de MC-01 (discrepancia entre §19 y §25).
-  - FR-013: qué suma de verificación registra el manifiesto.
-- Los dos primeros necesitan el acuerdo de Tabata (M-CIENCIA y revisora de M-INGESTA).
+- Los 3 marcadores [NEEDS CLARIFICATION] se resolvieron en P-INGESTA-02 (sección Clarifications, 2026-11-14).
+- FR-011 (promedio a unos 60 m) queda decidido por Alex y **pendiente de la confirmación de Tabata** antes de
+  P-INGESTA-04.
 - DP-08 (área de recorte) y DP-03 (valores de la máscara) siguen pendientes y no se deciden aquí.
 - El término «frame» y las siglas del producto (GCOV, CRID, HH, HV) se conservan porque son los del
   documento maestro (§10.1, §30).
