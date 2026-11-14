@@ -18,7 +18,7 @@ const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: '
 const { modulos, repoModulos } = cargarEquipo(root);
 
 if (!modulos.length) {
-  console.error('No se pudo leer §19 del documento maestro (docs/UraqiVisionDocumentoMaestrov1.0.txt). Regenera la copia: uv run --with pypdf python ai/scripts/extraer_documento.py');
+  console.error('No se pudo leer §19 del documento maestro (docs/UraqiVisionDocumentoMaestrov1.1.txt). Regenera la copia: uv run --with pypdf python ai/scripts/extraer_documento.py');
   process.exit(1);
 }
 
