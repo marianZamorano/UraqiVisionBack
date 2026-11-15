@@ -36,6 +36,9 @@ sentinel2:
   ventanas:
     antes: ["2026-06-17", "2026-07-26"]
     despues: ["2026-09-15", "2026-10-23"]
+    # VC-01: pares ópticos que encierran el periodo de detección del radar (29 ago → 16 oct)
+    antes_radar: ["2026-08-18", "2026-09-04"]
+    despues_radar: ["2026-10-10", "2026-10-28"]
 
 firms:
   inicio: "2026-06-17"

@@ -1,7 +1,15 @@
-norte_san_ignacio|NorteSanIgnacio|Norte de San Ignacio de Velasco: celda con 2404 focos FIRMS desde el 11 ago 2026 (candidata DP-08)|-61.10|-15.98|-60.63|-15.51|60|A
 chiquitania_oeste|ChiquitaniaOeste|Oeste de la Chiquitania: celda con 2653 focos desde el 11 ago 2026; prueba de la orbita 161A|-62.04|-15.98|-61.57|-15.51|161|A
 beni_norte|BeniNorte|Norte del Beni: celda con 2096 focos desde el 11 ago 2026; prueba de la orbita 089A|-65.80|-12.22|-65.33|-11.75|89|A
 santa_cruz_norte|SantaCruzNorte|Norte de Santa Cruz: celda con 1627 focos desde el 11 ago 2026; prueba de la orbita 068D|-63.92|-15.98|-63.45|-15.51|68|D
 chapare|Chapare|Tropico de Cochabamba (Villa Tunari, aprox.): referencia de agua en epoca seca para inundaciones|-65.66|-17.21|-65.19|-16.74||
 alto_beni_tipuani|AltoBeniTipuani|Tipuani y Alto Beni, La Paz (aprox.): referencia de agua en epoca seca para inundaciones|-68.24|-15.79|-67.77|-15.32||
 moxos|Moxos|Llanos de Moxos cerca de Trinidad, Beni (aprox.): referencia de humedales en epoca seca|-65.14|-15.07|-64.67|-14.60||
+chiquitania_oeste_sur|ChiquitaniaOesteSur|Santa Cruz: sur de la Chiquitania oeste, celda con 2379 focos desde el 11 ago 2026 (orbita 161A)|-62.04|-16.45|-61.57|-15.98|161|A
+beni_sur|BeniSur|Beni: al sur de Beni norte, celda con 1773 focos desde el 11 ago 2026 (orbita 089A)|-65.80|-12.69|-65.33|-12.22|89|A
+beni_centro|BeniCentro|Beni: celda con 1300 focos desde el 11 ago 2026 (orbita 089A)|-64.39|-15.51|-63.92|-15.04|89|A
+beni_este|BeniEste|Beni: celda con 1186 focos desde el 11 ago 2026 (orbita 089A)|-64.86|-14.10|-64.39|-13.63|89|A
+beni_noreste|BeniNoreste|Beni: celda con 1201 focos desde el 11 ago 2026 (orbita 161A)|-63.45|-13.16|-62.98|-12.69|161|A
+pando|Pando|Pando: celda con 966 focos desde el 11 ago 2026, casi todos posteriores al hueco (orbita 017A, sin probar)|-68.15|-11.28|-67.68|-10.81|17|A
+la_paz_amazonia|LaPazAmazonia|La Paz: Amazonia de La Paz, celda con 1260 focos desde el 11 ago 2026 (orbita 017A, sin probar)|-67.68|-13.16|-67.21|-12.69|17|A
+oruro_poopo|OruroPoopo|Oruro: lago Poopo, desecamiento en epoca seca (mapa de agua; aprox.)|-67.30|-18.98|-66.83|-18.52||
+dp08_san_ignacio|SanIgnacioDP08|San Ignacio de Velasco: recorte DP-08, caja de ~50 km con más focos FIRMS desde el 11 ago 2026 a menos de 60 km del pueblo, en un solo frame|-61.045|-16.153|-60.575|-15.693|60|A

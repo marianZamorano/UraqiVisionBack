@@ -1,12 +1,12 @@
 # Zona de análisis del MVP (decisión DP-08: puede cambiar; todo script la lee de aquí).
-nombre: NorteSanIgnacio
-descripcion: "Norte de San Ignacio de Velasco: celda con 2404 focos FIRMS desde el 11 ago 2026 (candidata DP-08)"
+nombre: SanIgnacioDP08
+descripcion: "San Ignacio de Velasco: recorte DP-08, caja de ~50 km con más focos FIRMS desde el 11 ago 2026 a menos de 60 km del pueblo, en un solo frame"
 crs: EPSG:4326
 caja:            # lon/lat
-  oeste: -61.10
-  sur: -15.98
-  este: -60.63
-  norte: -15.51
+  oeste: -61.045
+  sur: -16.153
+  este: -60.575
+  norte: -15.693
 
 periodo:
   inicio: "2026-06-17"       # primer dato NISAR
@@ -36,6 +36,9 @@ sentinel2:
   ventanas:
     antes: ["2026-06-17", "2026-07-26"]
     despues: ["2026-09-15", "2026-10-23"]
+    # VC-01: pares ópticos que encierran el periodo de detección del radar (29 ago → 16 oct)
+    antes_radar: ["2026-08-18", "2026-09-04"]
+    despues_radar: ["2026-10-10", "2026-10-28"]
 
 firms:
   inicio: "2026-06-17"
@@ -43,3 +46,10 @@ firms:
   sensores: [VIIRS_SNPP, VIIRS_NOAA20, MODIS]
 
 limite_gb: 5      # si data/ fuera a pasar de esto, los scripts se detienen
+
+estacion:        # textos de la estación publicada (08_publicar_borrador.py)
+  id: sanignacio
+  nombre: {es: "San Ignacio de Velasco", en: "San Ignacio de Velasco"}
+  criterio:
+    es: "DP-08 (14 nov 2026): caja de ~50 km a 52 km al norte del pueblo, la que más focos FIRMS tiene desde el 11 ago 2026 entre las que están a menos de 60 km del pueblo y caben en un solo frame del radar (§11)"
+    en: "DP-08 (14 Nov 2026): ~50 km box 52 km north of the town, the one with the most FIRMS hotspots since 11 Aug 2026 among those within 60 km of the town that fit in a single radar frame (§11)"

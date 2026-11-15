@@ -14,6 +14,81 @@ Rutas relativas a `~/projects/hackathon/`.
 versionan (`pipeline_beta/.gitignore`); el cuaderno va sin salidas. Para reconstruir: `cp .env.example .env`
 (credenciales Earthdata y FIRMS), `make build`, scripts 00–07, y `08_publicar_borrador.py`.
 
+## 0. Decisiones del 14 nov 2026 y estado actual
+
+Tabata (M-CIENCIA) acordó, por medio de Alex, que se decidieran los puntos abiertos. Quedan registradas en cada
+`station.json → decisiones` y en `08_publicar_borrador.py → DECISIONES`.
+
+| Punto | Decisión |
+|---|---|
+| **DP-08** recorte | Caja de ~50 km centrada en (−60,81, −15,92), 52 km al norte del pueblo: la que más focos FIRMS tiene desde el 11 ago (2.576) entre las que están a menos de 60 km del pueblo y caben en un solo frame (060A f170). Zona `zonas/dp08_san_ignacio`, publicada como `sanignacio`. La caja anterior, centrada en el pueblo, quedó archivada en `nasa/publicado_archivo/` |
+| **DP-05** zonas de control | 6 bloques de ~1 km por estación: mediana de HV a ±1,5 dB de la que tenía lo que después cayó, sin focos a menos de 2 km, dNBR < 0,27, a más de 1 km de parches y del borde, textura ≤ p75 (descarta parcelas), 5 km entre zonas. Restan la deriva estacional (MC-05) |
+| **MC-03** umbrales | Los menos exigentes que dejan marcado como máximo el 2 / 1 / 0,5 % de la superficie donde Sentinel-2 no ve cambio (sensible / central / estricto). Un primer intento con percentiles de las zonas de control marcaba el 16 % de lo que no cambió y se descartó |
+| **MC-02** línea base | 2 fechas (17 y 29 ago), desviación declarada: en la órbita 060A no hay 3 fechas sanas antes del evento |
+| **VC-01** | Par Sentinel-2 que encierra al radar: 26 ago → 13 oct (San Ignacio) y 26 ago → 20 oct (Chiquitanía este) |
+| **CQ-06** | MD5 y tamaño de cada gránulo original desde NASA CMR (`data/meta/cmr_checksums.json`) |
+| **Estado** | `publicada_con_limites` (el endpoint la sirve como REAL) solo si hay zonas de control, umbrales calibrados, CQ-06 completo y par óptico que encierra al radar; si no, `borrador_exploratorio` (DEMO). C1 sigue pendiente de confirmar con Mimi |
+
+| | San Ignacio (DP-08) | Chiquitanía este |
+|---|---|---|
+| Umbrales (sensible / central / estricto) | −2,9 / −3,8 / −4,5 dB | −4,0 / −4,9 / −5,6 dB |
+| Caída sostenida de HV al 16 oct | 982 ha (526–1.729) | 333 ha (138–922) |
+| Marcado en quema severa / sin cambio óptico | 60 % / 1,9 % | 54 % / 1,9 % |
+| Dice frente a dNBR > 0,27 | 0,36 | 0,39 |
+| Focos del periodo en o junto a un parche | 600 de 1.258 | 717 de 1.404 |
+
+Límites que siguen declarados en la web: línea base de 2 fechas; lo quemado antes del 17 ago no se ve; producto
+PROVISIONAL; el óptico incluye la caída de hojas; falta la revisión visual (VC-05).
+
+### Estaciones al 15 nov 2026
+
+| Estación (`id`) | Departamento | Órbita | Línea base | Caída sostenida de HV (última fecha) | Tramo VALIDATED | Estado |
+|---|---|---|---|---|---|---|
+| `sanignacio` (DP-08) | Santa Cruz | 060A | 2 fechas | 982 ha (526–1.729) al 16 oct | 28 oct | `publicada_con_limites` |
+| `chiquitaniaeste` | Santa Cruz | 060A | 2 fechas | 333 ha (138–922) al 16 oct | 28 oct | `publicada_con_limites` |
+| `chiquitania-oeste` | Santa Cruz | 161A | 3 fechas (cumple MC-02) | 4.432 ha (2.065–8.660) al 11 oct | 23 oct | `publicada_con_limites` |
+| `beni-norte` | Beni | 089A | 4 fechas (cumple MC-02) | 21.406 ha (15.177–29.465) al 18 oct | 30 oct | `publicada_con_limites` |
+| `alto-beni` | La Paz | 118A | 3 fechas | 435 ha (267–786) al 20 oct | 1 nov | `borrador_exploratorio` (1 sola zona de control) |
+
+**Tramo VALIDATED (RN-02):** `08` publica las fechas VALIDATED de la misma órbita y frame como vistas aparte
+(`views/val_AAAAMMDD_{hv,hh,ratio}.webp`, con `coleccion: "validated"`, su CRID y **sus propias esquinas**, porque la
+grilla puede diferir) y las lista en `station.json → tramo_validated`. Nunca entran a la línea base, al cambio ni a
+las hectáreas; la web las muestra en un bloque propio.
+
+### Calidad por órbita (control de valores y de posición, 14 nov)
+
+| Zona | Órbita | Fechas sanas antes del hueco | Después | Uso |
+|---|---|---|---|---|
+| San Ignacio (DP-08), Chiquitanía este | 060A | 0 | 5 | Publicadas con línea base de 2 fechas |
+| Chiquitanía oeste | 161A | 3 | 5 | Estación: cumple MC-02 |
+| Beni norte | 089A | 4 | 6 | Estación: cumple MC-02 |
+| Chapare, Moxos | 089A | 4 | 6 | Mapa de agua de época seca |
+| Alto Beni / Tipuani | 118A | 3 | 6 | Mapa de agua de época seca |
+| Norte de Santa Cruz | 068D | 2 | 3 (la mitad de las fechas en otra grilla) | **Descartada** como estación |
+
+Los datos dañados antes del hueco son un problema de la órbita 060A, no de NISAR en general. `norte_san_ignacio` se
+borró: la reemplaza la caja de DP-08.
+
+### Mapas de agua de época seca (`10_mapa_agua.py`, exploratorio, fuera del MVP)
+
+Referencia para medir inundaciones cuando se publiquen las escenas de lluvias. Agua abierta = HH y HV muy oscuros;
+frecuencia de agua en las fechas sanas (≥ 0,8 permanente; 0,2–0,8 ocasional); doble rebote fuerte solo como contexto
+(puede ser bosque inundado o techos). En las tres zonas el umbral de Otsu cayó en el tope (−14 dB): el histograma no
+separa limpio agua y tierra, así que manda el límite físico; revisar con imágenes ópticas antes de usarlo.
+
+| Zona | Agua permanente | Salida |
+|---|---|---|
+| Moxos | ~9.970 ha (meandros, lagos en herradura, lagunas) | `zonas/moxos/publicado/moxos_agua/` |
+| Alto Beni / Tipuani | ~590 ha | `zonas/alto_beni_tipuani/publicado/altobenitipuani_agua/` |
+| Chapare | ~550 ha (río principal) | `zonas/chapare/publicado/chapare_agua/` |
+
+### Avisos (`09_enviar_avisos.py`, RF-40, Futuro)
+
+Integrado con el servidor de alertas del equipo (`server/`, fuera de git): `POST /notificar` con `tipo: "AVISO"`,
+`categoria: "PERDIDA_VEGETACION"` y los datos de la detección; nunca `ALERTA` de emergencia (RN-10), porque el dato de
+NISAR llega días o semanas después. Probado de punta a punta en local. `zonas/actualizar_y_avisar.sh` lo corre para
+todas las estaciones; no está programado en el sistema.
+
 ## 1. Mapa de carpetas
 
 | Ruta | Qué es |
@@ -59,13 +134,19 @@ NISAR con HH+HV. Todas con 0 fallos de descarga.
 |---|---|---|---|---|---|
 | `nasa/` (San Ignacio) | −61,20 −16,60 −60,72 −16,14 | Estación original | 060A f169 | 5 buenas (17 ago–16 oct); **las 4 previas al hueco, inservibles** | **Publicada** |
 | `chiquitania_este` | −59,69 −17,86 −59,22 −17,39 | Celda con más focos de Bolivia (5.100) | 060A f169 | 5 buenas; las 4 previas, inservibles; +1 VALIDATED (28 oct) | **Publicada** |
-| `norte_san_ignacio` | −61,10 −15,98 −60,63 −15,51 | Candidata DP-08 dentro del municipio (2.404 focos) | 060A f170 | 6 pasan valores (30 jun incluido); 3 previas malas | Descargada |
-| `chiquitania_oeste` | −62,04 −15,98 −61,57 −15,51 | Probar la órbita 161A | 161A f170 | **8 de 8 pasan valores, incluidas 3 previas al hueco** | Descargada |
-| `beni_norte` | −65,80 −12,22 −65,33 −11,75 | Probar la órbita 089A | 089A f172 | **10 de 10 pasan valores, incluidas 4 previas** | Descargada |
+| `dp08_san_ignacio` | −61,045 −16,153 −60,575 −15,693 | Caja DP-08 (2.576 focos) | 060A f170 | 5 buenas; las previas, inservibles; +1 VALIDATED (28 oct) | **Publicada** (`sanignacio`) |
+| `chiquitania_oeste` | −62,04 −15,98 −61,57 −15,51 | Probar la órbita 161A | 161A f170 | **8 de 8 pasan valores, incluidas 3 previas al hueco** | **Publicada** |
+| `beni_norte` | −65,80 −12,22 −65,33 −11,75 | Probar la órbita 089A | 089A f172 | **10 de 10 pasan valores, incluidas 4 previas** | **Publicada** |
 | `santa_cruz_norte` | −63,92 −15,98 −63,45 −15,51 | Probar la órbita 068D | 068D f096 | Mezcla; varias fechas con <50 % de cobertura | Descargada |
 | `chapare` | −65,66 −17,21 −65,19 −16,74 | «Antes» para inundaciones | 089A f169 | **10 de 10 pasan valores** (época seca) | Descargada |
-| `alto_beni_tipuani` | −68,24 −15,79 −67,77 −15,32 | «Antes» para inundaciones | 118A f170 | **9 de 9 pasan valores** (época seca) | Descargada |
-| `moxos` | −65,14 −15,07 −64,67 −14,60 | Humedales en época seca | 089A | En curso al escribir esto | Descargando |
+| `alto_beni_tipuani` | −68,24 −15,79 −67,77 −15,32 | «Antes» para inundaciones y estación de La Paz | 118A f170 | **9 de 9 pasan valores** (época seca) | Mapa de agua + estación en borrador (`alto-beni`) |
+| `moxos` | −65,14 −15,07 −64,67 −14,60 | Humedales en época seca | 089A | Pasan valores | Mapa de agua |
+
+**Zonas nuevas en descarga (15 nov, `zonas/cola.txt`):** `chiquitania_oeste_sur` (161A), `beni_sur`, `beni_centro`,
+`beni_este` (089A), `beni_noreste` (161A), `pando` y `la_paz_amazonia` (017A, calidad sin probar) y `oruro_poopo`
+(solo mapa de agua). Al terminar cada una: control de posición, sección `estacion:` y par Sentinel-2 que encierre
+al radar en su `config/aoi.yaml`, y correr `04` y `08` (`10` en Poopó). `norte_san_ignacio` se borró (la reemplaza
+DP-08).
 
 «Pasan valores» = control de `07_verificar` (mediana en rango físico, cobertura). **Falta el control de posición**
 (ver §3.1) en las zonas nuevas antes de darlas por buenas. En las zonas con dos frames, el que aparece con
@@ -111,11 +192,12 @@ escribe `publicado/<id>/`. Método (exploratorio):
 | `hectares.csv` | fecha, hectáreas, rango inferior y superior, confirmada (sí/no), fuente, método |
 | `validation.json` | `validacion_limitada: true` con motivo; VC-01 (precisión, exhaustividad, Dice) y VC-02 (focos) |
 | `quality.json` | CQ-01 a CQ-06 con resultado; fechas excluidas con motivo; deriva por fecha |
-| `footprints.geojson` | Huellas de las escenas de la serie |
+| `footprints.geojson` | Huellas de las escenas de la serie (órbita, dirección, frame, fecha, polarización y uso en la serie: RF-26) |
+| `views/val_*.webp` + `station.json → tramo_validated` | Tramo VALIDATED aparte, con sus propias esquinas (RN-02) |
 | `fires.geojson` | Focos FIRMS de la caja (**no está en §17.3**: propuesta) |
 | `atlas/departments.geojson` | Límites departamentales con fuente y licencia |
 
-**Resultados del borrador (no publicables):**
+**Resultados del primer borrador (13 nov, caja anterior y umbrales fijos; solo historial, los vigentes están en §0):**
 
 | | San Ignacio | Chiquitanía este |
 |---|---|---|
@@ -141,10 +223,12 @@ Servidor HTTP de desarrollo, solo biblioteca estándar, en `127.0.0.1:8787`, con
 | `GET /api/estaciones` | Lista: `stationId`, `label` es/en, `estado` |
 | `GET /api/estaciones/<id>` | La estación en la forma `PublishedStation` de la web (`web/src/contracts/view-state.ts`), traducida aquí |
 | `GET /estaciones/<id>/<archivo>` | Cualquier archivo publicado tal cual (GeoJSON, CSV, WebP, COG…). Rutas fuera de la carpeta → 404 |
+| `GET /api/agua` | Mapas de agua de época seca (exploratorios): id, nombre es/en, esquinas, imagen y hectáreas |
+| `GET /agua/<id>/<archivo>` | Archivos de un mapa de agua (`agua_capa.webp`: solo las clases de agua, el resto transparente) |
 
-Decisiones provisionales de la traducción: `evidenceMode: "DEMO"` (datos reales sin calibrar; conflicto C1
-pendiente), `area` = hectáreas de la última fecha con `status: "limited"`, resumen con rango (RN-06), fechas
-útiles y excluidas.
+Decisiones provisionales de la traducción: `evidenceMode: "REAL"` solo si la estación está `publicada_con_limites`
+(si no, `DEMO`; conflicto C1 pendiente con Mimi), `departamento` y `departmentId` para agrupar, `area` = hectáreas
+de la última fecha con `status: "limited"`, resumen con rango (RN-06), fechas útiles y excluidas.
 
 **No es la arquitectura final**: §17 prevé archivos estáticos en el hospedaje (DP-06 pendiente). Sirve para
 desarrollar mientras se acuerdan C1–C9.
@@ -154,9 +238,10 @@ python3 pipeline_beta/zonas/servidor_estaciones.py                     # endpoin
 cd UraqiVision/web && VITE_PUBLISHED_API=http://127.0.0.1:8787/api npm run dev   # web en :5173
 ```
 
-En la web (rama local `local/prueba-mapa-chiquitania` de `UraqiVision`, sin subir) hay un prototipo de mapa 2D
-(MapLibre 5.24.0) que consume estos archivos: radar por fecha y polarización, parches por clase, focos y gráfico
-de hectáreas. El mapa oficial es de M-MAPA (Joaco).
+La web (`UraqiVision`, ya en `dev` por la PR #119) consume estos archivos en el mapa 2D de cada estación (MapLibre
+5.24.0): radar por fecha y polarización, parches por clase, focos, zonas de control y la respuesta paso a paso. Las
+capas de huellas, agua de referencia y tramo VALIDATED están en una rama local del frontend, sin subir. El mapa
+oficial es de M-MAPA (Joaco).
 
 ## 6. Cuaderno
 

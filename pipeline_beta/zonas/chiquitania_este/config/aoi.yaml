@@ -36,6 +36,9 @@ sentinel2:
   ventanas:
     antes: ["2026-06-17", "2026-07-26"]
     despues: ["2026-09-15", "2026-10-23"]
+    # VC-01: pares ópticos que encierran el periodo de detección del radar (29 ago → 16 oct)
+    antes_radar: ["2026-08-18", "2026-09-04"]
+    despues_radar: ["2026-10-10", "2026-10-28"]
 
 firms:
   inicio: "2026-06-17"
@@ -45,7 +48,7 @@ firms:
 limite_gb: 5      # si data/ fuera a pasar de esto, los scripts se detienen
 
 estacion:        # textos de la estación publicada (08_publicar_borrador.py)
-  nombre: {es: "Chiquitanía este (propuesta)", en: "Eastern Chiquitanía (proposed)"}
+  nombre: {es: "Chiquitanía este", en: "Eastern Chiquitanía"}
   criterio:
-    es: "Celda de ~50 km con más focos FIRMS desde el 11 ago 2026 (propuesta para DP-08, pendiente de acuerdo)"
-    en: "~50 km cell with the most FIRMS hotspots since 11 Aug 2026 (proposal for DP-08, pending agreement)"
+    es: "Celda de ~50 km con más focos FIRMS desde el 11 ago 2026 (evaluada para DP-08; se eligió otra caja más cerca de San Ignacio)"
+    en: "~50 km cell with the most FIRMS hotspots since 11 Aug 2026 (evaluated for DP-08; a box closer to San Ignacio was chosen)"
