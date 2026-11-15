@@ -107,7 +107,7 @@ Verificado con `make verificar` (tabla completa en `data/meta/verificacion.csv`)
 | Fecha | Frame 169 (≈98 % de la caja) | Frame 170 (≈30 %, franja norte) |
 |---|---|---|
 | 2026-06-18 | **Mala**: bandas, mediana HH ≈ 8 (el browse oficial de NASA muestra lo mismo) | **Mala** |
-| 2026-06-30 | Valores en rango, pero la imagen se ve **borrosa** frente a las de después del hueco | en rango |
+| 2026-06-30 | **Desplazada ~20 km**: valores en rango, pero la imagen está fuera de su sitio (correlación 0,03 con las fechas limpias; coincide solo al moverla 20,5 km al norte y 4,4 km al oeste) | **Desplazada** |
 | 2026-07-12 | **Vacía**: todo ceros, `mask` = 0 en el 100 % | **Mala**: mediana HH ≈ 1,1 |
 | 2026-07-24 | **Mala**: valores ~8× más altos (mediana HH 1,7; p98 178) | **Vacía**: todo ceros |
 | 2026-08-17 | buena | buena |
@@ -117,8 +117,10 @@ Verificado con `make verificar` (tabla completa en `data/meta/verificacion.csv`)
 | 2026-10-16 | buena | buena |
 
 - Las 5 fechas posteriores al hueco son coherentes entre sí (mediana HH 0,18–0,21; HV 0,058–0,063).
-- **Antes del hueco no hay ninguna escena limpia** en este track: solo el 30 jun es utilizable, y
-  con reservas. Esto condiciona cualquier comparación antes/después.
+- **Antes del hueco no hay ninguna escena utilizable** en este track: el 30 jun pasa los controles de valores,
+  pero está georreferenciado ~20 km fuera de su sitio. La línea base solo puede salir de fechas posteriores al hueco.
+  El problema es de la órbita 060A: las órbitas 161A, 089A y 118A tienen 3 o 4 fechas sanas antes del hueco
+  (ver `BACKEND-ESTADO-LOCAL.md` en UraqiVisionBack).
 - `mask` = 0 coincide con las zonas dañadas (18 jun: 43 %; 12 jul: 100 %), así que sirve para
   filtrar. El 24 jul no lo marca: hay que descartarlo por valores.
 - Los dos frames están en **CRS distintos**: 169 en EPSG:32721 (UTM 21S) y 170 en EPSG:32720
@@ -151,7 +153,9 @@ Lo normal es usar `make` dentro de `pipeline_beta/`, que corre cada script en el
 | 05 | `python pipeline_beta/scripts/05_limites.py` |
 | 06 | `python pipeline_beta/scripts/06_huellas_bolivia.py` |
 | 07 | `python pipeline_beta/scripts/07_verificar.py` |
-| 08 | `python pipeline_beta/scripts/08_publicar_borrador.py` (borrador exploratorio, §17.3) |
+| 08 | `python pipeline_beta/scripts/08_publicar_borrador.py` (publicación §17.3; «publicada con límites» o borrador) |
+| 09 | `python pipeline_beta/scripts/09_enviar_avisos.py` (avisos de detecciones nuevas; `--enviar` para mandarlos) |
+| 10 | `python pipeline_beta/scripts/10_mapa_agua.py` (mapa de agua de época seca; exploratorio, fuera del MVP) |
 
 Utilidades compartidas: `pipeline_beta/scripts/_comun.py` (importado por todos).
 
@@ -162,3 +166,23 @@ python3 pipeline_beta/zonas/servidor_estaciones.py --puerto 8787
 ```
 
 Descarga de una zona nueva: `pipeline_beta/zonas/descargar_zona.sh <id> <Nombre> "<descripción>" <O> <S> <E> <N> [track dir]`.
+
+## Avisos al servidor de alertas (RF-40, Futuro)
+
+`09_enviar_avisos.py` lee la estación publicada y, por cada fecha con detección **confirmada** que todavía no se avisó,
+manda un `AVISO` (nunca una `ALERTA`) a `POST /notificar` del servidor de alertas:
+
+```json
+{"tipo": "AVISO", "categoria": "PERDIDA_VEGETACION", "mensaje": "…", "destino": "todos",
+ "datos": {"estacion": "sanignacio", "subtipo": "compatible_quema", "superficie_ha": 684, "rango_ha": [389, 1005],
+           "fecha_observacion_utc": "…", "retraso_dias": 41, "enlace": "…/station/sanignacio", "nota": "…"}}
+```
+
+- Solo avisa estaciones `publicada_con_limites` (RN-04) y nunca da instrucciones de emergencia (RN-10): el dato de
+  NISAR llega días o semanas después de la observación.
+- La primera vez de cada estación solo avisa la fecha más reciente; lo ya avisado queda en `data/meta/avisos_enviados.json`.
+- Variables: `AVISOS_URL`, `AVISOS_TOKEN` (cabecera `X-Token`, nunca en el código) y `AVISOS_WEB`. Sin `--enviar` solo
+  muestra el aviso.
+
+Para correr todo de forma periódica: `pipeline_beta/zonas/actualizar_y_avisar.sh` (baja escenas nuevas, publica y avisa
+cada estación; en el propio script hay un ejemplo de cron).
