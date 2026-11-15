@@ -36,6 +36,9 @@ sentinel2:
   ventanas:
     antes: ["2026-06-17", "2026-07-26"]
     despues: ["2026-09-15", "2026-10-23"]
+    # VC-01: par óptico que encierra el periodo de detección de la órbita 118A
+    antes_radar: ["2026-07-08", "2026-07-24"]
+    despues_radar: ["2026-09-25", "2026-11-12"]   # ampliada: los Yungas están casi siempre nublados en octubre
 
 firms:
   inicio: "2026-06-17"
@@ -43,3 +46,11 @@ firms:
   sensores: [VIIRS_SNPP, VIIRS_NOAA20, MODIS]
 
 limite_gb: 5      # si data/ fuera a pasar de esto, los scripts se detienen
+
+estacion:        # textos de la estación publicada (08_publicar_borrador.py)
+  id: alto-beni
+  departamento: La Paz
+  nombre: {es: "Alto Beni y Tipuani", en: "Alto Beni and Tipuani"}
+  criterio:
+    es: "Caja de ~50 km en Alto Beni y Tipuani (La Paz) con 812 focos FIRMS desde el 11 ago 2026; órbita 118A con 3 fechas sanas antes del hueco (cumple MC-02). Relieve de Yungas: sombras e inversiones del radar en laderas"
+    en: "~50 km box in Alto Beni and Tipuani (La Paz) with 812 FIRMS hotspots since 11 Aug 2026; orbit 118A with 3 sound dates before the gap (meets MC-02). Yungas relief: radar shadow and layover on slopes"
