@@ -1,0 +1,45 @@
+# Zona de análisis del MVP (decisión DP-08: puede cambiar; todo script la lee de aquí).
+nombre: Moxos
+descripcion: "Llanos de Moxos cerca de Trinidad, Beni (aprox.): referencia de humedales en epoca seca"
+crs: EPSG:4326
+caja:            # lon/lat
+  oeste: -65.14
+  sur: -15.07
+  este: -64.67
+  norte: -14.60
+
+periodo:
+  inicio: "2026-06-17"       # primer dato NISAR
+  fin: "2026-12-31"          # solo 2026
+  hueco:                     # hueco permanente sin datos NISAR
+    inicio: "2026-07-27"
+    fin: "2026-08-10"
+
+bolivia:         # caja aproximada del país (FIRMS y huellas)
+  oeste: -69.7
+  sur: -22.9
+  este: -57.4
+  norte: -9.6
+
+nisar:
+  colecciones:
+    provisional: NISAR_L2_GCOV_PROVISIONAL_V1   # 17 jun – 23 oct 2026, serie principal
+    validated: NISAR_L2_GCOV_V1                 # desde 21 oct 2026, tramo APARTE
+  grupo: /science/LSAR/GCOV/grids/frequencyA
+  capas: [HHHH, HVHV, mask, numberOfLooks]
+  polarizacion: DHDH
+
+sentinel2:
+  stac: https://earth-search.aws.element84.com/v1
+  coleccion: sentinel-2-l2a
+  assets: [nir08, swir22, scl]
+  ventanas:
+    antes: ["2026-06-17", "2026-07-26"]
+    despues: ["2026-09-15", "2026-10-23"]
+
+firms:
+  inicio: "2026-06-17"
+  dias_por_pedido: 5
+  sensores: [VIIRS_SNPP, VIIRS_NOAA20, MODIS]
+
+limite_gb: 5      # si data/ fuera a pasar de esto, los scripts se detienen

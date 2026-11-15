@@ -1,0 +1,24 @@
+name: base
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - earthaccess
+  - h5py
+  - h5netcdf
+  - xarray
+  - rioxarray
+  - rasterio
+  - gdal
+  - pyproj
+  - numpy
+  - pandas
+  - geopandas
+  - shapely
+  - pystac-client
+  - requests
+  - pyyaml
+  - tqdm
+  - jupyterlab
+  - matplotlib
+  # openseppo: fuera. En conda-forge exige python >=3.12 y aquí se fija 3.11.

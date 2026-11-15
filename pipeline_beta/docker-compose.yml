@@ -1,0 +1,17 @@
+services:
+  uraqi:
+    build:
+      context: .
+      args:
+        NEW_MAMBA_USER_ID: ${HOST_UID:-1000}
+        NEW_MAMBA_USER_GID: ${HOST_GID:-1000}
+    image: uraqivision:latest
+    working_dir: /work
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./:/work
+      - ./data:/work/data
+    ports:
+      - "127.0.0.1:8888:8888"

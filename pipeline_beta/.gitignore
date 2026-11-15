@@ -1,0 +1,18 @@
+# Datos y salidas locales: nunca a git (pesan GB; se regeneran con los scripts). Ver README.md.
+data/
+publicado/
+zonas/*/data/
+zonas/*/publicado/
+zonas/*/scripts/
+zonas/*/Makefile
+zonas/*/docker-compose.yml
+zonas/*/Dockerfile
+zonas/*/environment.yml
+zonas/*/.dockerignore
+zonas/*/.env
+zonas/log_*.txt
+notebooks/*.html
+notebooks/.ipynb_checkpoints/
+# Credenciales (RNF-06)
+.env
+.netrc
