@@ -135,3 +135,30 @@ Verificado con `make verificar` (tabla completa en `data/meta/verificacion.csv`)
   en un subproceso con límite de 12 min y reintentos.
 - Sentinel-2 se guarda como DN uint16; si `boa_offset_aplicado` es verdadero en el manifest,
   reflectancia = DN / 10000.
+
+## Comandos de cada script (rutas desde la raíz de UraqiVisionBack)
+
+Lo normal es usar `make` dentro de `pipeline_beta/`, que corre cada script en el contenedor. Cada comando de
+`make` equivale a uno de estos (con el entorno del contenedor):
+
+| Paso | Comando |
+|---|---|
+| 00 | `python pipeline_beta/scripts/00_comprobar_entorno.py` |
+| 01 | `python pipeline_beta/scripts/01_nisar_listar.py` |
+| 02 | `python pipeline_beta/scripts/02_nisar_recortar.py --coleccion provisional --track 60 --dir A` |
+| 03 | `python pipeline_beta/scripts/03_firms.py` |
+| 04 | `python pipeline_beta/scripts/04_sentinel2.py` |
+| 05 | `python pipeline_beta/scripts/05_limites.py` |
+| 06 | `python pipeline_beta/scripts/06_huellas_bolivia.py` |
+| 07 | `python pipeline_beta/scripts/07_verificar.py` |
+| 08 | `python pipeline_beta/scripts/08_publicar_borrador.py` (borrador exploratorio, §17.3) |
+
+Utilidades compartidas: `pipeline_beta/scripts/_comun.py` (importado por todos).
+
+Endpoint local de desarrollo para la web (lee `publicado/` y `zonas/*/publicado/`):
+
+```bash
+python3 pipeline_beta/zonas/servidor_estaciones.py --puerto 8787
+```
+
+Descarga de una zona nueva: `pipeline_beta/zonas/descargar_zona.sh <id> <Nombre> "<descripción>" <O> <S> <E> <N> [track dir]`.

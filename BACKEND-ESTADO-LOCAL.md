@@ -45,7 +45,7 @@ Todo corre en el contenedor Docker `uraqivision:latest` (micromamba, Python 3.11
 | 05 | `limites` | Departamentos de Bolivia (geoBoundaries ADM1) |
 | 06 | `huellas` | Huellas GCOV PROVISIONAL sobre Bolivia |
 | 07 | `verificar` | Valida los GeoTIFF (CRS, tipo, % válido, rango) → `data/meta/verificacion.csv` y quicklooks |
-| 08 | `docker compose run --rm uraqi python scripts/08_publicar_borrador.py` | **Nuevo.** Análisis exploratorio y carpeta publicada §17.3 (ver §4) |
+| 08 | `docker compose run --rm uraqi python pipeline_beta/scripts/08_publicar_borrador.py` (en el contenedor, desde `pipeline_beta/`: `scripts/08_…`) | **Nuevo.** Análisis exploratorio y carpeta publicada §17.3 (ver §4) |
 
 Reglas que el código ya cumple: nunca descarga el HDF5 entero; PROVISIONAL y VALIDATED en carpetas separadas
 (RN-02); un archivo por frame; reprocesos → CRID más alto; límite de 5 GB por zona.
@@ -150,7 +150,7 @@ pendiente), `area` = hectáreas de la última fecha con `status: "limited"`, res
 desarrollar mientras se acuerdan C1–C9.
 
 ```bash
-python3 nasa/zonas/servidor_estaciones.py                     # endpoint en :8787
+python3 pipeline_beta/zonas/servidor_estaciones.py                     # endpoint en :8787
 cd UraqiVision/web && VITE_PUBLISHED_API=http://127.0.0.1:8787/api npm run dev   # web en :5173
 ```
 
